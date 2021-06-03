@@ -7,8 +7,9 @@ import { setCurrentUser, logoutUser } from "./actions/authActions";
 import { Provider } from "react-redux";
 import store from "./store";
 
-import Login from "./auth/Login";
-import Landing from "./components/Landing"
+import Login from "./auth/Login"
+import Companies from "./components/sections/companies/CompaniesPage";
+import Users from "./components/sections/users/UsersPage";
 import PrivateRoute from "./privateRoute/PrivateRoute";
 
 
@@ -40,8 +41,8 @@ class App extends Component {
             <Route exact path="/" component={Login} />
             <Route exact path="/login" component={Login} />
             <Switch>
-              <PrivateRoute exact path="/landing" component={Landing} />
-
+              <PrivateRoute exact path="/companies" component={Companies} />
+              <PrivateRoute exact path="/users" component={Users} />
             </Switch>
           </div>
         </Router>
