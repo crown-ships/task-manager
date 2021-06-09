@@ -18,6 +18,11 @@ const companyModel = new mongoose.Schema({
     type: String,
     required: true
   },
+  enabled:{
+    type: String,
+    default: "true",
+    enum: ["true","false"]
+  },
   date: {
     type: Date,
     default: Date.now

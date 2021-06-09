@@ -85,6 +85,7 @@ export default function CompaniesTable(props) {
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
+  const [checked, setChecked] = React.useState(false);
   const [records, setRecords] = React.useState(data);
   const classes = useStyles();
 
@@ -93,8 +94,8 @@ export default function CompaniesTable(props) {
     const d = await getData(props);
     setData(d.data);
     setRecords(d.data);
+    console.log(data);
   },[notify]);
-
 
   const {
           TblContainer,
@@ -110,18 +111,19 @@ export default function CompaniesTable(props) {
             if (target.value == "")
                 return items;
             else
-                return items.filter(x => x.name.toLowerCase().includes(target.value))
+                return items.filter(x => x.companyName.toLowerCase().includes(target.value.toLowerCase()))
         }
     })
   }
-  const [state, setState] = React.useState({
-      checkedA: true,
-      checkedB: true,
-    });
 
-    const handleChange = (event) => {
-      setState({ ...state, [event.target.name]: event.target.checked });
-    };
+  const handleChange = (val, row) => {
+    console.log(val);
+      if(val== true)
+        changeEnable("true",row.email, row.companyName);
+      if(val == false)
+        changeEnable("false",row.email, row.companyName);
+  };
+
   const openInEditPopup = item => {
     setRecordForEdit(item);
     setOpenEditPopup(true);
@@ -150,6 +152,39 @@ export default function CompaniesTable(props) {
       type: 'success'
     });
   }
+
+  const changeEnable = (value, og_email, og_company) => {
+    const input = {
+      params: {
+        email: props.auth.user.email,
+        emailupdate: og_email,
+        auth: props.auth.isAuthenticated
+      },
+      body: {
+      enabled: value
+      }
+    };
+
+    const p_input = {
+      params: {
+        email: props.auth.user.email,
+        companyName: og_company,
+        auth: props.auth.isAuthenticated
+      },
+      body: {
+      enabled: value
+      }
+    };
+
+    props.updateCompany(input, props.history);
+    props.updateAllProjects(p_input, props.history);
+    setNotify({
+      isOpen: true,
+      message: "Success.",
+      type: 'success'
+    });
+  }
+
   const edit = (data, resetForm, og_email) => {
 
     const input = {
@@ -233,10 +268,10 @@ export default function CompaniesTable(props) {
                 <TableCell>{row.contactNo}</TableCell>
                 <TableCell>
                   <Switch
-                    checked={state.checkedB}
-                    onChange={handleChange}
+                    onChange={(e,val)=>handleChange(val, row)}
                     color="primary"
-                    name="checkedB"
+                    name="checked"
+                    checked={(row.enabled==="true")}
                     inputProps={{ 'aria-label': 'primary checkbox' }}
                   />
                 </TableCell>

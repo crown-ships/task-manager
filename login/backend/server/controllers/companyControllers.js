@@ -21,7 +21,7 @@ exports.addNew = async (req, res, next) => {
 
   const email = req.body.email;
   const user = await Company.findOne({ email });
-  if (user) return res.status(400).json({data: "User already exists."});
+  if (user) return res.status(400).json({data: "Company already exists."});
 
   const signedupCompany = new Company({
    companyName: req.body.companyName,

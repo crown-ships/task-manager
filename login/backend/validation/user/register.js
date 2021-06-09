@@ -36,7 +36,7 @@ module.exports = function validateRegisterInput(data) {
 if(Validator.isEmpty(data.role)){
   errors.role = "Role field is required";
 }
-else if(!(Validator.equals(data.role,"staff-member")|| Validator.equals(data.role,"supervisor")||Validator.equals(data.role,"admin")||Validator.equals(data.role,"super-admin"))){
+else if(!(Validator.equals(data.role,"user")|| Validator.equals(data.role,"admin"))){
   errors.role = "Role is invalid.";
 }
 // Password checks

@@ -9,7 +9,9 @@ import store from "./store";
 
 import Login from "./auth/Login"
 import Companies from "./components/sections/companies/CompaniesPage";
+import Projects from "./components/sections/projects/ProjectsPage";
 import Users from "./components/sections/users/UsersPage";
+import Approval from "./components/sections/approval/ApprovalPage";
 import PrivateRoute from "./privateRoute/PrivateRoute";
 
 
@@ -41,8 +43,10 @@ class App extends Component {
             <Route exact path="/" component={Login} />
             <Route exact path="/login" component={Login} />
             <Switch>
+              <PrivateRoute exact path="/projects" component={Projects} />
               <PrivateRoute exact path="/companies" component={Companies} />
               <PrivateRoute exact path="/users" component={Users} />
+              <PrivateRoute exact path="/approval" component={Approval} />
             </Switch>
           </div>
         </Router>
