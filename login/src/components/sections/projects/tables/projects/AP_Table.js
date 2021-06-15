@@ -28,10 +28,44 @@ import RegisterForm from "../../forms/registerProjectForm"
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import PropTypes from "prop-types";
 // Generate Order Data
 function createData(id ,name, date, details, createdBy, update,del) {
   return { _id:id, projectName: name, dueDate: date, projectDetails: details, creatorName: createdBy, updated:update,delete:del};
 }
+
+function CircularProgressWithLabel(props) {
+  return (
+    <Box position="relative" display="inline-flex">
+      <CircularProgress variant="determinate" {...props} />
+      <Box
+        top={0}
+        left={0}
+        bottom={0}
+        right={0}
+        position="absolute"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Typography variant="caption" component="div" color="textSecondary">{`${Math.round(
+          props.value,
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
+
+CircularProgressWithLabel.propTypes = {
+  /**
+   * The value of the progress indicator for the determinate and buffer variants.
+   * Value between 0 and 100.
+   */
+  value: PropTypes.number.isRequired,
+};
 
 const useStyles = makeStyles(theme => ({
     pageContent: {
@@ -59,6 +93,7 @@ const headCells = [
     { id: 'creatorName', label: 'Creator' },
     { id: 'projectDetails', label: 'Task Details'},
     { id: 'companyName', label: 'Company Name'},
+    { id: 'percentComplete', label: 'Progress'},
     { id: 'enabled', label: 'Enable', disableSorting: true },
     { id: 'update', label: 'Update', disableSorting: true },
     { id: 'delete', label: 'Delete', disableSorting: true }
@@ -88,6 +123,7 @@ export default function AP_Table(props) {
   const [data, setData] = React.useState(rows);
   const [list, setList] = React.useState([]);
   const [company, setCompany] = React.useState("");
+  const [allCompanies, setAllCompanies] = React.useState([]);
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
@@ -96,6 +132,7 @@ export default function AP_Table(props) {
 
   React.useEffect(async () => {
     const d = await getDropdownList(props);
+    setAllCompanies(d.data);
     var complist = d.data.map(function(item) {
       if(item.enabled === "true")
         return item.companyName;
@@ -202,12 +239,12 @@ export default function AP_Table(props) {
       type: 'success'
     });
   }
-  const edit = (data, resetForm, og_projectName) => {
+  const edit = (data, resetForm, og_id) => {
 
     const input = {
       params: {
         email: props.auth.user.email,
-        projectName: og_projectName,
+        projectID: og_id,
         auth: props.auth.isAuthenticated
       },
       body: data
@@ -228,11 +265,35 @@ export default function AP_Table(props) {
 
   const handleSwitch = (val, row) => {
     console.log(val);
-      // if(val== true)
-      //   changeEnable("true",row.email, row.companyName);
-      // if(val == false)
-      //   changeEnable("false",row.email, row.companyName);
+      if(val== true)
+        changeEnable("true",row._id);
+      if(val == false)
+        changeEnable("false",row._id);
   };
+
+  const changeEnable = (value, og_id) => {
+
+    const input = {
+      params: {
+        email: props.auth.user.email,
+        projectID: og_id,
+        auth: props.auth.isAuthenticated
+      },
+      body: {
+      enabled: value
+      }
+    };
+
+
+    props.updateProject(input, props.history);
+    props.updateAllFeatures(input, props.history);
+    props.updateAllTasks(input, props.history);
+    setNotify({
+      isOpen: true,
+      message: "Success.",
+      type: 'success'
+    });
+  }
 
   const onDelete = project => {
     setConfirmDialog({
@@ -241,7 +302,7 @@ export default function AP_Table(props) {
     })
 
     const input = {
-      projectName: project.projectName,
+      projectID: project._id,
       email: props.auth.user.email,
       auth: props.auth.isAuthenticated
     };
@@ -321,6 +382,7 @@ export default function AP_Table(props) {
                 <TableCell>{row.creatorName}</TableCell>
                 <TableCell>{row.projectDetails}</TableCell>
                 <TableCell>{row.companyName}</TableCell>
+                <TableCell>  <CircularProgressWithLabel value={row.percentComplete} /></TableCell>
                 <TableCell>
                   <Switch
                     onChange={(e,val)=>handleSwitch(val, row)}
@@ -362,7 +424,7 @@ export default function AP_Table(props) {
         openPopup={openEditPopup}
         setOpenPopup={setOpenEditPopup}
       >
-        <UpdateForm
+        <UpdateForm {...props}
             recordForEdit={recordForEdit}
             edit={edit} />
       </Popup>
@@ -371,7 +433,7 @@ export default function AP_Table(props) {
         openPopup={openRegPopup}
         setOpenPopup={setOpenRegPopup}
       >
-        <RegisterForm {...props} create={create} company={company}/>
+        <RegisterForm {...props} create={create} company={company} allCompanies = {allCompanies}/>
       </Popup>
       <Notification
                notify={notify}

@@ -9,7 +9,8 @@ import { useForm, Form } from '../../useForm';
 const initialFValues = {
     projectName: '',
     projectDetails: '',
-    dueDate: ''
+    dueDate: '',
+    ownerName: ''
 }
 
 export default function RegisterForm(props) {
@@ -23,6 +24,13 @@ export default function RegisterForm(props) {
 
         if (fieldValues === values)
             return Object.values(temp).every(x => x == "")
+    }
+
+    var i;
+    var companyDetails = {};
+    for(i=0; i< props.allCompanies.length; i++) {
+      if(props.allCompanies[i].companyName === props.company)
+        companyDetails = props.allCompanies[i];
     }
 
     const {
@@ -39,13 +47,17 @@ export default function RegisterForm(props) {
         if (validate()) {
             const approved = (props.auth.user.role === "admin")?"approved":"wait";
             const input = {
-              companyName: props.company,
+              companyName: companyDetails.companyName,
+              companyID: companyDetails._id,
               creatorName: props.auth.user.name,
+              creatorID: props.auth.user.id,
               projectName: values.projectName,
               projectDetails: values.projectDetails,
+              ownerName: values.ownerName,
               dueDate: values.dueDate,
               approved: approved
             };
+            console.log(props);
             props.create(input, resetForm);
         }
     }
@@ -74,6 +86,13 @@ export default function RegisterForm(props) {
                         value={values.projectDetails}
                         onChange={handleInputChange}
                         error={errors.projectDetails}
+                    />
+                    <Input
+                        name="ownerName"
+                        label="Owner Name"
+                        value={values.ownerName}
+                        onChange={handleInputChange}
+                        error={errors.ownerName}
                     />
 
                 </Grid>

@@ -23,7 +23,7 @@ const companyModel = new mongoose.Schema({
     default: "true",
     enum: ["true","false"]
   },
-  date: {
+  dateCreated: {
     type: Date,
     default: Date.now
   }

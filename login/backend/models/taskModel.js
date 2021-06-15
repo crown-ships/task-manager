@@ -8,13 +8,33 @@ const taskModel = new mongoose.Schema({
   dueDate: {
     type: Date,
     required: true,
-
   },
   taskDetails: {
     type: String,
     required: true
   },
   featureName: {
+    type: String,
+    required: true
+  },
+  featureID: {
+    type: String,
+    required: true
+  },
+  projectName: {
+    type: String
+  },
+  projectID: {
+    type: String,
+    required: true
+  },
+  companyName: {
+    type: String
+  },
+  companyID: {
+    type: String
+  },
+  creatorID: {
     type: String,
     required: true
   },
@@ -25,9 +45,6 @@ const taskModel = new mongoose.Schema({
   percentComplete:{
     type: Number,
     default:0
-  },
-  status: {
-    type: String
   },
   ownerName: {
     type: String
@@ -40,6 +57,11 @@ const taskModel = new mongoose.Schema({
   {
     data: Buffer,
     contentType: String
+  },
+  enabled:{
+    type: String,
+    default: "true",
+    enum: ["true","false"]
   }
 });
 

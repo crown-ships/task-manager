@@ -11,8 +11,11 @@ import Login from "./auth/Login"
 import Companies from "./components/sections/companies/CompaniesPage";
 import Projects from "./components/sections/projects/ProjectsPage";
 import Users from "./components/sections/users/UsersPage";
+import Vendors from "./components/sections/vendors/VendorsPage";
+import Investments from "./components/sections/investments/InvestmentsPage";
 import Approval from "./components/sections/approval/ApprovalPage";
 import PrivateRoute from "./privateRoute/PrivateRoute";
+import Dashboard from "./components/sections/dashboard/DashboardPage";
 
 
 if (localStorage.jwtToken) {
@@ -44,6 +47,9 @@ class App extends Component {
             <Route exact path="/login" component={Login} />
             <Switch>
               <PrivateRoute exact path="/projects" component={Projects} />
+              <PrivateRoute exact path="/investments" component={Investments} />
+              <PrivateRoute exact path="/vendors" component={Vendors} />
+              <PrivateRoute exact path="/dashboard" component={Dashboard} />
               <PrivateRoute exact path="/companies" component={Companies} />
               <PrivateRoute exact path="/users" component={Users} />
               <PrivateRoute exact path="/approval" component={Approval} />

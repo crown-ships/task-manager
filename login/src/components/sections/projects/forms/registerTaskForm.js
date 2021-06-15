@@ -7,9 +7,10 @@ import { useForm, Form } from '../../useForm';
 
 
 const initialFValues = {
-    projectName: '',
-    projectDetails: '',
-    dueDate: ''
+    taskName: '',
+    taskDetails: '',
+    dueDate: '',
+    ownerName: ''
 }
 
 export default function RegisterForm(props) {
@@ -34,17 +35,31 @@ export default function RegisterForm(props) {
         resetForm
     } = useForm(initialFValues, true, validate);
 
+    var i;
+    var featureDetails = {};
+    for(i=0; i< props.allFeatures.length; i++) {
+      if(props.allFeatures[i].featureName === props.feature)
+        featureDetails = props.allFeatures[i];
+    }
+
     const handleSubmit = e => {
         e.preventDefault()
         if (validate()) {
             const approved = (props.auth.user.role === "admin")?"approved":"wait";
             const input = {
-              companyName: props.company,
-              creatorName: props.auth.user.name,
-              projectName: values.projectName,
-              projectDetails: values.projectDetails,
+              taskName: values.taskName,
+              taskDetails: values.taskDetails,
               dueDate: values.dueDate,
-              approved: approved
+              ownerName: values.ownerName,
+              creatorName: props.auth.user.name,
+              creatorID: props.auth.user.id,
+              companyName: featureDetails.companyName,
+              companyID: featureDetails.companyID,
+              projectName:featureDetails.projectName,
+              projectID:featureDetails.projectID,
+              featureName:featureDetails.featureName,
+              featureID:featureDetails._id,
+              percentComplete: values.percentComplete
             };
             props.create(input, resetForm);
         }
@@ -62,20 +77,26 @@ export default function RegisterForm(props) {
             <Grid container>
                 <Grid item xs={8}>
                     <Input
-                        name="projectName"
-                        label="Project Name"
-                        value={values.projectName}
+                        name="taskName"
+                        label="Task Name"
+                        value={values.taskName}
                         onChange={handleInputChange}
-                        error={errors.projectName}
+                        error={errors.taskName}
                     />
                     <Input
-                        name="projectDetails"
-                        label="Project Details"
-                        value={values.projectDetails}
+                        name="taskDetails"
+                        label="Task Details"
+                        value={values.taskDetails}
                         onChange={handleInputChange}
-                        error={errors.projectDetails}
+                        error={errors.taskDetails}
                     />
-
+                    <Input
+                        name="ownerName"
+                        label="Owner Name"
+                        value={values.ownerName}
+                        onChange={handleInputChange}
+                        error={errors.ownerName}
+                    />
                 </Grid>
                 <Grid item xs={4}>
                 <Input

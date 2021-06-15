@@ -30,7 +30,7 @@ export const deleteFeature = (userData, history) => dispatch => {
   console.log(userData);
   axios
     .delete("http://localhost:4000/api/delFeature", {params:userData})
-    .then(res => history.push("/features"))
+    .then(res => history.push("/projects"))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
@@ -53,6 +53,20 @@ export const getAllFeatures = (userData, history) => {
       })
     );
   }
+};
+
+export const updateAllFeatures = (userData, history) => dispatch => {
+  axios
+    .post("http://localhost:4000/api/updAllFeatures", userData.body, {params:userData.params})
+    .then(res => {
+      console.log("updated");
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
 };
 
 export const registerFeature = (userData, history) => dispatch => {

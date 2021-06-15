@@ -26,6 +26,8 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import { mainListItems} from '../listitem';
 import { logoutUser } from "../../../actions/authActions";
+import { updateAllTasks } from "../../../actions/taskActions";
+import { updateAllFeatures } from "../../../actions/featureActions";
 import { updateAllProjects } from "../../../actions/projectActions";
 import { getAllCompanies, deleteCompany, updateCompany, registerCompany } from "../../../actions/companyActions";
 import CompaniesTable from "./CompaniesTable"
@@ -218,5 +220,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { logoutUser, getAllCompanies, deleteCompany, updateCompany, registerCompany, updateAllProjects }
+  { logoutUser, getAllCompanies, deleteCompany, updateCompany, registerCompany,updateAllFeatures,updateAllTasks, updateAllProjects }
 )(withRouter(CompaniesPage));

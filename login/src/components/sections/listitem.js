@@ -18,6 +18,12 @@ import BusinessIcon from '@material-ui/icons/Business';
 
 export const mainListItems = (
   <div>
+    <ListItem button component={Link} to="/dashboard">
+      <ListItemIcon>
+        <AssignmentIcon />
+      </ListItemIcon>
+      <ListItemText primary="Dashboard" />
+    </ListItem>
     <ListItem button component={Link} to="/projects">
       <ListItemIcon>
         <AssignmentIcon />
@@ -36,6 +42,18 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Companies" />
     </ListItem>
+    <ListItem button component={Link} to="/investments">
+      <ListItemIcon>
+        <BusinessIcon />
+      </ListItemIcon>
+      <ListItemText primary="Investments" />
+    </ListItem>
+    <ListItem button component={Link} to="/vendors">
+      <ListItemIcon>
+        <BusinessIcon />
+      </ListItemIcon>
+      <ListItemText primary="Vendors" />
+    </ListItem>
     <ListItem button component={Link} to="/users">
       <ListItemIcon>
         <PeopleIcon />
@@ -52,6 +70,12 @@ export const secondaryListItems = (
       <DashboardIcon />
     </ListItemIcon>
     <ListItemText primary="Projects" />
+  </ListItem>
+  <ListItem button component={Link} to="/vendors">
+    <ListItemIcon>
+      <DashboardIcon />
+    </ListItemIcon>
+    <ListItemText primary="Vendors" />
   </ListItem>
   </div>
 );

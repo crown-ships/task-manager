@@ -119,9 +119,9 @@ export default function CompaniesTable(props) {
   const handleChange = (val, row) => {
     console.log(val);
       if(val== true)
-        changeEnable("true",row.email, row.companyName);
+        changeEnable("true",row._id);
       if(val == false)
-        changeEnable("false",row.email, row.companyName);
+        changeEnable("false",row._id);
   };
 
   const openInEditPopup = item => {
@@ -153,11 +153,11 @@ export default function CompaniesTable(props) {
     });
   }
 
-  const changeEnable = (value, og_email, og_company) => {
+  const changeEnable = (value, og_id) => {
     const input = {
       params: {
         email: props.auth.user.email,
-        emailupdate: og_email,
+        idupdate: og_id,
         auth: props.auth.isAuthenticated
       },
       body: {
@@ -168,16 +168,19 @@ export default function CompaniesTable(props) {
     const p_input = {
       params: {
         email: props.auth.user.email,
-        companyName: og_company,
+        companyID: og_id,
         auth: props.auth.isAuthenticated
       },
       body: {
-      enabled: value
+        enabled: value
       }
     };
 
+
     props.updateCompany(input, props.history);
     props.updateAllProjects(p_input, props.history);
+    props.updateAllFeatures(p_input, props.history);
+    props.updateAllTasks(p_input, props.history);
     setNotify({
       isOpen: true,
       message: "Success.",

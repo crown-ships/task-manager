@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const mongoose = require ('mongoose');
 const validateProjectInput = require("../../validation/project/addNew");
 const validateProjectName = require("../../validation/project/validateProjectName");
+const validateOwnerName = require("../../validation/project/validateOwnerName");
 const validateDate = require("../../validation/validateDate");
 
 exports.addNew = async (req, res, next) => {
@@ -23,9 +24,12 @@ exports.addNew = async (req, res, next) => {
   const signedupProject = new Project({
    projectName: req.body.projectName,
    companyName: req.body.companyName,
+   companyID: req.body.companyID,
    projectDetails: req.body.projectDetails,
    dueDate: req.body.dueDate,
+   ownerName: req.body.ownerName,
    creatorName: req.body.creatorName,
+   creatorID:req.body.creatorID,
    approved:req.body.approved
   });
 
@@ -47,20 +51,18 @@ exports.getProjects = async (req, res, next) => {
  //validate role
 exports.update = async (req, res, next) => {
  try {
-   const projectName_upd = req.query.projectName;
-
-   const project_upd = await Project.find({projectName:projectName_upd});
+   const id_upd = req.query.projectID;
 
    const userBody = req.body;
 
-   if (userBody.dueDate)
-   {
-     const { errors, isValid } = validateDate(userBody);
-     // Check validation
-     if (!isValid) {
-       return res.status(400).json(errors);
-     }
-   }
+   // if (userBody.dueDate)
+   // {
+   //   const { errors, isValid } = validateDate(userBody);
+   //   // Check validation
+   //   if (!isValid) {
+   //     return res.status(400).json(errors);
+   //   }
+   // }
    if (userBody.projectName)
    {
      const { errors, isValid } = validateProjectName(userBody);
@@ -69,9 +71,17 @@ exports.update = async (req, res, next) => {
        return res.status(400).json(errors);
      }
    }
+   if (userBody.ownerName)
+   {
+     const { errors, isValid } = validateProjectName(userBody);
+     // Check validation
+     if (!isValid) {
+       return res.status(400).json(errors);
+     }
+   }
 
-   await Project.findByIdAndUpdate(project_upd[0]._id, userBody);
-   const user = await Project.findById(project_upd[0]._id);
+   await Project.findByIdAndUpdate(id_upd, userBody);
+   const user = await Project.findById(id_upd);
 
    res.status(200).json({
     data: user,
@@ -85,12 +95,12 @@ exports.update = async (req, res, next) => {
 
 exports.updateAll = async (req, res, next) => {
 try {
-  const companyName_upd = req.query.companyName;
+  const companyID_upd = req.query.companyID;
 
   const userBody = req.body;
 
 
-  await Project.updateMany({companyName: companyName_upd}, userBody);
+  await Project.updateMany({companyID: companyID_upd}, userBody);
 
    res.status(200).json({
     message: 'Project updated successfully.'
@@ -103,10 +113,9 @@ try {
 
 exports.delete = async (req, res, next) => {
  try {
-  const projectName_del = req.query.projectName;
-  const project_delete = await Project.find({projectName:projectName_del});
+  const id_del = req.query.projectID;
 
-  await Project.findByIdAndDelete(project_delete[0]._id);
+  await Project.findByIdAndDelete(id_del);
   res.status(200).json({
    data: null,
    message: 'Project has been deleted'

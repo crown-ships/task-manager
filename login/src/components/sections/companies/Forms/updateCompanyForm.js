@@ -5,7 +5,6 @@ import Input from "../../../controls/Input";
 import { useForm, Form } from '../../useForm';
 
 const initialFValues = {
-    companyName: '',
     contactNo: '',
     email: '',
     websiteURL: ''
@@ -37,7 +36,6 @@ export default function UpdateForm(props) {
         e.preventDefault()
         if (validate()) {
             const input = {
-              companyName: values.companyName,
               contactNo: values.contactNo,
               email: values.email,
               websiteURL: values.websiteURL
@@ -58,13 +56,6 @@ export default function UpdateForm(props) {
         <Form onSubmit={handleSubmit}>
             <Grid container>
                 <Grid item xs={7}>
-                    <Input
-                        name="companyName"
-                        label="Company Name"
-                        value={values.companyName}
-                        onChange={handleInputChange}
-                        error={errors.companyName}
-                    />
                     <Input
                         name="email"
                         label="Email Address"

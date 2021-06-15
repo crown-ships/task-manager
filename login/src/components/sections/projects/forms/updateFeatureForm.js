@@ -5,8 +5,7 @@ import Input from "../../../controls/Input";
 import { useForm, Form } from '../../useForm';
 
 const initialFValues = {
-    projectName: '',
-    projectDetails: '',
+    featureDetails: '',
     dueDate: ''
 }
 
@@ -37,12 +36,11 @@ export default function UpdateForm(props) {
         if (validate()) {
             const approved = (props.auth.user.role === "admin")?"approved":"wait";
             const input = {
-              projectName: values.projectName,
-              projectDetails: values.projectDetails,
+              featureDetails: values.featureDetails,
               dueDate: values.dueDate,
               approved: approved
           };
-          props.edit(input, resetForm, recordForEdit.projectName);
+          props.edit(input, resetForm, recordForEdit.featureName);
         }
     }
 
@@ -58,18 +56,11 @@ export default function UpdateForm(props) {
             <Grid container>
                 <Grid item xs={7}>
                     <Input
-                        name="projectName"
-                        label="Project Name"
-                        value={values.projectName}
+                        name="featureDetails"
+                        label="Feature Details"
+                        value={values.featureDetails}
                         onChange={handleInputChange}
-                        error={errors.projectName}
-                    />
-                    <Input
-                        name="projectDetails"
-                        label="Project Details"
-                        value={values.projectDetails}
-                        onChange={handleInputChange}
-                        error={errors.projectDetails}
+                        error={errors.featureDetails}
                     />
                     <Input
                       id="date"

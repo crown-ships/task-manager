@@ -5,13 +5,11 @@ import Input from "../../../controls/Input";
 import { useForm, Form } from '../../useForm';
 
 const initialFValues = {
-    projectName: '',
     projectDetails: '',
     dueDate: ''
 }
 
 export default function UpdateForm(props) {
-    const { addOrEdit, recordForEdit } = props
 
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
@@ -31,39 +29,30 @@ export default function UpdateForm(props) {
         handleInputChange,
         resetForm
     } = useForm(initialFValues, true, validate);
-    console.log(recordForEdit);
     const handleSubmit = e => {
         e.preventDefault()
         if (validate()) {
             const approved = (props.auth.user.role === "admin")?"approved":"wait";
             const input = {
-              projectName: values.projectName,
               projectDetails: values.projectDetails,
               dueDate: values.dueDate,
               approved: approved
           };
-          props.edit(input, resetForm, recordForEdit.projectName);
+          props.edit(input, resetForm, props.recordForEdit._id);
         }
     }
 
     useEffect(() => {
-        if (recordForEdit != null)
+        if (props.recordForEdit != null)
             setValues({
-                ...recordForEdit
+                ...props.recordForEdit
             })
-    }, [recordForEdit])
+    }, [props.recordForEdit])
 
     return (
         <Form onSubmit={handleSubmit}>
             <Grid container>
                 <Grid item xs={7}>
-                    <Input
-                        name="projectName"
-                        label="Project Name"
-                        value={values.projectName}
-                        onChange={handleInputChange}
-                        error={errors.projectName}
-                    />
                     <Input
                         name="projectDetails"
                         label="Project Details"

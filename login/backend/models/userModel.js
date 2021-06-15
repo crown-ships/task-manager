@@ -18,14 +18,14 @@ const userModel = new mongoose.Schema({
     type: String,
     required: true
   },
-  date: {
+  dateCreated: {
     type: Date,
     default: Date.now
   },
   role: {
     type: String,
     default: "user",
-    enum: ["admin", "user"]
+    enum: ["admin", "user","super-admin", "supervisor"]
   },
   idCard:{
     data: Buffer,

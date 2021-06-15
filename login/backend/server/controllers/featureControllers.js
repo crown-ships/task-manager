@@ -23,10 +23,14 @@ exports.addNew = async (req, res, next) => {
   const signedupFeature = new Feature({
    featureName: req.body.featureName,
    projectName: req.body.projectName,
+   projectID: req.body.projectID,
    featureDetails: req.body.featureDetails,
    dueDate: req.body.dueDate,
+   companyName: req.body.companyName,
+   companyID: req.body.companyID,
    creatorName: req.body.creatorName,
-   approved:req.body.approved
+   creatorID: req.body.creatorID,
+   ownerName:req.body.ownerName
   });
 
   await signedupFeature.save()
@@ -35,6 +39,24 @@ exports.addNew = async (req, res, next) => {
 catch(error) {
    next(error)
  }
+}
+
+exports.updateAll = async (req, res, next) => {
+try {
+  const projectID = req.query.projectID;
+  const companyID = req.query.companyID;
+  const userBody = req.body;
+
+
+  await Feature.updateMany({$or:[{projectID: projectID}, {companyID: companyID}]}, userBody);
+
+   res.status(200).json({
+    message: 'Features enabled/disabled'
+   });
+  }
+  catch (error) {
+   next(error)
+  }
 }
 
 exports.getFeatures = async (req, res, next) => {
@@ -47,20 +69,18 @@ exports.getFeatures = async (req, res, next) => {
  //validate role
 exports.update = async (req, res, next) => {
  try {
-   const featureName_upd = req.query.featureName;
-
-   const feature_upd = await Feature.find({featureName:featureName_upd});
+   const id_upd = req.query.featureID;
 
    const userBody = req.body;
 
-   if (userBody.dueDate)
-   {
-     const { errors, isValid } = validateDate(userBody);
-     // Check validation
-     if (!isValid) {
-       return res.status(400).json(errors);
-     }
-   }
+   // if (userBody.dueDate)
+   // {
+   //   const { errors, isValid } = validateDate(userBody);
+   //   // Check validation
+   //   if (!isValid) {
+   //     return res.status(400).json(errors);
+   //   }
+   // }
    if (userBody.featureName)
    {
      const { errors, isValid } = validateFeatureName(userBody);
@@ -70,8 +90,8 @@ exports.update = async (req, res, next) => {
      }
    }
 
-   await Feature.findByIdAndUpdate(feature_upd[0]._id, userBody);
-   const user = await Feature.findById(feature_upd[0]._id);
+   await Feature.findByIdAndUpdate(id_upd, userBody);
+   const user = await Feature.findById(id_upd);
 
    res.status(200).json({
     data: user,
@@ -85,10 +105,9 @@ exports.update = async (req, res, next) => {
 
 exports.delete = async (req, res, next) => {
  try {
-  const featureName_del = req.query.featureName;
-  const feature_delete = await Feature.find({featureName:featureName_del});
+  const id_del = req.query.featureID;
 
-  await Feature.findByIdAndDelete(feature_delete[0]._id);
+  await Feature.findByIdAndDelete(id_del);
   res.status(200).json({
    data: null,
    message: 'Feature has been deleted'

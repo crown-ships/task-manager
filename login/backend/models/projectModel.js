@@ -18,7 +18,14 @@ const projectModel = new mongoose.Schema({
     type: String,
     required: true
   },
+  companyID: {
+    type: String
+  },
   creatorName: {
+    type: String,
+    required: true
+  },
+  creatorID: {
     type: String,
     required: true
   },
@@ -26,6 +33,9 @@ const projectModel = new mongoose.Schema({
     type: String,
     default: "wait",
     enum: ["approved", "rejected", "wait"]
+  },
+  rejectReason: {
+    type: String
   },
   enabled:{
     type: String,
@@ -50,6 +60,10 @@ const projectModel = new mongoose.Schema({
   {
     data: Buffer,
     contentType: String
+  },
+  rejectReason: {
+    type: String,
+    default: ""
   }
 });
 

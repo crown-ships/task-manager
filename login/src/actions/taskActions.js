@@ -30,7 +30,7 @@ export const deleteTask = (userData, history) => dispatch => {
   console.log(userData);
   axios
     .delete("http://localhost:4000/api/delTask", {params:userData})
-    .then(res => history.push("/tasks"))
+    .then(res => history.push("/projects"))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
@@ -53,6 +53,20 @@ export const getAllTasks = (userData, history) => {
       })
     );
   }
+};
+
+export const updateAllTasks = (userData, history) => dispatch => {
+  axios
+    .post("http://localhost:4000/api/updAllTasks", userData.body, {params:userData.params})
+    .then(res => {
+      console.log("updated");
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
 };
 
 export const registerTask = (userData, history) => dispatch => {

@@ -25,6 +25,16 @@ module.exports = function validateProjectInput(data) {
       errors.projectName = "Name cannot exceed length of 50 characters.";
     }
 
+  if (Validator.isEmpty(data.ownerName)) {
+    errors.ownerName = "Name field is required.";
+  }
+  else if(!data.ownerName.match(letters)){
+      errors.ownerName = "Name can only contain alphanumeric characters."
+    }
+  if (!Validator.isLength(data.ownerName, { min: 0, max: 50 })) {
+      errors.ownerName = "Name cannot exceed length of 50 characters.";
+    }
+
 // Details checks
   if (Validator.isEmpty(data.projectDetails)) {
     errors.projectDetails = "Details field is required.";

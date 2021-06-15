@@ -18,10 +18,7 @@ export const updateUser = (userData, history) => dispatch => {
     .then(res => {
       console.log("updated");
 
-      if(userData.role === "basic")
-        history.push("/basic-dashboard")
-      else if (userData.role === "admin")
-        history.push("/admin/employees")
+     history.push("/users")
     })
     .catch(err =>
       dispatch({
@@ -35,7 +32,7 @@ export const deleteUser = (userData, history) => dispatch => {
   console.log(userData);
   axios
     .delete("http://localhost:4000/api/users", {params:userData})
-    .then(res => history.push("/admin/employees"))
+    .then(res => history.push("/users"))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,

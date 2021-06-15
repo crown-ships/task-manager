@@ -6,6 +6,7 @@ const mongoose = require ('mongoose');
 const validateTaskInput = require("../../validation/task/addNew");
 const validateTaskName = require("../../validation/task/validateTaskName");
 const validateDate = require("../../validation/validateDate");
+const validateOwnerName = require("../../validation/task/validateOwnerName");
 
 exports.addNew = async (req, res, next) => {
  try {
@@ -23,10 +24,16 @@ exports.addNew = async (req, res, next) => {
   const signedupTask = new Task({
    taskName: req.body.taskName,
    featureName: req.body.featureName,
+   featureID: req.body.featureID,
+   projectName: req.body.projectName,
+   projectID: req.body.projectID,
+   companyName: req.body.companyName,
+   companyID: req.body.companyID,
    taskDetails: req.body.taskDetails,
    dueDate: req.body.dueDate,
+   ownerName: req.body.ownerName,
    creatorName: req.body.creatorName,
-   approved:req.body.approved
+   creatorID:req.body.creatorID
   });
 
   await signedupTask.save()
@@ -44,23 +51,39 @@ exports.getTasks = async (req, res, next) => {
   });
 }
 
+exports.updateAll = async (req, res, next) => {
+try {
+  const projectID = req.query.projectID;
+  const companyID = req.query.companyID;
+  const userBody = req.body;
+
+
+  await Task.updateMany({$or:[{projectID: projectID}, {companyID: companyID}]}, userBody);
+
+   res.status(200).json({
+    message: 'Tasks enabled/disabled'
+   });
+  }
+  catch (error) {
+   next(error)
+  }
+}
+
  //validate role
 exports.update = async (req, res, next) => {
  try {
-   const taskName_upd = req.query.taskName;
-
-   const task_upd = await Task.find({taskName:taskName_upd});
+   const id_upd = req.query.taskID;
 
    const userBody = req.body;
 
-   if (userBody.dueDate)
-   {
-     const { errors, isValid } = validateDate(userBody);
-     // Check validation
-     if (!isValid) {
-       return res.status(400).json(errors);
-     }
-   }
+   // if (userBody.dueDate !== 'mm/dd/yyyy')
+   // {
+   //   const { errors, isValid } = validateDate(userBody);
+   //   // Check validation
+   //   if (!isValid) {
+   //     return res.status(400).json(errors);
+   //   }
+   // }
    if (userBody.taskName)
    {
      const { errors, isValid } = validateTaskName(userBody);
@@ -69,9 +92,17 @@ exports.update = async (req, res, next) => {
        return res.status(400).json(errors);
      }
    }
+   if (userBody.ownerName)
+   {
+     const { errors, isValid } = validateOwnerName(userBody);
+     // Check validation
+     if (!isValid) {
+       return res.status(400).json(errors);
+     }
+   }
 
-   await Task.findByIdAndUpdate(task_upd[0]._id, userBody);
-   const user = await Task.findById(task_upd[0]._id);
+   await Task.findByIdAndUpdate(id_upd, userBody);
+   const user = await Task.findById(id_upd);
 
    res.status(200).json({
     data: user,
@@ -85,10 +116,9 @@ exports.update = async (req, res, next) => {
 
 exports.delete = async (req, res, next) => {
  try {
-  const taskName_del = req.query.taskName;
-  const task_delete = await Task.find({taskName:taskName_del});
+  const id_del = req.query.taskID;
 
-  await Task.findByIdAndDelete(task_delete[0]._id);
+  await Task.findByIdAndDelete(id_del);
   res.status(200).json({
    data: null,
    message: 'Task has been deleted'

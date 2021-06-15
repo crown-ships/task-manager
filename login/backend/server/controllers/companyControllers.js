@@ -21,7 +21,7 @@ exports.addNew = async (req, res, next) => {
 
   const email = req.body.email;
   const user = await Company.findOne({ email });
-  if (user) return res.status(400).json({data: "Company already exists."});
+  if (user) return res.status(400).json({data: "Company email already exists."});
 
   const signedupCompany = new Company({
    companyName: req.body.companyName,
@@ -48,10 +48,7 @@ exports.getCompanies = async (req, res, next) => {
  //validate role
 exports.update = async (req, res, next) => {
  try {
-   const email_upd = req.query.emailupdate;
-
-   const company_upd = await Company.find({email:email_upd});
-
+   const id_Upd = req.query.idupdate;
    const userBody = req.body;
 
    if (userBody.email)
@@ -89,8 +86,8 @@ exports.update = async (req, res, next) => {
        return res.status(400).json(errors);
      }
    }
-   await Company.findByIdAndUpdate(company_upd[0]._id, userBody);
-   const user = await Company.findById(company_upd[0]._id);
+   await Company.findByIdAndUpdate(id_Upd, userBody);
+   const user = await Company.findById(id_Upd);
 
    res.status(200).json({
     data: user,
@@ -104,10 +101,9 @@ exports.update = async (req, res, next) => {
 
 exports.delete = async (req, res, next) => {
  try {
-  const email_del = req.query.emailDelete;
-  const company_delete = await Company.find({email:email_del});
+  const id_del = req.query.idDelete;
 
-  await Company.findByIdAndDelete(company_delete[0]._id);
+  await Company.findByIdAndDelete(id_del);
   res.status(200).json({
    data: null,
    message: 'User has been deleted'

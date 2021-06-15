@@ -5,9 +5,10 @@ import Input from "../../../controls/Input";
 import { useForm, Form } from '../../useForm';
 
 const initialFValues = {
-    projectName: '',
-    projectDetails: '',
-    dueDate: ''
+    taskName: '',
+    taskDetails: '',
+    dueDate: '',
+    percentComplete:0
 }
 
 export default function UpdateForm(props) {
@@ -35,14 +36,14 @@ export default function UpdateForm(props) {
     const handleSubmit = e => {
         e.preventDefault()
         if (validate()) {
-            const approved = (props.auth.user.role === "admin")?"approved":"wait";
             const input = {
-              projectName: values.projectName,
-              projectDetails: values.projectDetails,
+              taskName: values.taskName,
+              taskDetails: values.taskDetails,
               dueDate: values.dueDate,
-              approved: approved
+              percentComplete: parseInt(values.percentComplete)
           };
-          props.edit(input, resetForm, recordForEdit.projectName);
+          console.log(input);
+          props.edit(input, resetForm, recordForEdit._id);
         }
     }
 
@@ -58,23 +59,29 @@ export default function UpdateForm(props) {
             <Grid container>
                 <Grid item xs={7}>
                     <Input
-                        name="projectName"
+                        name="taskName"
                         label="Project Name"
-                        value={values.projectName}
+                        value={values.taskName}
                         onChange={handleInputChange}
-                        error={errors.projectName}
+                        error={errors.taskName}
                     />
                     <Input
-                        name="projectDetails"
+                        name="taskDetails"
                         label="Project Details"
-                        value={values.projectDetails}
+                        value={values.taskDetails}
                         onChange={handleInputChange}
-                        error={errors.projectDetails}
+                        error={errors.taskDetails}
+                    />
+                    <Input
+                        name="percentComplete"
+                        label="Progress"
+                        value={values.percentComplete}
+                        onChange={handleInputChange}
+                        error={errors.percentComplete}
                     />
                     <Input
                       id="date"
                       type="date"
-                      defaultValue="2017-05-24"
                       InputLabelProps={{
                         shrink: true,
                       }}

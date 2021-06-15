@@ -18,22 +18,27 @@ const featureModel = new mongoose.Schema({
     type: String,
     required: true
   },
+  projectID: {
+    type: String
+  },
+  companyName: {
+    type: String
+  },
+  companyID: {
+    type: String
+  },
   creatorName: {
     type: String,
     required: true
   },
-  approved: {
+  creatorID: {
     type: String,
-    default: "wait",
-    enum: ["approved", "rejected", "wait"]
+    required: true
   },
   enabled:{
     type: String,
     default: "true",
     enum: ["true","false"]
-  },
-  status: {
-    type: String
   },
   percentComplete:{
     type: Number,

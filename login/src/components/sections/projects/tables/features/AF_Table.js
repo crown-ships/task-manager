@@ -4,8 +4,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import FormControl from '@material-ui/core/FormControl';
+import PropTypes from "prop-types";
 import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
 import AddIcon from '@material-ui/icons/Add';
+import Typography from '@material-ui/core/Typography';
 import {Search} from '@material-ui/icons';
 import TableCell from '@material-ui/core/TableCell';
 import Paper from '@material-ui/core/Paper';
@@ -28,11 +31,41 @@ import RegisterForm from "../../forms/registerFeatureForm"
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import CircularProgress from '@material-ui/core/CircularProgress';
 // Generate Order Data
 function createData(id ,name, date, details, createdBy, update,del) {
   return { _id:id, featureName: name, dueDate: date, featureDetails: details, creatorName: createdBy, updated:update,delete:del};
 }
 
+function CircularProgressWithLabel(props) {
+  return (
+    <Box position="relative" display="inline-flex">
+      <CircularProgress variant="determinate" {...props} />
+      <Box
+        top={0}
+        left={0}
+        bottom={0}
+        right={0}
+        position="absolute"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Typography variant="caption" component="div" color="textSecondary">{`${Math.round(
+          props.value,
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
+
+CircularProgressWithLabel.propTypes = {
+  /**
+   * The value of the progress indicator for the determinate and buffer variants.
+   * Value between 0 and 100.
+   */
+  value: PropTypes.number.isRequired,
+};
 const useStyles = makeStyles(theme => ({
     pageContent: {
         margin: theme.spacing(5),
@@ -54,11 +87,12 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const headCells = [
-    { id: 'featureName', label: 'Task Name' },
+    { id: 'featureName', label: 'Feature Name' },
     { id: 'dueDate', label: 'Due Date' },
     { id: 'creatorName', label: 'Creator' },
     { id: 'featureDetails', label: 'Task Details'},
-    { id: 'companyName', label: 'Company Name'},
+    { id: 'projectName', label: 'Project Name'},
+    { id: 'percentComplete', label: 'Progress'},
     { id: 'update', label: 'Update', disableSorting: true },
     { id: 'delete', label: 'Delete', disableSorting: true }
 ];
@@ -75,18 +109,20 @@ const getData = (prop) => {
   return prop.getAllFeatures({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 const getDropdownList = (prop) => {
-  return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  return prop.getAllProjects({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
 
-export default function AP_Table(props) {
+
+export default function AF_Table(props) {
 
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
   const [list, setList] = React.useState([]);
-  const [company, setCompany] = React.useState("");
+  const [project, setProject] = React.useState("");
+  const [allProjects, setAllProjects] = React.useState([]);
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
@@ -95,9 +131,10 @@ export default function AP_Table(props) {
 
   React.useEffect(async () => {
     const d = await getDropdownList(props);
+    setAllProjects(d.data);
     var complist = d.data.map(function(item) {
       if(item.enabled === "true")
-        return item.companyName;
+        return item.projectName;
       else
         return "0"
     });
@@ -122,15 +159,60 @@ export default function AP_Table(props) {
 
   React.useEffect(async () => {
     const d = await getData(props);
+    var features = d.data.map(function(item) {
+      return ({pID: item.projectID, progress:item.percentComplete});
+    });
+    var i;
+    var j;
+    var k;
+    var sum = [];
+    var labels = [];
+    for (i=0; i<features.length; i++) {
+      labels[i] = features[i].pID;
+    }
+    var unique = labels.filter((v, i, a) => a.indexOf(v) === i);
+    var projectProgress = [];
+    var count = 0;
+    for (j=0; j<unique.length; j++) {
+      sum[j] = 0;
+      count = 0;
+      for(k=0; k<features.length; k++){
+        if (features[k].pID.includes(unique[j])){
+          sum[j] = sum[j] + features[k].progress;
+          count++;
+        }
+      }
+      projectProgress[j] = {projectID:unique[j], percentComplete: (sum[j]/count)};
+    }
+    var input;
+
+    for(i=0; i<projectProgress.length; i++){
+      input = {
+        params: {
+          email: props.auth.user.email,
+          projectID: projectProgress[i].projectID,
+          auth: props.auth.isAuthenticated
+        },
+        body: {
+          percentComplete: projectProgress[i].percentComplete
+        }
+      };
+      props.updateProject(input, props.history);
+    }
+
+  },[notify]);
+
+  React.useEffect(async () => {
+    const d = await getData(props);
     setData(d.data);
     setRecords(d.data);
     console.log(d.data);
     setFilterFn({
         fn: items => {
-            if (company == "")
+            if (project == "")
                 return items;
             else
-                return items.filter(x => x.companyName.includes(company) && x.approved.includes("approved"))
+                return items.filter(x => x.projectName.includes(project))
         }
     })
   },[notify, list]);
@@ -162,13 +244,13 @@ export default function AP_Table(props) {
   const handleChange = (event) => {
     let val = event.target;
     console.log(val.value);
-    setCompany(val.value);
+    setProject(val.value);
     setFilterFn({
         fn: items => {
             if (val.value == "")
                 return items;
             else
-                return items.filter(x => x.companyName.includes(val.value) && x.approved.includes("approved"))
+                return items.filter(x => x.projectName.includes(val.value))
         }
     })
 
@@ -232,7 +314,7 @@ export default function AP_Table(props) {
     })
 
     const input = {
-      featureName: feature.featureName,
+      featureID: feature._id,
       email: props.auth.user.email,
       auth: props.auth.isAuthenticated
     }
@@ -275,15 +357,15 @@ export default function AP_Table(props) {
           </Grid>
           <Grid item xs={3}>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
+              <InputLabel htmlFor="outlined-project-native-simple">Project</InputLabel>
               <Select
                 native
                 value={state.age}
                 onChange={handleChange}
-                label="Company"
+                label="Project"
                 inputProps={{
-                  name: 'company',
-                  id: 'outlined-company-native-simple',
+                  name: 'project',
+                  id: 'outlined-project-native-simple',
                 }}
               >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
               </Select>
@@ -296,7 +378,7 @@ export default function AP_Table(props) {
                 startIcon={<AddIcon />}
                 className={classes.newButton}
                 onClick={() => { setOpenRegPopup(true); }}
-                disabled = {(company==="")}
+                disabled = {(project==="")}
             />
           </Grid>
         </Grid>
@@ -311,7 +393,8 @@ export default function AP_Table(props) {
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
                 <TableCell>{row.creatorName}</TableCell>
                 <TableCell>{row.featureDetails}</TableCell>
-                <TableCell>{row.companyName}</TableCell>
+                <TableCell>{row.projectName}</TableCell>
+                <TableCell>  <CircularProgressWithLabel value={row.percentComplete} /></TableCell>
                 <TableCell>
                   <ActionButton
                     color="light"
@@ -353,7 +436,7 @@ export default function AP_Table(props) {
         openPopup={openRegPopup}
         setOpenPopup={setOpenRegPopup}
       >
-        <RegisterForm {...props} create={create} company={company}/>
+        <RegisterForm {...props} create={create} project={project} allProjects = {allProjects}/>
       </Popup>
       <Notification
                notify={notify}
