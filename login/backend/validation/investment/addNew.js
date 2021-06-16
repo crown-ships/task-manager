@@ -42,7 +42,7 @@ module.exports = function validateInvestmentInput(data) {
 if (Validator.isEmpty(data.paymentTerms)) {
   errors.paymentTerms = "Payment terms field is required.";
 }
-else if(!(Validator.equals(data.paymentTerms,"monthly")|| Validator.equals(data.paymentTerms,"quarterly") || Validator.equals(data.paymentTerms,"half-yearly")|| Validator.equals(data.paymentTerms,"yearly"))) {
+else if(!(Validator.equals(data.paymentTerms,"none") || Validator.equals(data.paymentTerms,"monthly")|| Validator.equals(data.paymentTerms,"quarterly") || Validator.equals(data.paymentTerms,"half-yearly")|| Validator.equals(data.paymentTerms,"yearly"))) {
   errors.paymentTerms = "Payment terms is invalid.";
 }
 

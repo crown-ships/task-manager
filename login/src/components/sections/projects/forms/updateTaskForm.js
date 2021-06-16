@@ -8,6 +8,7 @@ const initialFValues = {
     taskName: '',
     taskDetails: '',
     dueDate: '',
+    ownerName:'',
     percentComplete:0
 }
 
@@ -40,7 +41,8 @@ export default function UpdateForm(props) {
               taskName: values.taskName,
               taskDetails: values.taskDetails,
               dueDate: values.dueDate,
-              percentComplete: parseInt(values.percentComplete)
+              percentComplete: parseInt(values.percentComplete),
+              ownerName: values.ownerName
           };
           console.log(input);
           props.edit(input, resetForm, recordForEdit._id);
@@ -71,6 +73,13 @@ export default function UpdateForm(props) {
                         value={values.taskDetails}
                         onChange={handleInputChange}
                         error={errors.taskDetails}
+                    />
+                    <Input
+                        name="ownerName"
+                        label="Owner Name"
+                        value={values.ownerName}
+                        onChange={handleInputChange}
+                        error={errors.ownerName}
                     />
                     <Input
                         name="percentComplete"

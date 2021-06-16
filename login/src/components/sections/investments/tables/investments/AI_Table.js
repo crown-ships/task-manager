@@ -76,6 +76,8 @@ const useStyles = makeStyles(theme => ({
 
 const headCells = [
     { id: 'investorName', label: 'Investor Name' },
+    { id: 'investmentName', label: 'Investment Name' },
+    { id: 'approved', label: 'Approved' },
     { id: 'startDate', label: 'Start Date' },
     { id: 'dueDate', label: 'Due Date' },
     { id: 'capitalAmt', label: 'Capital Amount'},
@@ -99,6 +101,10 @@ const getData = (prop) => {
   return prop.getAllInvestments({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
+const getDropdownList = (prop) => {
+  return prop.getAllInvestors({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+}
+
 export default function AP_Table(props) {
 
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
@@ -106,6 +112,8 @@ export default function AP_Table(props) {
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
   const [list, setList] = React.useState([]);
+  const [investor, setInvestor] = React.useState("");
+  const [allInvestors, setAllInvestors] = React.useState([]);
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
@@ -113,12 +121,40 @@ export default function AP_Table(props) {
   const classes = useStyles();
 
   React.useEffect(async () => {
+    const d = await getDropdownList(props);
+    setAllInvestors(d.data);
+    var complist = d.data.map(function(item) {
+      if (item.approved === "approved")
+        return item.investorName;
+      else
+        return "0"
+    });
+
+    var j;
+    var len = 0;
+    var trimlist = [];
+    for(j=0; j<complist.length; j++) {
+      if(complist[j] !== "0"){
+        trimlist[len++] = complist[j];
+      }
+    }
+    var selList = [];
+    var i;
+    selList[0] = {key:0, item: ""};
+    for(i=0; i<len; i++) {
+      selList[i+1] = {key:i+1, item: trimlist[i]};
+    }
+    console.log(selList);
+    setList(selList);
+  },[]);
+
+  React.useEffect(async () => {
     const d = await getData(props);
     setData(d.data);
     setRecords(d.data);
     setFilterFn({
         fn: items => {
-          return items;//.filter(x =>  x.approved.includes("approved"))
+          return items.filter(x =>  x.approved.includes("approved"))
         }
     })
   },[notify, list]);
@@ -136,13 +172,27 @@ export default function AP_Table(props) {
     setFilterFn({
         fn: items => {
             if (target.value == "")
-                return items;
+                return items.filter(x =>  x.approved.includes("approved"))
             else
-                return items.filter(x => x.investorName.toLowerCase().includes(target.value.toLowerCase()))
+                return items.filter(x => x.investmentName.toLowerCase().includes(target.value.toLowerCase()) && x.approved.includes("approved"))
         }
     })
   }
 
+  const handleChange = (event) => {
+    let val = event.target;
+    console.log(val.value);
+    setInvestor(val.value);
+    setFilterFn({
+        fn: items => {
+            if (val.value == "")
+                return items.filter(x => x.approved.includes("approved"));
+            else
+                return items.filter(x => x.investorName.includes(val.value) && x.approved.includes("approved"))
+        }
+    })
+
+  };
   const openInEditPopup = item => {
     setRecordForEdit(item);
     setOpenEditPopup(true);
@@ -184,14 +234,17 @@ export default function AP_Table(props) {
             auth: props.auth.isAuthenticated
           },
           body: {
-            investmentName: data.investorName,
+            investorName: data.investorName,
+            investorID: data.investorID,
+            investmentName: data.investmentName,
             paymentTerms: data.paymentTerms,
             totalInterestAmt: ((data.profitPercent*data.capitalAmt)/100),
             returnAmt: ((data.profitPercent*data.capitalAmt)/100),
+            localDueDate: data.dueDate,
             dueDate: data.dueDate
           }
         }
-        return props.registerReturn(input, props.history);
+        props.registerReturn(input, props.history);
       }
       else {
         var noOfPayments = months/divider;
@@ -204,16 +257,18 @@ export default function AP_Table(props) {
               auth: props.auth.isAuthenticated
             },
             body: {
-              investmentName: data.investorName,
+              investorName: data.investorName,
+              investorID: data.investorID,
+              investmentName: data.investmentName,
               paymentTerms: data.paymentTerms,
               totalInterestAmt: ((data.profitPercent*data.capitalAmt)/100),
               returnAmt: ((data.profitPercent*data.capitalAmt)/100)/noOfPayments,
-              dueDate: date1.setMonth(date1.getMonth() + divider)
+              localDueDate: date1.setMonth(date1.getMonth() + divider),
+              dueDate: data.dueDate
             }
           }
-          return props.registerReturn(input, props.history);
+          props.registerReturn(input, props.history);
         }
-
       }
   }
 
@@ -322,7 +377,7 @@ export default function AP_Table(props) {
 
       <Toolbar>
         <Grid container>
-          <Grid item xs={9}>
+          <Grid item xs={7}>
             <Input
                 label="Search Investments"
                 className={classes.searchInput}
@@ -335,12 +390,28 @@ export default function AP_Table(props) {
             />
           </Grid>
           <Grid item xs={3}>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel htmlFor="outlined-company-native-simple">Investor</InputLabel>
+              <Select
+                native
+                onChange={handleChange}
+                label="Investor"
+                inputProps={{
+                  name: '// investor',
+                  id: 'outlined-investor-native-simple',
+                }}
+              >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={2}>
             <Button
                 text="Add New"
                 variant="outlined"
                 startIcon={<AddIcon />}
                 className={classes.newButton}
                 onClick={() => { setOpenRegPopup(true); }}
+                disabled = {(investor==="")}
             />
           </Grid>
         </Grid>
@@ -351,7 +422,8 @@ export default function AP_Table(props) {
             {
               recordsAfterPagingAndSorting().map(row =>
               (<TableRow key={row._id}>
-                <TableCell backgroundColor = "primary">{row.investorName}</TableCell>
+                <TableCell>{row.investorName}</TableCell>
+                <TableCell>{row.investmentName}</TableCell>
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
                 <TableCell>{dateToString(row.startDate)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
@@ -401,7 +473,7 @@ export default function AP_Table(props) {
         openPopup={openRegPopup}
         setOpenPopup={setOpenRegPopup}
       >
-        <RegisterForm {...props} create={create} />
+        <RegisterForm {...props} create={create} investor={investor} allInvestors={allInvestors} />
       </Popup>
       <Notification
                notify={notify}

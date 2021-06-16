@@ -13,14 +13,17 @@ import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SettingsIcon from '@material-ui/icons/Settings';
-
+import BlockIcon from '@material-ui/icons/Block';
+import CancelIcon from '@material-ui/icons/Cancel';
+import ContactsIcon from '@material-ui/icons/Contacts';
 import BusinessIcon from '@material-ui/icons/Business';
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 
 export const mainListItems = (
   <div>
     <ListItem button component={Link} to="/dashboard">
       <ListItemIcon>
-        <AssignmentIcon />
+        <DashboardIcon />
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
     </ListItem>
@@ -36,6 +39,12 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Approval" />
     </ListItem>
+    <ListItem button component={Link} to="/rejection">
+      <ListItemIcon>
+        <CancelIcon />
+      </ListItemIcon>
+      <ListItemText primary="Rejection" />
+    </ListItem>
     <ListItem button component={Link} to="/companies">
       <ListItemIcon>
         <BusinessIcon />
@@ -44,13 +53,13 @@ export const mainListItems = (
     </ListItem>
     <ListItem button component={Link} to="/investments">
       <ListItemIcon>
-        <BusinessIcon />
+        <MonetizationOnIcon />
       </ListItemIcon>
       <ListItemText primary="Investments" />
     </ListItem>
     <ListItem button component={Link} to="/vendors">
       <ListItemIcon>
-        <BusinessIcon />
+        <ContactsIcon />
       </ListItemIcon>
       <ListItemText primary="Vendors" />
     </ListItem>

@@ -60,14 +60,14 @@ exports.update = async (req, res, next) => {
 
    const userBody = req.body;
 
-   if (userBody.dueDate)
-   {
-     const { errors, isValid } = validateDate(userBody);
-     // Check validation
-     if (!isValid) {
-       return res.status(400).json(errors);
-     }
-   }
+   // if (userBody.dueDate)
+   // {
+   //   const { errors, isValid } = validateDate(userBody);
+   //   // Check validation
+   //   if (!isValid) {
+   //     return res.status(400).json(errors);
+   //   }
+   // }
 
    if (userBody.capitalPaid)
    {

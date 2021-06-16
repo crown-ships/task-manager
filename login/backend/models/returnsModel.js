@@ -6,8 +6,7 @@ const returnsModel = new mongoose.Schema({
     required: true
   },
   investmentID: {
-    type: String,
-    required: true
+    type: String
   },
   investorName: {
     type: String,

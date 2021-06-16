@@ -14,7 +14,6 @@ const initialFValues = {
 }
 
 export default function RegisterForm(props) {
-    const { addOrEdit, recordForEdit } = props
 
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
@@ -64,13 +63,6 @@ export default function RegisterForm(props) {
             props.create(input, resetForm);
         }
     }
-
-    useEffect(() => {
-        if (recordForEdit != null)
-            setValues({
-                ...recordForEdit
-            })
-    }, [recordForEdit])
 
     return (
         <Form onSubmit={handleSubmit}>

@@ -14,41 +14,25 @@ import Toolbar from '@material-ui/core/Toolbar';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TableRow from '@material-ui/core/TableRow';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import Switch from '@material-ui/core/Switch';
-import ActionButton from "../../../../controls/ActionButton"
-import Button from "../../../../controls/Button"
-import Input from "../../../../controls/Input"
-import ConfirmDialog from "../../../../elements/ConfirmDialog"
-import Notification from "../../../../elements/Notification"
-import Popup from "../../../../elements/Popup"
-import UpdateForm from "../../forms/updateVendorForm"
-import UseTable from "../../../useTable"
-import RegisterForm from "../../forms/registerVendorForm"
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
+import ActionButton from "../../../controls/ActionButton"
+import Button from "../../../controls/Button"
+import Input from "../../../controls/Input"
+import Notification from "../../../elements/Notification"
+import Popup from "../../../elements/Popup"
 import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import HelpIcon from '@material-ui/icons/Help';
-import PropTypes from "prop-types";
+import UseTable from "../../useTable"
+
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 // Generate Order Data
 function createData() {
-  return {
-    _id:"",
-    vendorName: "",
-    vendorEmail: "",
-    contactNo: "",
-    contractAmt: 0,
-    startDate: "",
-    endDate:"",
-    pendingAmt:0,
-    creatorName: "",
-    approved: ""
-  }
+  return { _id:"", vendorName: "", endDate: "ttt", startDate: "uyyy", contractAmt: "", updated:"",delete:""};
 }
 
 const useStyles = makeStyles(theme => ({
@@ -74,13 +58,10 @@ const useStyles = makeStyles(theme => ({
 const headCells = [
     { id: 'vendorName', label: 'Vendor Name' },
     { id: 'approved', label: 'Approved' },
-    { id: 'vendorEmail', label: 'Email' },
     { id: 'startDate', label: 'Start Date' },
-    { id: 'endDate', label: 'End Date' },
-    { id: 'contractAmt', label: 'Contract Amount' },
-    { id: 'pendingAmt', label: 'Pending Amount'},
-    { id: 'contactNo', label: 'Contact No.'},
-    { id: 'update', label: 'Update', disableSorting: true }
+    { id: 'dueDate', label: 'Due Date' },
+    { id: 'contractAmt', label: 'Contract Amount'},
+    { id: 'rejectReason', label: 'rejectReason'}
 ];
 
 const rows = [
@@ -95,99 +76,55 @@ const getData = (prop) => {
   return prop.getAllVendors({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
-export default function UV_Table(props) {
-  const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
+export default function VendorRejectionTable(props) {
+
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
-  const [recordForEdit, setRecordForEdit] = React.useState(null);
-  const [openEditPopup, setOpenEditPopup] = React.useState(false);
-  const [openRegPopup, setOpenRegPopup] = React.useState(false);
-  const [records, setRecords] = React.useState(data);
+  const [openRejectPopup, setOpenRejectPopup] = React.useState(false);
   const classes = useStyles();
 
+  const openInRejectPopup = item => {
+    setOpenRejectPopup(true);
+  }
 
   React.useEffect(async () => {
     const d = await getData(props);
-        console.log(d.data);
     setData(d.data);
-    setRecords(d.data);
+    setFilterFn({
+        fn: items => {
+            return items.filter(x =>  x.approved.includes("rejected"))
+        }
+    })
   },[notify]);
 
-  console.log(data);
+
   const {
           TblContainer,
           TblHead,
           TblPagination,
           recordsAfterPagingAndSorting
-      } = UseTable(records, headCells, filterFn);
+      } = UseTable(data, headCells, filterFn);
 
   const handleSearch = e => {
     let target = e.target;
     setFilterFn({
         fn: items => {
             if (target.value == "")
-                return items;
+                return items.filter(x => x.approved.includes("rejected"));
             else
                 return items.filter(x => x.vendorName.toLowerCase().includes(target.value.toLowerCase()))
         }
     })
   }
-
-  const openInEditPopup = item => {
-    setRecordForEdit(item);
-    setOpenEditPopup(true);
-  }
-
-  const openInRegPopup = item => {
-
-    setOpenRegPopup(true);
-  }
-
-  const create = (data, resetForm) => {
-    const input = {
-      params: {
-        email: props.auth.user.email,
-        auth: props.auth.isAuthenticated
-      },
-      body: data
-    };
-    console.log(input);
-    props.registerVendor(input, props.history);
-    resetForm();
-    setOpenRegPopup(false);
-    setNotify({
-      isOpen: true,
-      message: "Registered Successfully.",
-      type: 'success'
+  const [state, setState] = React.useState({
+      checkedA: true,
+      checkedB: true,
     });
-  }
-  const edit = (data, resetForm, og_id) => {
-
-    const input = {
-      params: {
-        email: props.auth.user.email,
-        vendorID: og_id,
-        auth: props.auth.isAuthenticated
-      },
-      body: data
-    };
-
-      console.log(input);
-      props.updateVendor(input, props.history);
-      resetForm();
-      setRecordForEdit(null);
-      setOpenEditPopup(false);
-      setNotify({
-        isOpen: true,
-        message: "Updated Successfully",
-        type: 'success'
-      });
-
-  }
 
 
   const dateToString = (date) => {
+    console.log(date);
     var d = date.toString();
 
     d = d.substring(0, d.indexOf('T'));
@@ -210,11 +147,13 @@ export default function UV_Table(props) {
       return <CancelIcon fontSize="small"  style={{ color: "#DC143C" }}/>
     }
   }
+
   return (
     <React.Fragment>
+    <Paper className={classes.pageContent}>
       <Toolbar>
         <Grid container>
-          <Grid item xs={9}>
+          <Grid item xs={12}>
             <Input
                 label="Search Vendors"
                 className={classes.searchInput}
@@ -224,15 +163,6 @@ export default function UV_Table(props) {
                     </InputAdornment>)
                 }}
                 onChange={handleSearch}
-            />
-          </Grid>
-          <Grid item xs={3}>
-            <Button
-                text="Add New"
-                variant="outlined"
-                startIcon={<AddIcon />}
-                className={classes.newButton}
-                onClick={() => { setOpenRegPopup(true); }}
             />
           </Grid>
         </Grid>
@@ -245,49 +175,20 @@ export default function UV_Table(props) {
               (<TableRow key={row._id}>
                 <TableCell>{row.vendorName}</TableCell>
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
-                <TableCell>{row.vendorEmail}</TableCell>
                 <TableCell>{dateToString(row.startDate)}</TableCell>
                 <TableCell>{dateToString(row.endDate)}</TableCell>
                 <TableCell>{row.contractAmt}</TableCell>
-                <TableCell>{row.pendingAmt}</TableCell>
-                <TableCell>{row.contactNo}</TableCell>
-                <TableCell>
-                  <ActionButton
-                    color="light"
-                    onClick={() => { openInEditPopup(row) }}>
-                    <EditOutlinedIcon fontSize="small" />
-                  </ActionButton>
-                </TableCell>
+                <TableCell>{row.rejectReason}</TableCell>
               </TableRow>
           ))}
         </TableBody>
       </TblContainer>
       <TblPagination />
-
-      <Popup
-        title="Edit Vendor Details"
-        openPopup={openEditPopup}
-        setOpenPopup={setOpenEditPopup}
-      >
-        <UpdateForm {...props}
-            recordForEdit={recordForEdit}
-            edit={edit} />
-      </Popup>
-      <Popup
-        title="Register New Vendor"
-        openPopup={openRegPopup}
-        setOpenPopup={setOpenRegPopup}
-      >
-        <RegisterForm {...props} create={create} />
-      </Popup>
+    </Paper>
       <Notification
                notify={notify}
                setNotify={setNotify}
            />
-      <ConfirmDialog
-        confirmDialog={confirmDialog}
-        setConfirmDialog={setConfirmDialog}
-      />
     </React.Fragment>
   );
 }

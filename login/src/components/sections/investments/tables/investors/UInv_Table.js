@@ -1,15 +1,17 @@
 import React from 'react';
 import Link from '@material-ui/core/Link';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, createMuiTheme } from '@material-ui/core/styles';
+import red from "@material-ui/core/colors/red";
+import orange from "@material-ui/core/colors/orange";
+import green from "@material-ui/core/colors/green";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import FormControl from '@material-ui/core/FormControl';
-import PropTypes from "prop-types";
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import AddIcon from '@material-ui/icons/Add';
-import Typography from '@material-ui/core/Typography';
 import {Search} from '@material-ui/icons';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import HelpIcon from '@material-ui/icons/Help';
 import TableCell from '@material-ui/core/TableCell';
 import Paper from '@material-ui/core/Paper';
 import TableHead from '@material-ui/core/TableHead';
@@ -25,15 +27,31 @@ import Input from "../../../../controls/Input"
 import ConfirmDialog from "../../../../elements/ConfirmDialog"
 import Notification from "../../../../elements/Notification"
 import Popup from "../../../../elements/Popup"
+import UpdateForm from "../../forms/updateProjectForm"
 import UseTable from "../../../useTable"
+import RegisterForm from "../../forms/registerProjectForm"
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import CircularProgress from '@material-ui/core/CircularProgress';
-// Generate Order Data
-function createData(id ,name, date, details, createdBy, update,del) {
-  return { _id:id, investmentName: name, dueDate: date, investmentDetails: details, creatorName: createdBy, updated:update,delete:del};
+import CancelIcon from '@material-ui/icons/Cancel';
+
+function createData(id ,name, app, date, details, createdBy, update,del) {
+  return { _id:id, projectName: name, approved: app ,dueDate: date, projectDetails: details, creatorName: createdBy, updated:update,delete:del};
 }
+
+const theme = createMuiTheme({
+  palette: {
+    green: {
+      main: '#1a9c34'
+    },
+    yellow: {
+      main: '#f5ca20'
+    },
+    yellow: {
+      main: '#f5ca20'
+    },
+  },
+});
 
 const useStyles = makeStyles(theme => ({
     pageContent: {
@@ -56,16 +74,23 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const headCells = [
-    { id: 'investmentName', label: 'Investment Name' },
-    { id: 'localDueDate', label: 'Next Due Date' },
-    { id: 'returnAmt', label: 'Next Payment Amount'},
-    { id: 'totalInterestAmt', label: 'Total Interest'},
-    { id: 'paymentTerms', label: 'Payment Terms'},
+    { id: 'projectName', label: 'Project Name' },
+    { id: 'approvedIcon', label: 'Approved',disableSorting: true  },
+
+    { id: 'update', label: 'Update', disableSorting: true },
     { id: 'delete', label: 'Delete', disableSorting: true }
 ];
 
 const rows = [
-  createData("", "", "", "","","","")
+  createData("", "","", "", "","","",""),
+  createData("", "", "","", "","","",""),
+  createData("", "", "","", "","","",""),
+  createData("", "", "", "","","","",""),
+  createData("", "", "", "","","","",""),
+  createData("", "", "", "","","","",""),
+  createData("", "", "", "","","","",""),
+  createData("", "", "", "","","","",""),
+  createData("", "", "", "","","","","")
 ];
 
 function preventDefault(event) {
@@ -73,22 +98,21 @@ function preventDefault(event) {
 }
 
 const getData = (prop) => {
-  return prop.getAllReturns({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  return prop.getAllProjects({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 const getDropdownList = (prop) => {
-  return prop.getAllInvestments({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
 
-
-export default function AF_Table(props) {
+export default function AP_Table(props) {
 
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
   const [list, setList] = React.useState([]);
-  const [investment, setInvestment] = React.useState("");
+  const [company, setCompany] = React.useState("");
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
@@ -98,39 +122,29 @@ export default function AF_Table(props) {
   React.useEffect(async () => {
     const d = await getDropdownList(props);
     var complist = d.data.map(function(item) {
-      return item.investmentName;
+      return item.companyName;
     });
-    console.log(complist);
-    var j;
-    var len = 0;
-    var trimlist = [];
-    for(j=0; j<complist.length; j++) {
-      if(complist[j] !== "0"){
-        trimlist[len++] = complist[j];
-      }
-    }
+    const len = complist.length;
     var selList = [];
     var i;
     selList[0] = {key:0, item: ""};
     for(i=0; i<len; i++) {
-      selList[i+1] = {key:i+1, item: trimlist[i]};
+      selList[i+1] = {key:i+1, item: complist[i]};
     }
     console.log(selList);
     setList(selList);
   },[]);
 
-
   React.useEffect(async () => {
     const d = await getData(props);
     setData(d.data);
     setRecords(d.data);
-    console.log(d.data);
     setFilterFn({
         fn: items => {
-            if (investment == "")
-                return items.filter(x => x.isPaid.includes("yes"));
+            if (company == "")
+                return items;
             else
-                return items.filter(x => x.investmentName.includes(investment) && x.isPaid.includes("yes"))
+                return items.filter(x => x.companyName.includes(company))
         }
     })
   },[notify, list]);
@@ -150,21 +164,25 @@ export default function AF_Table(props) {
             if (target.value == "")
                 return items;
             else
-                return items.filter(x => x.investmentName.toLowerCase().includes(target.value.toLowerCase()))
+                return items.filter(x => x.projectName.toLowerCase().includes(target.value))
         }
     })
   }
+  const [state, setState] = React.useState({
+      checkedA: true,
+      checkedB: true,
+    });
 
   const handleChange = (event) => {
     let val = event.target;
     console.log(val.value);
-    setInvestment(val.value);
+    setCompany(val.value);
     setFilterFn({
         fn: items => {
-          if (val.value == "")
-              return items.filter(x => x.isPaid.includes("yes"));
-          else
-              return items.filter(x => x.investmentName.includes(val.value) && x.isPaid.includes("yes"))
+            if (val.value == "")
+                return items;
+            else
+                return items.filter(x => x.companyName.includes(val.value))
         }
     })
 
@@ -188,7 +206,7 @@ export default function AF_Table(props) {
       body: data
     };
     console.log(input);
-    props.registerFeature(input, props.history);
+    props.registerProject(input, props.history);
     resetForm();
     setOpenRegPopup(false);
     setNotify({
@@ -197,19 +215,19 @@ export default function AF_Table(props) {
       type: 'success'
     });
   }
-  const edit = (data, resetForm, og_investmentName) => {
+  const edit = (data, resetForm, og_email) => {
 
     const input = {
       params: {
         email: props.auth.user.email,
-        investmentID: og_investmentName,
+        emailupdate: og_email,
         auth: props.auth.isAuthenticated
       },
       body: data
     };
 
     if(props.auth.user.role === "admin"){
-      props.updateReturn(input, props.history);
+      props.updateProject(input, props.history);
       resetForm();
       setRecordForEdit(null);
       setOpenEditPopup(false);
@@ -221,28 +239,27 @@ export default function AF_Table(props) {
     }
   }
 
-  const onDelete = investment => {
+  const onDelete = company => {
     setConfirmDialog({
         ...confirmDialog,
         isOpen: false
     })
 
     const input = {
-      investmentName: investment.investmentName,
+      emailDelete: company.email,
       email: props.auth.user.email,
       auth: props.auth.isAuthenticated
-    }
+    };
 
 
-    if(props.auth.user.role === "admin"){
-      props.deleteReturn(input, props.history);
+      props.deleteProject(input, props.history);
       setNotify({
         isOpen: true,
         message: "Deleted Successfully",
         type: 'success'
       });
 
-    }
+
   }
   const dateToString = (date) => {
     var d = date.toString();
@@ -251,15 +268,32 @@ export default function AF_Table(props) {
     return d;
   }
 
+  const approvedIcon = (status) => {
+
+    if (status === "approved") {
+      console.log(status);
+      console.log("yes");
+      return <CheckCircleIcon fontSize="small" style={{ color: "#00b386" }}/>
+    }
+    else if (status === "wait") {
+      console.log("what");
+      return <HelpIcon fontSize="small"  style={{ color: "#ffbf00" }}/>
+    }
+    else if (status === "rejected") {
+      console.log("what");
+      return <CancelIcon fontSize="small"  style={{ color: "#DC143C" }}/>
+    }
+  }
+
 
   return (
     <React.Fragment>
     <Paper className={classes.pageContent}>
       <Toolbar>
         <Grid container>
-          <Grid item xs={9}>
+          <Grid item xs={7}>
             <Input
-                label="Search Features"
+                label="Search Projects"
                 className={classes.searchInput}
                 InputProps={{
                     startAdornment: (<InputAdornment position="start">
@@ -271,18 +305,29 @@ export default function AF_Table(props) {
           </Grid>
           <Grid item xs={3}>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel htmlFor="outlined-project-native-simple">Investment</InputLabel>
+              <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
               <Select
                 native
+                value={state.age}
                 onChange={handleChange}
-                label="Project"
+                label="Company"
                 inputProps={{
-                  name: 'project',
-                  id: 'outlined-project-native-simple',
+                  name: 'company',
+                  id: 'outlined-company-native-simple',
                 }}
               >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
               </Select>
             </FormControl>
+          </Grid>
+          <Grid item xs={2}>
+            <Button
+                text="Add New"
+                variant="outlined"
+                startIcon={<AddIcon />}
+                className={classes.newButton}
+                onClick={() => { setOpenRegPopup(true); }}
+                disabled = {(company==="")}
+            />
           </Grid>
         </Grid>
       </Toolbar>
@@ -292,11 +337,19 @@ export default function AF_Table(props) {
             {
               recordsAfterPagingAndSorting().map(row =>
               (<TableRow key={row._id}>
-                <TableCell>{row.investmentName}</TableCell>
+                <TableCell>{row.projectName}</TableCell>
+                <TableCell align='center'>{approvedIcon(row.approved)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
-                <TableCell>{row.returnAmt}</TableCell>
-                <TableCell>{row.totalInterestAmt}</TableCell>
-                <TableCell>{row.paymentTerms}</TableCell>
+                <TableCell>{row.creatorName}</TableCell>
+                <TableCell>{row.projectDetails}</TableCell>
+                <TableCell>{row.companyName}</TableCell>
+                <TableCell>
+                  <ActionButton
+                    color="light"
+                    onClick={() => { openInEditPopup(row) }}>
+                    <EditOutlinedIcon fontSize="small" />
+                  </ActionButton>
+                </TableCell>
                 <TableCell>
                   <ActionButton
                     color="light"
@@ -317,6 +370,22 @@ export default function AF_Table(props) {
       </TblContainer>
       <TblPagination />
     </Paper>
+      <Popup
+        title="Edit Project Details"
+        openPopup={openEditPopup}
+        setOpenPopup={setOpenEditPopup}
+      >
+        <UpdateForm
+            recordForEdit={recordForEdit}
+            edit={edit} />
+      </Popup>
+      <Popup
+        title="Register New Project"
+        openPopup={openRegPopup}
+        setOpenPopup={setOpenRegPopup}
+      >
+        <RegisterForm {...props} create={create} company={company}/>
+      </Popup>
       <Notification
                notify={notify}
                setNotify={setNotify}

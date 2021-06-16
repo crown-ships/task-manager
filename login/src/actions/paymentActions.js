@@ -45,7 +45,7 @@ export const deletePayment = (userData, history) => dispatch => {
   console.log(userData);
   axios
     .delete("http://localhost:4000/api/delPayment", {params:userData})
-    .then(res => history.push("/payments"))
+    .then(res => history.push("/vendors"))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,

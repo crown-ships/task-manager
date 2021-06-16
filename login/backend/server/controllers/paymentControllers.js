@@ -42,7 +42,7 @@ try {
   const userBody = req.body;
 
 
-  await Payment.updateMany({vendorName: vendorID_upd}, userBody);
+  await Payment.updateMany({vendorID: vendorID_upd}, userBody);
 
    res.status(200).json({
     message: 'Payments enabled/disabled'
@@ -68,14 +68,14 @@ exports.update = async (req, res, next) => {
 
    const userBody = req.body;
 
-   if (userBody.dueDate)
-   {
-     const { errors, isValid } = validateDate(userBody);
-     // Check validation
-     if (!isValid) {
-       return res.status(400).json(errors);
-     }
-   }
+   // if (userBody.dueDate)
+   // {
+   //   const { errors, isValid } = validateDate(userBody);
+   //   // Check validation
+   //   if (!isValid) {
+   //     return res.status(400).json(errors);
+   //   }
+   // }
    if (userBody.paymentName)
    {
      const { errors, isValid } = validatePaymentName(userBody);

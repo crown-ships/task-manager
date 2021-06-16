@@ -34,7 +34,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import CircularProgress from '@material-ui/core/CircularProgress';
 // Generate Order Data
 function createData(id ,name, date, details, createdBy, update,del) {
-  return { _id:id, featureName: name, dueDate: date, featureDetails: details, creatorName: createdBy, updated:update,delete:del};
+  return { _id:id, featureName: name, dueDate: date, featureDetails: details, percentComplete: 0, creatorName: createdBy, updated:update,delete:del};
 }
 
 function CircularProgressWithLabel(props) {
@@ -89,8 +89,8 @@ const useStyles = makeStyles(theme => ({
 const headCells = [
     { id: 'featureName', label: 'Feature Name' },
     { id: 'dueDate', label: 'Due Date' },
-    { id: 'creatorName', label: 'Creator' },
-    { id: 'featureDetails', label: 'Task Details'},
+    { id: 'ownerName', label: 'Owner' },
+    { id: 'featureDetails', label: 'Feature Details'},
     { id: 'projectName', label: 'Project Name'},
     { id: 'percentComplete', label: 'Progress'},
     { id: 'update', label: 'Update', disableSorting: true },
@@ -210,7 +210,7 @@ export default function AF_Table(props) {
     setFilterFn({
         fn: items => {
             if (project == "")
-                return items;
+                return items.filter(x => x.enabled.includes("true"));
             else
                 return items.filter(x => x.projectName.includes(project))
         }
@@ -230,7 +230,7 @@ export default function AF_Table(props) {
     setFilterFn({
         fn: items => {
             if (target.value == "")
-                return items;
+                return items.filter(x => x.enabled.includes("true"));
             else
                 return items.filter(x => x.featureName.toLowerCase().includes(target.value.toLowerCase()))
         }
@@ -248,7 +248,7 @@ export default function AF_Table(props) {
     setFilterFn({
         fn: items => {
             if (val.value == "")
-                return items;
+                return items.filter(x => x.enabled.includes("true"));
             else
                 return items.filter(x => x.projectName.includes(val.value))
         }
@@ -283,12 +283,12 @@ export default function AF_Table(props) {
       type: 'success'
     });
   }
-  const edit = (data, resetForm, og_featureName) => {
+  const edit = (data, resetForm, og_id) => {
 
     const input = {
       params: {
         email: props.auth.user.email,
-        featureName: og_featureName,
+        featureID: og_id,
         auth: props.auth.isAuthenticated
       },
       body: data
@@ -301,7 +301,7 @@ export default function AF_Table(props) {
       setOpenEditPopup(false);
       setNotify({
         isOpen: true,
-        message: "Update Successfully",
+        message: "Updated Successfully",
         type: 'success'
       });
     }
@@ -391,7 +391,7 @@ export default function AF_Table(props) {
               (<TableRow key={row._id}>
                 <TableCell backgroundColor = "primary">{row.featureName}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
-                <TableCell>{row.creatorName}</TableCell>
+                <TableCell>{row.ownerName}</TableCell>
                 <TableCell>{row.featureDetails}</TableCell>
                 <TableCell>{row.projectName}</TableCell>
                 <TableCell>  <CircularProgressWithLabel value={row.percentComplete} /></TableCell>
@@ -427,7 +427,7 @@ export default function AF_Table(props) {
         openPopup={openEditPopup}
         setOpenPopup={setOpenEditPopup}
       >
-        <UpdateForm
+        <UpdateForm {...props}
             recordForEdit={recordForEdit}
             edit={edit} />
       </Popup>

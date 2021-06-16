@@ -51,6 +51,7 @@ export default function RegisterForm(props) {
               endDate:values.endDate,
               pendingAmt:values.pendingAmt,
               creatorName: props.auth.user.name,
+              creatorID: props.auth.user.id,
               approved: approved
             };
             props.create(input, resetForm);

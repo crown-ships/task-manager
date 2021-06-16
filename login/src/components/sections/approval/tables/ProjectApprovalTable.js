@@ -115,7 +115,7 @@ export default function ProjectApprovalTable(props) {
     setFilterFn({
         fn: items => {
             if (company == "")
-                return rows;
+                return items.filter(x => x.approved.includes("wait"));
             else
                 return items.filter(x => x.companyName.includes(company) && x.approved.includes("wait"))
         }
@@ -135,7 +135,7 @@ export default function ProjectApprovalTable(props) {
     setFilterFn({
         fn: items => {
             if (company == "")
-                return items;
+                return items.filter(x => x.approved.includes("wait"));
             else
                 return items.filter(x => x.taskName.toLowerCase().includes(target.value.toLowerCase()))
         }
@@ -153,7 +153,7 @@ export default function ProjectApprovalTable(props) {
       setFilterFn({
           fn: items => {
               if (val.value == "")
-                  return rows;
+                  return items;
               else
                   return items.filter(x => x.companyName.includes(val.value) && x.approved.includes("wait"))
           }

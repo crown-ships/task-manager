@@ -14,41 +14,25 @@ import Toolbar from '@material-ui/core/Toolbar';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TableRow from '@material-ui/core/TableRow';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import Switch from '@material-ui/core/Switch';
-import ActionButton from "../../../../controls/ActionButton"
-import Button from "../../../../controls/Button"
-import Input from "../../../../controls/Input"
-import ConfirmDialog from "../../../../elements/ConfirmDialog"
-import Notification from "../../../../elements/Notification"
-import Popup from "../../../../elements/Popup"
-import UpdateForm from "../../forms/updateVendorForm"
-import UseTable from "../../../useTable"
-import RegisterForm from "../../forms/registerVendorForm"
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
+import ActionButton from "../../../controls/ActionButton"
+import Button from "../../../controls/Button"
+import Input from "../../../controls/Input"
+import Notification from "../../../elements/Notification"
+import Popup from "../../../elements/Popup"
 import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import HelpIcon from '@material-ui/icons/Help';
-import PropTypes from "prop-types";
+import UseTable from "../../useTable"
+import RejectForm from "../forms/rejectForm"
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 // Generate Order Data
 function createData() {
-  return {
-    _id:"",
-    vendorName: "",
-    vendorEmail: "",
-    contactNo: "",
-    contractAmt: 0,
-    startDate: "",
-    endDate:"",
-    pendingAmt:0,
-    creatorName: "",
-    approved: ""
-  }
+  return { _id:"", vendorName: "", endDate: "ttt", startDate: "uyyy", contractAmt: "", updated:"",delete:""};
 }
 
 const useStyles = makeStyles(theme => ({
@@ -74,13 +58,11 @@ const useStyles = makeStyles(theme => ({
 const headCells = [
     { id: 'vendorName', label: 'Vendor Name' },
     { id: 'approved', label: 'Approved' },
-    { id: 'vendorEmail', label: 'Email' },
     { id: 'startDate', label: 'Start Date' },
-    { id: 'endDate', label: 'End Date' },
-    { id: 'contractAmt', label: 'Contract Amount' },
-    { id: 'pendingAmt', label: 'Pending Amount'},
-    { id: 'contactNo', label: 'Contact No.'},
-    { id: 'update', label: 'Update', disableSorting: true }
+    { id: 'dueDate', label: 'Due Date' },
+    { id: 'contractAmt', label: 'Contract Amount'},
+    { id: 'approve', label: 'Approve', disableSorting: true },
+    { id: 'reject', label: 'Reject', disableSorting: true }
 ];
 
 const rows = [
@@ -95,26 +77,35 @@ const getData = (prop) => {
   return prop.getAllVendors({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
-export default function UV_Table(props) {
-  const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
+export default function VendorApprovalTable(props) {
+
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
+  const [list, setList] = React.useState([]);
+  const [company, setCompany] = React.useState("");
   const [recordForEdit, setRecordForEdit] = React.useState(null);
-  const [openEditPopup, setOpenEditPopup] = React.useState(false);
-  const [openRegPopup, setOpenRegPopup] = React.useState(false);
+  const [openRejectPopup, setOpenRejectPopup] = React.useState(false);
   const [records, setRecords] = React.useState(data);
   const classes = useStyles();
 
+  const openInRejectPopup = item => {
+    setRecordForEdit(item);
+    setOpenRejectPopup(true);
+  }
 
   React.useEffect(async () => {
     const d = await getData(props);
-        console.log(d.data);
     setData(d.data);
     setRecords(d.data);
-  },[notify]);
+    setFilterFn({
+        fn: items => {
+            return items.filter(x =>  x.approved.includes("wait"))
+        }
+    })
+  },[notify, list]);
 
-  console.log(data);
+
   const {
           TblContainer,
           TblHead,
@@ -127,67 +118,67 @@ export default function UV_Table(props) {
     setFilterFn({
         fn: items => {
             if (target.value == "")
-                return items;
+                return items.filter(x => x.approved.includes("wait"));
             else
                 return items.filter(x => x.vendorName.toLowerCase().includes(target.value.toLowerCase()))
         }
     })
   }
-
-  const openInEditPopup = item => {
-    setRecordForEdit(item);
-    setOpenEditPopup(true);
-  }
-
-  const openInRegPopup = item => {
-
-    setOpenRegPopup(true);
-  }
-
-  const create = (data, resetForm) => {
-    const input = {
-      params: {
-        email: props.auth.user.email,
-        auth: props.auth.isAuthenticated
-      },
-      body: data
-    };
-    console.log(input);
-    props.registerVendor(input, props.history);
-    resetForm();
-    setOpenRegPopup(false);
-    setNotify({
-      isOpen: true,
-      message: "Registered Successfully.",
-      type: 'success'
+  const [state, setState] = React.useState({
+      checkedA: true,
+      checkedB: true,
     });
-  }
-  const edit = (data, resetForm, og_id) => {
 
+  const onApprove = og_id => {
     const input = {
       params: {
         email: props.auth.user.email,
         vendorID: og_id,
         auth: props.auth.isAuthenticated
       },
-      body: data
+      body: {
+        approved: "approved",
+        rejectReason: ""
+      }
     };
 
-      console.log(input);
+    if(props.auth.user.role === "admin"){
       props.updateVendor(input, props.history);
-      resetForm();
-      setRecordForEdit(null);
-      setOpenEditPopup(false);
       setNotify({
         isOpen: true,
-        message: "Updated Successfully",
+        message: "Vendor Approved.",
         type: 'success'
       });
-
+    }
   }
 
+  const onReject = (og_id, reason, resetForm) => {
+    const input = {
+      params: {
+        email: props.auth.user.email,
+        vendorID: og_id,
+        auth: props.auth.isAuthenticated
+      },
+      body: {
+        approved: "rejected",
+        rejectReason: reason
+      }
+    };
+
+    if(props.auth.user.role === "admin"){
+      props.updateVendor(input, props.history);
+      resetForm();
+      setOpenRejectPopup(false);
+      setNotify({
+        isOpen: true,
+        message: "Vendor Rejected.",
+        type: 'success'
+      });
+    }
+  }
 
   const dateToString = (date) => {
+    console.log(date);
     var d = date.toString();
 
     d = d.substring(0, d.indexOf('T'));
@@ -210,11 +201,13 @@ export default function UV_Table(props) {
       return <CancelIcon fontSize="small"  style={{ color: "#DC143C" }}/>
     }
   }
+
   return (
     <React.Fragment>
+    <Paper className={classes.pageContent}>
       <Toolbar>
         <Grid container>
-          <Grid item xs={9}>
+          <Grid item xs={12}>
             <Input
                 label="Search Vendors"
                 className={classes.searchInput}
@@ -224,15 +217,6 @@ export default function UV_Table(props) {
                     </InputAdornment>)
                 }}
                 onChange={handleSearch}
-            />
-          </Grid>
-          <Grid item xs={3}>
-            <Button
-                text="Add New"
-                variant="outlined"
-                startIcon={<AddIcon />}
-                className={classes.newButton}
-                onClick={() => { setOpenRegPopup(true); }}
             />
           </Grid>
         </Grid>
@@ -245,17 +229,21 @@ export default function UV_Table(props) {
               (<TableRow key={row._id}>
                 <TableCell>{row.vendorName}</TableCell>
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
-                <TableCell>{row.vendorEmail}</TableCell>
                 <TableCell>{dateToString(row.startDate)}</TableCell>
                 <TableCell>{dateToString(row.endDate)}</TableCell>
                 <TableCell>{row.contractAmt}</TableCell>
-                <TableCell>{row.pendingAmt}</TableCell>
-                <TableCell>{row.contactNo}</TableCell>
                 <TableCell>
                   <ActionButton
                     color="light"
-                    onClick={() => { openInEditPopup(row) }}>
-                    <EditOutlinedIcon fontSize="small" />
+                    onClick={() => {onApprove(row._id)}}>
+                    <CheckIcon fontSize="small" />
+                  </ActionButton>
+                </TableCell>
+                <TableCell>
+                  <ActionButton
+                    color="light"
+                    onClick={() => { openInRejectPopup(row) }}>
+                    <CloseIcon fontSize="small" />
                   </ActionButton>
                 </TableCell>
               </TableRow>
@@ -263,31 +251,20 @@ export default function UV_Table(props) {
         </TableBody>
       </TblContainer>
       <TblPagination />
-
-      <Popup
-        title="Edit Vendor Details"
-        openPopup={openEditPopup}
-        setOpenPopup={setOpenEditPopup}
-      >
-        <UpdateForm {...props}
-            recordForEdit={recordForEdit}
-            edit={edit} />
-      </Popup>
-      <Popup
-        title="Register New Vendor"
-        openPopup={openRegPopup}
-        setOpenPopup={setOpenRegPopup}
-      >
-        <RegisterForm {...props} create={create} />
-      </Popup>
+    </Paper>
+    <Popup
+      title="Edit Company Details"
+      openPopup={openRejectPopup}
+      setOpenPopup={setOpenRejectPopup}
+    >
+      <RejectForm
+          recordForReject={recordForEdit}
+          reject={onReject} />
+    </Popup>
       <Notification
                notify={notify}
                setNotify={setNotify}
            />
-      <ConfirmDialog
-        confirmDialog={confirmDialog}
-        setConfirmDialog={setConfirmDialog}
-      />
     </React.Fragment>
   );
 }

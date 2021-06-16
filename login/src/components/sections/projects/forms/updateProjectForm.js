@@ -6,7 +6,8 @@ import { useForm, Form } from '../../useForm';
 
 const initialFValues = {
     projectDetails: '',
-    dueDate: ''
+    dueDate: '',
+    ownerName: ''
 }
 
 export default function UpdateForm(props) {
@@ -36,6 +37,7 @@ export default function UpdateForm(props) {
             const input = {
               projectDetails: values.projectDetails,
               dueDate: values.dueDate,
+              ownerName: values.ownerName,
               approved: approved
           };
           props.edit(input, resetForm, props.recordForEdit._id);
@@ -59,6 +61,13 @@ export default function UpdateForm(props) {
                         value={values.projectDetails}
                         onChange={handleInputChange}
                         error={errors.projectDetails}
+                    />
+                    <Input
+                        name="ownerName"
+                        label="Owner Name"
+                        value={values.ownerName}
+                        onChange={handleInputChange}
+                        error={errors.ownerName}
                     />
                     <Input
                       id="date"

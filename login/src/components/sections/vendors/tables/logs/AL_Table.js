@@ -16,6 +16,7 @@ import TableHead from '@material-ui/core/TableHead';
 import Toolbar from '@material-ui/core/Toolbar';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TableRow from '@material-ui/core/TableRow';
+import CheckIcon from '@material-ui/icons/Check';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import CloseIcon from '@material-ui/icons/Close';
 import Switch from '@material-ui/core/Switch';
@@ -25,14 +26,16 @@ import Input from "../../../../controls/Input"
 import ConfirmDialog from "../../../../elements/ConfirmDialog"
 import Notification from "../../../../elements/Notification"
 import Popup from "../../../../elements/Popup"
+import UpdateForm from "../../forms/updatePaymentForm"
 import UseTable from "../../../useTable"
+import RegisterForm from "../../forms/registerPaymentForm"
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import CircularProgress from '@material-ui/core/CircularProgress';
 // Generate Order Data
-function createData(id ,name, date, details, createdBy, update,del) {
-  return { _id:id, investmentName: name, dueDate: date, investmentDetails: details, creatorName: createdBy, updated:update,delete:del};
+function createData() {
+  return { _id:'',  vendorName: '', paymentName: '', amtToBePaid: '', dueDate: '', updated:'',delete:''};
 }
 
 const useStyles = makeStyles(theme => ({
@@ -56,16 +59,15 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const headCells = [
-    { id: 'investmentName', label: 'Investment Name' },
-    { id: 'localDueDate', label: 'Next Due Date' },
-    { id: 'returnAmt', label: 'Next Payment Amount'},
-    { id: 'totalInterestAmt', label: 'Total Interest'},
-    { id: 'paymentTerms', label: 'Payment Terms'},
+    { id: 'vendorName', label: 'Vendor Name' },
+    { id: 'amtToBePaid', label: 'Amount Paid' },
+    { id: 'dueDate', label: 'Due Date'},
+    { id: 'isPaid', label: 'Status'},
     { id: 'delete', label: 'Delete', disableSorting: true }
 ];
 
 const rows = [
-  createData("", "", "", "","","","")
+  createData()
 ];
 
 function preventDefault(event) {
@@ -73,10 +75,10 @@ function preventDefault(event) {
 }
 
 const getData = (prop) => {
-  return prop.getAllReturns({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  return prop.getAllPayments({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 const getDropdownList = (prop) => {
-  return prop.getAllInvestments({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  return prop.getAllVendors({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
 
@@ -87,8 +89,9 @@ export default function AF_Table(props) {
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
+  const [allVendors, setAllVendors] = React.useState([]);
   const [list, setList] = React.useState([]);
-  const [investment, setInvestment] = React.useState("");
+  const [vendor, setVendor] = React.useState("");
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
@@ -97,8 +100,12 @@ export default function AF_Table(props) {
 
   React.useEffect(async () => {
     const d = await getDropdownList(props);
+    setAllVendors(d.data);
     var complist = d.data.map(function(item) {
-      return item.investmentName;
+      if(item.approved === "approved")
+        return item.vendorName;
+      else
+        return "0"
     });
     console.log(complist);
     var j;
@@ -127,10 +134,10 @@ export default function AF_Table(props) {
     console.log(d.data);
     setFilterFn({
         fn: items => {
-            if (investment == "")
+            if (vendor == "")
                 return items.filter(x => x.isPaid.includes("yes"));
             else
-                return items.filter(x => x.investmentName.includes(investment) && x.isPaid.includes("yes"))
+                return items.filter(x => x.vendorName.includes(vendor) && x.approved.includes("approved") && x.isPaid.includes("yes"))
         }
     })
   },[notify, list]);
@@ -150,92 +157,45 @@ export default function AF_Table(props) {
             if (target.value == "")
                 return items;
             else
-                return items.filter(x => x.investmentName.toLowerCase().includes(target.value.toLowerCase()))
+                return items.filter(x => x.vendorName.toLowerCase().includes(target.value.toLowerCase()))
         }
     })
   }
+  const [state, setState] = React.useState({
+      checkedA: true,
+      checkedB: true,
+    });
 
   const handleChange = (event) => {
     let val = event.target;
     console.log(val.value);
-    setInvestment(val.value);
+    setVendor(val.value);
     setFilterFn({
         fn: items => {
-          if (val.value == "")
-              return items.filter(x => x.isPaid.includes("yes"));
-          else
-              return items.filter(x => x.investmentName.includes(val.value) && x.isPaid.includes("yes"))
+            if (val.value == "")
+                return items.filter(x=>x.isPaid.includes("yes"));
+            else
+                return items.filter(x => x.vendorName.includes(val.value) && x.approved.includes("approved")&& x.isPaid.includes("yes"))
         }
     })
 
   };
-  const openInEditPopup = item => {
-    setRecordForEdit(item);
-    setOpenEditPopup(true);
-  }
 
-  const openInRegPopup = item => {
-
-    setOpenRegPopup(true);
-  }
-
-  const create = (data, resetForm) => {
-    const input = {
-      params: {
-        email: props.auth.user.email,
-        auth: props.auth.isAuthenticated
-      },
-      body: data
-    };
-    console.log(input);
-    props.registerFeature(input, props.history);
-    resetForm();
-    setOpenRegPopup(false);
-    setNotify({
-      isOpen: true,
-      message: "Registered Successfully.",
-      type: 'success'
-    });
-  }
-  const edit = (data, resetForm, og_investmentName) => {
-
-    const input = {
-      params: {
-        email: props.auth.user.email,
-        investmentID: og_investmentName,
-        auth: props.auth.isAuthenticated
-      },
-      body: data
-    };
-
-    if(props.auth.user.role === "admin"){
-      props.updateReturn(input, props.history);
-      resetForm();
-      setRecordForEdit(null);
-      setOpenEditPopup(false);
-      setNotify({
-        isOpen: true,
-        message: "Update Successfully",
-        type: 'success'
-      });
-    }
-  }
-
-  const onDelete = investment => {
+  const onDelete = payment => {
     setConfirmDialog({
         ...confirmDialog,
         isOpen: false
     })
 
     const input = {
-      investmentName: investment.investmentName,
+      paymentID: payment._id,
       email: props.auth.user.email,
       auth: props.auth.isAuthenticated
     }
 
 
     if(props.auth.user.role === "admin"){
-      props.deleteReturn(input, props.history);
+      props.deletePayment(input, props.history);
       setNotify({
         isOpen: true,
         message: "Deleted Successfully",
@@ -259,7 +219,7 @@ export default function AF_Table(props) {
         <Grid container>
           <Grid item xs={9}>
             <Input
-                label="Search Features"
+                label="Search Payments"
                 className={classes.searchInput}
                 InputProps={{
                     startAdornment: (<InputAdornment position="start">
@@ -271,14 +231,15 @@ export default function AF_Table(props) {
           </Grid>
           <Grid item xs={3}>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel htmlFor="outlined-project-native-simple">Investment</InputLabel>
+              <InputLabel htmlFor="outlined-vendor-native-simple">Vendor</InputLabel>
               <Select
                 native
+                value={state.age}
                 onChange={handleChange}
-                label="Project"
+                label="Vendor"
                 inputProps={{
-                  name: 'project',
-                  id: 'outlined-project-native-simple',
+                  name: 'vendor',
+                  id: 'outlined-vendor-native-simple',
                 }}
               >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
               </Select>
@@ -292,11 +253,10 @@ export default function AF_Table(props) {
             {
               recordsAfterPagingAndSorting().map(row =>
               (<TableRow key={row._id}>
-                <TableCell>{row.investmentName}</TableCell>
+                <TableCell backgroundColor = "primary">{row.vendorName}</TableCell>
+                <TableCell>{row.amtToBePaid}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
-                <TableCell>{row.returnAmt}</TableCell>
-                <TableCell>{row.totalInterestAmt}</TableCell>
-                <TableCell>{row.paymentTerms}</TableCell>
+                <TableCell>{row.isPaid}</TableCell>
                 <TableCell>
                   <ActionButton
                     color="light"

@@ -104,16 +104,18 @@ router.post('/newReturn', userController.allowIfLoggedin, userController.grantAc
 
 router.delete('/delReturn', userController.allowIfLoggedin, userController.grantAccess('deleteAny', 'return'),  returnController.delete);
 
+router.post('/updReturn', userController.allowIfLoggedin, userController.grantAccess('updateAny', 'return'),  returnController.update);
+
 router.get('/getReturns', userController.allowIfLoggedin, userController.grantAccess('readAny', 'return'),  returnController.getReturns);
 
 //------------------INVESTORS
-router.post('/newInvestor', userController.allowIfLoggedin, userController.grantAccess('create', 'investors'),investorController.addNew);
+router.post('/newInvestor', userController.allowIfLoggedin, userController.grantAccess('create', 'investor'),investorController.addNew);
 
-router.post('/updInvestor',  userController.allowIfLoggedin, userController.grantAccess('updateAny', 'investors'), investorController.update);
+router.post('/updInvestor',  userController.allowIfLoggedin, userController.grantAccess('updateAny', 'investor'), investorController.update);
 
-router.delete('/delInvestor', userController.allowIfLoggedin, userController.grantAccess('deleteAny', 'investors'),  investorController.delete);
+router.delete('/delInvestor', userController.allowIfLoggedin, userController.grantAccess('deleteAny', 'investor'),  investorController.delete);
 
-router.get('/getInvestors', userController.allowIfLoggedin, userController.grantAccess('readAny', 'investors'),  investorController.getInvestors);
+router.get('/getInvestors', userController.allowIfLoggedin, userController.grantAccess('readAny', 'investor'),  investorController.getInvestors);
 
 
 

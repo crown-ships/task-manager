@@ -5,6 +5,10 @@ const investorModel = new mongoose.Schema({
     type: String,
     required: true
   },
+  investorEmail: {
+    type: String,
+    required: true
+  },
   contactNo: {
     type: String,
     required: true

@@ -6,6 +6,7 @@ const mongoose = require ('mongoose');
 const validateInvestorInput = require("../../validation/investor/addNew");
 const validateContactNo = require("../../validation/investor/validateContactNo")
 const validateInvestorName = require("../../validation/investor/validateInvestorName");
+const validateEmail = require("../../validation/investor/validateEmail");
 const { roles } = require('../roles')
 
 exports.addNew = async (req, res, next) => {
@@ -23,6 +24,7 @@ exports.addNew = async (req, res, next) => {
 
   const signedupInvestor = new Investor({
    investorName: req.body.investorName,
+   investorEmail: req.body.investorEmail,
    contactNo: req.body.contactNo,
    creatorName: req.body.creatorName,
    creatorID: req.body.creatorID,
@@ -63,6 +65,15 @@ exports.update = async (req, res, next) => {
    if (userBody.contactNo)
    {
      const { errors, isValid } = validateContactNo(userBody);
+     // Check validation
+     if (!isValid) {
+       return res.status(400).json(errors);
+     }
+   }
+
+   if (userBody.investorEmail)
+   {
+     const { errors, isValid } = validateEmail(userBody);
      // Check validation
      if (!isValid) {
        return res.status(400).json(errors);

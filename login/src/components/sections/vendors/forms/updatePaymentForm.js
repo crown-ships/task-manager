@@ -5,13 +5,12 @@ import Input from "../../../controls/Input";
 import { useForm, Form } from '../../useForm';
 
 const initialFValues = {
-    featureName: '',
-    featureDetails: '',
-    dueDate: ''
+  paymentName: '',
+  amtToBePaid: '',
+  dueDate: ''
 }
 
 export default function UpdateForm(props) {
-    const { addOrEdit, recordForEdit } = props
 
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
@@ -31,45 +30,45 @@ export default function UpdateForm(props) {
         handleInputChange,
         resetForm
     } = useForm(initialFValues, true, validate);
-    console.log(recordForEdit);
+
     const handleSubmit = e => {
         e.preventDefault()
         if (validate()) {
             const approved = (props.auth.user.role === "admin")?"approved":"wait";
             const input = {
-              featureName: values.featureName,
-              featureDetails: values.featureDetails,
+              paymentName: values.paymentName,
+              amtToBePaid: values.amtToBePaid,
               dueDate: values.dueDate,
               approved: approved
           };
-          props.edit(input, resetForm, recordForEdit.featureName);
+          props.edit(input, resetForm, props.recordForEdit._id);
         }
     }
 
     useEffect(() => {
-        if (recordForEdit != null)
+        if (props.recordForEdit != null)
             setValues({
-                ...recordForEdit
+                ...props.recordForEdit
             })
-    }, [recordForEdit])
+    }, [props.recordForEdit])
 
     return (
         <Form onSubmit={handleSubmit}>
             <Grid container>
                 <Grid item xs={7}>
                     <Input
-                        name="featureName"
-                        label="Feature Name"
-                        value={values.featureName}
+                        name="paymentName"
+                        label="Payment Name"
+                        value={values.paymentName}
                         onChange={handleInputChange}
-                        error={errors.featureName}
+                        error={errors.paymentName}
                     />
                     <Input
-                        name="featureDetails"
-                        label="Feature Details"
-                        value={values.featureDetails}
+                        name="amtToBePaid"
+                        label="Amount to Pay"
+                        value={values.amtToBePaid}
                         onChange={handleInputChange}
-                        error={errors.featureDetails}
+                        error={errors.amtToBePaid}
                     />
                     <Input
                       id="date"

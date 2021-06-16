@@ -33,7 +33,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import CircularProgress from '@material-ui/core/CircularProgress';
 // Generate Order Data
 function createData(id ,name, date, details, createdBy, update,del) {
-  return { _id:id, returnName: name, dueDate: date, returnDetails: details, creatorName: createdBy, updated:update,delete:del};
+  return { _id:id, returnName: name, localDueDate: date, returnDetails: details, creatorName: createdBy, updated:update,delete:del};
 }
 
 const useStyles = makeStyles(theme => ({
@@ -100,7 +100,7 @@ export default function AR_Table(props) {
   React.useEffect(async () => {
     const d = await getDropdownList(props);
     var complist = d.data.map(function(item) {
-      return item.investorName;
+      return item.investmentName;
     });
     console.log(complist);
     var j;
@@ -241,7 +241,7 @@ export default function AR_Table(props) {
     <Paper className={classes.pageContent}>
       <Toolbar>
         <Grid container>
-          <Grid item xs={7}>
+          <Grid item xs={9}>
             <Input
                 label="Search Features"
                 className={classes.searchInput}
@@ -255,14 +255,14 @@ export default function AR_Table(props) {
           </Grid>
           <Grid item xs={3}>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel htmlFor="outlined-project-native-simple">Investor</InputLabel>
+              <InputLabel htmlFor="outlined-investment-native-simple">Investor</InputLabel>
               <Select
                 native
                 onChange={handleChange}
-                label="Project"
+                label="Investment"
                 inputProps={{
-                  name: 'project',
-                  id: 'outlined-project-native-simple',
+                  name: 'investment',
+                  id: 'outlined-investment-native-simple',
                 }}
               >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
               </Select>
@@ -279,7 +279,7 @@ export default function AR_Table(props) {
               recordsAfterPagingAndSorting().map(row =>
               (<TableRow key={row._id}>
                 <TableCell>{row.investmentName}</TableCell>
-                <TableCell>{dateToString(row.dueDate)}</TableCell>
+                <TableCell>{dateToString(row.localDueDate)}</TableCell>
                 <TableCell>{row.returnAmt}</TableCell>
                 <TableCell>{row.totalInterestAmt}</TableCell>
                 <TableCell>{row.paymentTerms}</TableCell>

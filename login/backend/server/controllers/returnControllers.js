@@ -9,7 +9,6 @@ exports.addNew = async (req, res, next) => {
  try {
   const signedupReturn = new Return({
    investmentName: req.body.investmentName,
-   investmentID: req.body.investmentID,
    investorName: req.body.investorName,
    investorID: req.body.investorID,
    paymentTerms: req.body.paymentTerms,
@@ -49,4 +48,24 @@ exports.delete = async (req, res, next) => {
  catch (error) {
   next(error)
  }
+}
+
+exports.update = async (req, res, next) => {
+ try {
+   const returnID_upd = req.query.returnID;
+
+
+   const userBody = req.body;
+
+   await Return.findByIdAndUpdate(returnID_upd, userBody);
+   const user = await Return.findById(returnID_upd);
+
+   res.status(200).json({
+    data: user,
+    message: 'Return updated successfully.'
+   });
+  }
+  catch (error) {
+   next(error)
+  }
 }

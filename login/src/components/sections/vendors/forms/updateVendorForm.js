@@ -13,7 +13,6 @@ const initialFValues = {
 }
 
 export default function UpdateForm(props) {
-    const { addOrEdit, recordForEdit } = props
 
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
@@ -33,10 +32,12 @@ export default function UpdateForm(props) {
         handleInputChange,
         resetForm
     } = useForm(initialFValues, true, validate);
-    console.log(recordForEdit);
+
     const handleSubmit = e => {
         e.preventDefault()
+
         if (validate()) {
+          console.log(props.recordForEdit);
             const approved = (props.auth.user.role === "admin")?"approved":"wait";
             const input = {
               vendorEmail:values.email,
@@ -46,16 +47,16 @@ export default function UpdateForm(props) {
               pendingAmt:values.pendingAmt,
               approved: approved
           };
-          props.edit(input, resetForm, recordForEdit.vendorName);
+          props.edit(input, resetForm, props.recordForEdit._id);
         }
     }
 
     useEffect(() => {
-        if (recordForEdit != null)
+        if (props.recordForEdit != null)
             setValues({
-                ...recordForEdit
+                ...props.recordForEdit
             })
-    }, [recordForEdit])
+    }, [props.recordForEdit])
 
     return (
         <Form onSubmit={handleSubmit}>
@@ -64,9 +65,9 @@ export default function UpdateForm(props) {
                     <Input
                         name="vendorEmail"
                         label="Vendor Email"
-                        value={values.email}
+                        value={values.vendorEmail}
                         onChange={handleInputChange}
-                        error={errors.email}
+                        error={errors.vendorEmail}
                     />
                     <Input
                         name="contactNo"

@@ -12,11 +12,11 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import PropTypes from "prop-types";
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
@@ -29,13 +29,13 @@ import ExitToApp from '@material-ui/icons/ExitToApp';
 import { mainListItems, secondaryListItems } from '../listitem';
 import { logoutUser } from "../../../actions/authActions";
 import { getAllCompanies } from "../../../actions/companyActions";
-import { getAllInvestments, deleteInvestment, updateInvestment, registerInvestment } from "../../../actions/investmentActions";
-import { getAllInvestors, deleteInvestor, updateInvestor, registerInvestor } from "../../../actions/investorActions";
-import { getAllReturns, deleteReturn, updateReturn, registerReturn } from "../../../actions/returnActions";
-import InvestmentTablePicker from "./pickers/InvestmentTablePicker"
-import ReturnTablePicker from "./pickers/ReturnTablePicker"
-import LogTablePicker from "./pickers/LogTablePicker"
-import InvestorTablePicker from "./pickers/InvestorTablePicker"
+import { getAllProjects, deleteProject, updateProject, registerProject } from "../../../actions/projectActions";
+import { getAllVendors, deleteVendor, updateVendor, registerVendor } from "../../../actions/vendorActions";
+import ProjectRejectionTable from "./tables/ProjectRejectionTable"
+import InvestorRejectionTable from "./tables/InvestorRejectionTable"
+import InvestmentRejectionTable from "./tables/InvestmentRejectionTable"
+import VendorRejectionTable from "./tables/VendorRejectionTable"
+import PaymentRejectionTable from "./tables/PaymentRejectionTable"
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -167,21 +167,26 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#666bff'}
 }));
 
+function onLogoutClick(e) {
+  e.preventDefault();
+  this.props.logoutUser();
+}
 
-const InvestmentsPage =  (props) => {
+const RejectionPage =  (props) => {
 
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+
   var itemList = "";
-  if (props.auth.user.role === "user") {
-    itemList = secondaryListItems;
-  }
-  else {
-    itemList = mainListItems;
-  }
+    if (props.auth.user.role === "user") {
+      itemList = secondaryListItems;
+    }
+    else {
+      itemList = mainListItems;
+    }
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -212,7 +217,7 @@ const InvestmentsPage =  (props) => {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Investments
+            Rejection
           </Typography>
           <Button color="inherit" className={classes.btnstyle} onClick={onLogoutClick}>
             Logout
@@ -242,23 +247,27 @@ const InvestmentsPage =  (props) => {
               <Paper className={classes.paper}>
               <AppBar position="static">
                 <Tabs value={value} centered onChange={handleChange} aria-label="simple tabs example">
-                  <Tab label="Investors" {...a11yProps(0)} />
-                  <Tab label="Investments" {...a11yProps(1)} />
-                  <Tab label="Returns" {...a11yProps(2)} />
-                  <Tab label="Log" {...a11yProps(3)} />
+                  <Tab label="Projects" {...a11yProps(0)} />
+                  <Tab label="Investors" {...a11yProps(1)} />
+                  <Tab label="Investments" {...a11yProps(2)} />
+                  <Tab label="Vendors" {...a11yProps(3)} />
+                  <Tab label="Payments" {...a11yProps(4)} />
                 </Tabs>
               </AppBar>
               <TabPanel value={value} index={0}>
-                <InvestorTablePicker {...props}/>
+                <ProjectRejectionTable {...props}/>
               </TabPanel>
               <TabPanel value={value} index={1}>
-                <InvestmentTablePicker {...props}/>
+                <InvestorRejectionTable {...props}/>
               </TabPanel>
               <TabPanel value={value} index={2}>
-                <ReturnTablePicker {...props}/>
+                <InvestmentRejectionTable {...props}/>
               </TabPanel>
               <TabPanel value={value} index={3}>
-                <LogTablePicker {...props}/>
+                <VendorRejectionTable {...props}/>
+              </TabPanel>
+              <TabPanel value={value} index={4}>
+                <PaymentRejectionTable {...props}/>
               </TabPanel>
               </Paper>
             </Grid>
@@ -273,7 +282,7 @@ const InvestmentsPage =  (props) => {
   );
 }
 
-InvestmentsPage.propTypes = {
+RejectionPage.propTypes = {
   logoutUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
@@ -282,5 +291,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { logoutUser, getAllInvestments,getAllInvestors, deleteInvestor, updateInvestor, registerInvestor, deleteInvestment, updateInvestment, registerInvestment,getAllReturns, deleteReturn, updateReturn, registerReturn  }
-)(withRouter(InvestmentsPage));
+  { logoutUser, getAllProjects, getAllCompanies, deleteProject, updateProject, registerProject, getAllVendors, deleteVendor, updateVendor, registerVendor}
+)(withRouter(RejectionPage));

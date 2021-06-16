@@ -9,7 +9,7 @@ module.exports = function validateDate(data) {
 if(Validator.isEmpty(data.dueDate)){
   errors.dueDate = "Due Date is required";
 }
-else if(!Validator.isDate("2021-06-19T00:00:00.000Z")){
+else if(!Validator.isDate(data.dueDate, false)){
   errors.dueDate = data.dueDate;
 }
 return {

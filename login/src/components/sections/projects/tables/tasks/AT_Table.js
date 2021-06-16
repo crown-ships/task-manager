@@ -90,7 +90,7 @@ const useStyles = makeStyles(theme => ({
 const headCells = [
     { id: 'taskName', label: 'Task Name' },
     { id: 'dueDate', label: 'Due Date' },
-    { id: 'creatorName', label: 'Creator' },
+    { id: 'ownerName', label: 'ownerName' },
     { id: 'taskDetails', label: 'Task Details'},
     { id: 'featureName', label: 'Feature Name'},
     { id: 'percentComplete', label: 'Progress'},
@@ -209,7 +209,7 @@ export default function AT_Table(props) {
     setFilterFn({
         fn: items => {
             if (feature == "")
-                return items;
+                return items.filter(x => x.enabled.includes("true"));
             else
                 return items.filter(x => x.featureName.includes(feature) )
         }
@@ -274,7 +274,7 @@ export default function AT_Table(props) {
     setFilterFn({
         fn: items => {
             if (target.value == "")
-                return items;
+                return items.filter(x => x.enabled.includes("true"));
             else
                 return items.filter(x => x.taskName.toLowerCase().includes(target.value.toLowerCase()))
         }
@@ -435,7 +435,7 @@ export default function AT_Table(props) {
               (<TableRow key={row._id}>
                 <TableCell backgroundColor = "primary">{row.taskName}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
-                <TableCell>{row.creatorName}</TableCell>
+                <TableCell>{row.ownerName}</TableCell>
                 <TableCell>{row.taskDetails}</TableCell>
                 <TableCell>{row.featureName}</TableCell>
                 <TableCell>  <CircularProgressWithLabel value={row.percentComplete} /></TableCell>

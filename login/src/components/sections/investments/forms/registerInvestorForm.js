@@ -7,12 +7,13 @@ import { useForm, Form } from '../../useForm';
 
 
 const initialFValues = {
-  paymentName: '',
-  amtToBePaid: '',
-  dueDate: ''
+    investorName: '',
+    investorEmail:'',
+    contactNo: ''
 }
 
 export default function RegisterForm(props) {
+    const { addOrEdit, recordForEdit } = props
 
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
@@ -23,13 +24,7 @@ export default function RegisterForm(props) {
         if (fieldValues === values)
             return Object.values(temp).every(x => x == "")
     }
-    var i;
-    var vendorDetails = {};
-    for(i=0; i< props.allVendors.length; i++) {
-      if(props.allVendors[i].vendorName === props.vendor)
-        vendorDetails = props.allVendors[i];
 
-    }
     const {
         values,
         setValues,
@@ -44,62 +39,48 @@ export default function RegisterForm(props) {
         if (validate()) {
             const approved = (props.auth.user.role === "admin")?"approved":"wait";
             const input = {
-              vendorName: vendorDetails.vendorName,
-              vendorID: vendorDetails._id,
-              paymentName: values.paymentName,
-              amtToBePaid: values.amtToBePaid,
-              dueDate: values.dueDate,
-              creatorName: props.auth.user.name,
-              creatorID:props.auth.user.id,
-              approved:approved
+              investorName: values.investorName,
+              investorEmail: values.investorEmail,
+              contactNo: values.contactNo,
+              approved: approved
             };
             props.create(input, resetForm);
         }
     }
 
-
-
     useEffect(() => {
-        if (props.recordForEdit != null)
+        if (recordForEdit != null)
             setValues({
-                ...props.recordForEdit
+                ...recordForEdit
             })
-    }, [props.recordForEdit])
+    }, [recordForEdit])
 
     return (
         <Form onSubmit={handleSubmit}>
             <Grid container>
-                <Grid item xs={8}>
-                    <Input
-                        name="paymentName"
-                        label="Payment Name"
-                        value={values.paymentName}
-                        onChange={handleInputChange}
-                        error={errors.paymentName}
-                    />
-                    <Input
-                        name="amtToBePaid"
-                        label="Amount to Pay"
-                        value={values.amtToBePaid}
-                        onChange={handleInputChange}
-                        error={errors.amtToBePaid}
-                    />
+                <Grid item xs={12}>
 
-                </Grid>
-                <Grid item xs={4}>
-                <Input
-                  id="date"
-                  type="date"
-                  defaultValue="2017-05-24"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  name="dueDate"
-                  label="Due Date"
-                  value={values.dueDate}
-                  onChange={handleInputChange}
-                  error={errors.dueDate}
-                />
+                    <Input
+                        name="investorName"
+                        label="Investor Name"
+                        value={values.investorName}
+                        onChange={handleInputChange}
+                        error={errors.investorName}
+                    />
+                    <Input
+                        name="investorEmail"
+                        label="Email Address"
+                        value={values.investorEmail}
+                        onChange={handleInputChange}
+                        error={errors.investorEmail}
+                    />
+                    <Input
+                        name="contactNo"
+                        label="Phone no."
+                        value={values.contactNo}
+                        onChange={handleInputChange}
+                        error={errors.contactNo}
+                    />
                     <div>
                         <Button
                             type="submit"

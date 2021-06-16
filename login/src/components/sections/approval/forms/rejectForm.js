@@ -5,12 +5,10 @@ import Input from "../../../controls/Input";
 import { useForm, Form } from '../../useForm';
 
 const initialFValues = {
-  dueDate: '',
-  capitalPaid: ''
+    rejectReason: ''
 }
 
-export default function UpdateForm(props) {
-    const { addOrEdit, recordForEdit } = props
+export default function RejectForm(props) {
 
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
@@ -30,50 +28,32 @@ export default function UpdateForm(props) {
         handleInputChange,
         resetForm
     } = useForm(initialFValues, true, validate);
-    console.log(recordForEdit);
+
+
     const handleSubmit = e => {
         e.preventDefault()
         if (validate()) {
-            const approved = (props.auth.user.role === "admin")?"approved":"wait";
-            const input = {
-              capitalPaid: values.capitalPaid,
-              dueDate: values.dueDate,
-              approved: approved
-          };
-          props.edit(input, resetForm, recordForEdit._id);
+            props.reject(props.recordForReject._id, values.rejectReason, resetForm);
         }
     }
 
     useEffect(() => {
-        if (recordForEdit != null)
+        if (props.recordForReject != null)
             setValues({
-                ...recordForEdit
+                ...props.recordForReject
             })
-    }, [recordForEdit])
+    }, [props.recordForReject])
 
     return (
         <Form onSubmit={handleSubmit}>
             <Grid container>
                 <Grid item xs={7}>
                     <Input
-                        name="capitalPaid"
-                        label="Capital Paid"
-                        value={values.capitalPaid}
+                        name="rejectReason"
+                        label="Reason for Rejection"
+                        value={values.rejectReason}
                         onChange={handleInputChange}
-                        error={errors.capitalPaid}
-                    />
-                    <Input
-                      id="date"
-                      type="date"
-                      defaultValue="2017-05-24"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      name="dueDate"
-                      label="Due Date"
-                      value={values.dueDate}
-                      onChange={handleInputChange}
-                      error={errors.dueDate}
+                        error={errors.rejectReason}
                     />
                 </Grid>
                 <Grid item xs={5}>

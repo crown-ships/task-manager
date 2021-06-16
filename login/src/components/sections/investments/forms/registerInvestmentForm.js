@@ -7,8 +7,7 @@ import { useForm, Form } from '../../useForm';
 
 
 const initialFValues = {
-    investorName: '',
-    contactNo: '',
+    investmentName: '',
     startDate: '',
     dueDate: '',
     profitPercent: '',
@@ -19,7 +18,7 @@ const initialFValues = {
 }
 
 export default function RegisterForm(props) {
-    const { addOrEdit, recordForEdit } = props
+
 
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
@@ -40,13 +39,21 @@ export default function RegisterForm(props) {
         resetForm
     } = useForm(initialFValues, true, validate);
 
+    var i;
+    var investorDetails =  {};
+    for(i=0; i< props.allInvestors.length; i++) {
+      if(props.allInvestors[i].investorName === props.investor)
+        investorDetails = props.allInvestors[i];
+    }
+
     const handleSubmit = e => {
         e.preventDefault()
         if (validate()) {
             const approved = (props.auth.user.role === "admin")?"approved":"wait";
             const input = {
-              investorName: values.investorName,
-              contactNo: values.contactNo,
+              investorName: investorDetails.investorName,
+              investorID: investorDetails._id,
+              investmentName: values.investmentName,
               startDate: values.startDate,
               dueDate: values.dueDate,
               profitPercent: values.profitPercent,
@@ -56,36 +63,29 @@ export default function RegisterForm(props) {
               paymentTerms: values.paymentTerms,
               approved: approved
             };
+            console.log(investorDetails.investorID)
             props.create(input, resetForm);
         }
     }
 
     useEffect(() => {
-        if (recordForEdit != null)
+        if (props.recordForEdit != null)
             setValues({
-                ...recordForEdit
+                ...props.recordForEdit
             })
-    }, [recordForEdit])
+    }, [props.recordForEdit])
 
     return (
         <Form onSubmit={handleSubmit}>
             <Grid container>
                 <Grid item xs={8}>
-
-                    <Input
-                        name="investorName"
-                        label="Investor Name"
-                        value={values.investorName}
-                        onChange={handleInputChange}
-                        error={errors.investorName}
-                    />
-                    <Input
-                        name="contactNo"
-                        label="Phone no."
-                        value={values.contactNo}
-                        onChange={handleInputChange}
-                        error={errors.contactNo}
-                    />
+                <Input
+                    name="investmentName"
+                    label="Investment Name"
+                    value={values.investmentName}
+                    onChange={handleInputChange}
+                    error={errors.investmentName}
+                />
                     <Input
                         name="profitPercent"
                         label="Rate"

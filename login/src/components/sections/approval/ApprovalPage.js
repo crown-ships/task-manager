@@ -30,9 +30,12 @@ import { mainListItems, secondaryListItems } from '../listitem';
 import { logoutUser } from "../../../actions/authActions";
 import { getAllCompanies } from "../../../actions/companyActions";
 import { getAllProjects, deleteProject, updateProject, registerProject } from "../../../actions/projectActions";
+import { getAllVendors, deleteVendor, updateVendor, registerVendor } from "../../../actions/vendorActions";
 import ProjectApprovalTable from "./tables/ProjectApprovalTable"
-import FeatureApprovalTable from "./tables/FeatureApprovalTable"
-import TaskApprovalTable from "./tables/TaskApprovalTable"
+import InvestorApprovalTable from "./tables/InvestorApprovalTable"
+import InvestmentApprovalTable from "./tables/InvestmentApprovalTable"
+import VendorApprovalTable from "./tables/VendorApprovalTable"
+import PaymentApprovalTable from "./tables/PaymentApprovalTable"
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -245,20 +248,27 @@ const ApprovalPage =  (props) => {
               <AppBar position="static">
                 <Tabs value={value} centered onChange={handleChange} aria-label="simple tabs example">
                   <Tab label="Projects" {...a11yProps(0)} />
-                  <Tab label="Features" {...a11yProps(1)} />
-                  <Tab label="Tasks" {...a11yProps(2)} />
+                  <Tab label="Investors" {...a11yProps(1)} />
+                  <Tab label="Investments" {...a11yProps(2)} />
+                  <Tab label="Vendors" {...a11yProps(3)} />
+                  <Tab label="Payments" {...a11yProps(4)} />
                 </Tabs>
               </AppBar>
               <TabPanel value={value} index={0}>
                 <ProjectApprovalTable {...props}/>
               </TabPanel>
               <TabPanel value={value} index={1}>
-                <FeatureApprovalTable {...props}/>
+                <InvestorApprovalTable {...props}/>
               </TabPanel>
               <TabPanel value={value} index={2}>
-                <TaskApprovalTable {...props}/>
+                <InvestmentApprovalTable {...props}/>
               </TabPanel>
-
+              <TabPanel value={value} index={3}>
+                <VendorApprovalTable {...props}/>
+              </TabPanel>
+              <TabPanel value={value} index={4}>
+                <PaymentApprovalTable {...props}/>
+              </TabPanel>
               </Paper>
             </Grid>
 
@@ -281,5 +291,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { logoutUser, getAllProjects, getAllCompanies, deleteProject, updateProject, registerProject}
+    { logoutUser, getAllProjects, getAllCompanies, deleteProject, updateProject, registerProject, getAllVendors, deleteVendor, updateVendor, registerVendor}
 )(withRouter(ApprovalPage));

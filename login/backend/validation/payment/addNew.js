@@ -30,7 +30,7 @@ module.exports = function validatePaymentInput(data) {
   if(Validator.isEmpty(data.amtToBePaid)){
   errors.amtToBePaid = "amount field is required";
   }
-  else if(!Validator.isInt(data.capitalPaid)){
+  else if(!Validator.isInt(data.amtToBePaid)){
   errors.amtToBePaid = "amount field is invalid";
   }
   return {

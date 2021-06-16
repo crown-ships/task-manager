@@ -68,39 +68,38 @@ exports.getVendors = async (req, res, next) => {
  //validate role
 exports.update = async (req, res, next) => {
  try {
-   const vendorName_upd = req.query.vendorName;
+   const vendorID = req.query.vendorID;
 
-   const vendor_upd = await Vendor.find({vendorName:vendorName_upd});
 
    const userBody = req.body;
 
-   if (userBody.startDate)
-   {
-     const { errors, isValid } = validateDate(userBody);
-     // Check validation
-     if (!isValid) {
-       return res.status(400).json(errors);
-     }
-   }
-   if (userBody.endDate)
-   {
-     const { errors, isValid } = validateDate(userBody);
-     // Check validation
-     if (!isValid) {
-       return res.status(400).json(errors);
-     }
-   }
-   // if (userBody.vendorName)
+   // if (userBody.startDate)
    // {
-   //   const { errors, isValid } = validateVendorName(userBody);
+   //   const { errors, isValid } = validateDate(userBody);
    //   // Check validation
    //   if (!isValid) {
    //     return res.status(400).json(errors);
    //   }
    // }
+   // if (userBody.endDate)
+   // {
+   //   const { errors, isValid } = validateDate(userBody);
+   //   // Check validation
+   //   if (!isValid) {
+   //     return res.status(400).json(errors);
+   //   }
+   // }
+   if (userBody.vendorName)
+   {
+     const { errors, isValid } = validateVendorName(userBody);
+     // Check validation
+     if (!isValid) {
+       return res.status(400).json(errors);
+     }
+   }
 
-   await Vendor.findByIdAndUpdate(vendor_upd[0]._id, userBody);
-   const user = await Vendor.findById(vendor_upd[0]._id);
+   await Vendor.findByIdAndUpdate(vendorID, userBody);
+   const user = await Vendor.findById(vendorID);
 
    res.status(200).json({
     data: user,
@@ -114,10 +113,10 @@ exports.update = async (req, res, next) => {
 
 exports.delete = async (req, res, next) => {
  try {
-  const vendorName_del = req.query.vendorName;
-  const vendor_delete = await Vendor.find({vendorName:vendorName_del});
+  const vendorID = req.query.vendorID;
 
-  await Vendor.findByIdAndDelete(vendor_delete[0]._id);
+
+  await Vendor.findByIdAndDelete(vendorID);
   res.status(200).json({
    data: null,
    message: 'Vendor has been deleted'

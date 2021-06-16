@@ -16,6 +16,9 @@ import TableRow from '@material-ui/core/TableRow';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import CloseIcon from '@material-ui/icons/Close';
 import Switch from '@material-ui/core/Switch';
+import CancelIcon from '@material-ui/icons/Cancel';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import HelpIcon from '@material-ui/icons/Help';
 import ActionButton from "../../../../controls/ActionButton"
 import Button from "../../../../controls/Button"
 import Input from "../../../../controls/Input"
@@ -39,11 +42,10 @@ function createData() {
     vendorName: "",
     vendorEmail: "",
     contactNo: "",
-    contractAmt: 0,
+    contractAmt: "",
     startDate: "",
     endDate:"",
-    pendingAmt:0,
-    creatorName: "",
+    pendingAmt:'',
     approved: ""
   }
 }
@@ -70,13 +72,13 @@ const useStyles = makeStyles(theme => ({
 
 const headCells = [
     { id: 'vendorName', label: 'Vendor Name' },
+    { id: 'approved', label: 'Approved' },
     { id: 'vendorEmail', label: 'Email' },
     { id: 'startDate', label: 'Start Date' },
     { id: 'endDate', label: 'End Date' },
     { id: 'contractAmt', label: 'Contract Amount' },
     { id: 'pendingAmt', label: 'Pending Amount'},
     { id: 'contactNo', label: 'Contact No.'},
-    { id: 'creatorName', label: 'Creator'},
     { id: 'enabled', label: 'Enable', disableSorting: true },
     { id: 'update', label: 'Update', disableSorting: true },
     { id: 'delete', label: 'Delete', disableSorting: true }
@@ -100,7 +102,6 @@ export default function AV_Table(props) {
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
-  const [list, setList] = React.useState([]);
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
@@ -118,7 +119,7 @@ export default function AV_Table(props) {
                 return items.filter(x => x.approved.includes("approved"))
         }
     })
-  },[notify, list]);
+  },[notify]);
 
   console.log(data);
   const {
@@ -168,12 +169,12 @@ export default function AV_Table(props) {
       type: 'success'
     });
   }
-  const edit = (data, resetForm, og_vendorName) => {
+  const edit = (data, resetForm, og_id) => {
 
     const input = {
       params: {
         email: props.auth.user.email,
-        vendorName: og_vendorName,
+        vendorID: og_id,
         auth: props.auth.isAuthenticated
       },
       body: data
@@ -194,11 +195,42 @@ export default function AV_Table(props) {
 
   const handleSwitch = (val, row) => {
     console.log(val);
-      // if(val== true)
-      //   changeEnable("true",row.email, row.companyName);
-      // if(val == false)
-      //   changeEnable("false",row.email, row.companyName);
+      if(val== true)
+        changeEnable("true", row._id);
+      if(val == false)
+        changeEnable("false", row._id);
   };
+
+  const changeEnable = (value, og_id) => {
+    const input = {
+      params: {
+        email: props.auth.user.email,
+        vendorID: og_id,
+        auth: props.auth.isAuthenticated
+      },
+      body: {
+      enabled: value
+      }
+    };
+
+    const p_input = {
+      params: {
+        email: props.auth.user.email,
+        vendorID: og_id,
+        auth: props.auth.isAuthenticated
+      },
+      body: {
+        enabled: value
+      }
+    };
+    props.updateVendor(input, props.history);
+    props.updateAllPayments(p_input, props.history);
+    setNotify({
+      isOpen: true,
+      message: "Success.",
+      type: 'success'
+    });
+  }
 
   const onDelete = vendor => {
     setConfirmDialog({
@@ -230,6 +262,22 @@ export default function AV_Table(props) {
     return d;
   }
 
+  const approvedIcon = (status) => {
+
+    if (status === "approved") {
+      console.log(status);
+      console.log("yes");
+      return <CheckCircleIcon fontSize="small" style={{ color: "#00b386" }}/>
+    }
+    else if (status === "wait") {
+      console.log("what");
+      return <HelpIcon fontSize="small"  style={{ color: "#ffbf00" }}/>
+    }
+    else if (status === "rejected") {
+      console.log("what");
+      return <CancelIcon fontSize="small"  style={{ color: "#DC143C" }}/>
+    }
+  }
 
   return (
     <React.Fragment>
@@ -265,13 +313,13 @@ export default function AV_Table(props) {
               recordsAfterPagingAndSorting().map(row =>
               (<TableRow key={row._id}>
                 <TableCell>{row.vendorName}</TableCell>
+                <TableCell>{approvedIcon(row.approved)}</TableCell>
                 <TableCell>{row.vendorEmail}</TableCell>
                 <TableCell>{dateToString(row.startDate)}</TableCell>
                 <TableCell>{dateToString(row.endDate)}</TableCell>
                 <TableCell>{row.contractAmt}</TableCell>
                 <TableCell>{row.pendingAmt}</TableCell>
                 <TableCell>{row.contactNo}</TableCell>
-                <TableCell>{row.creatorName}</TableCell>
                 <TableCell>
                   <Switch
                     onChange={(e,val)=>handleSwitch(val, row)}
@@ -313,7 +361,7 @@ export default function AV_Table(props) {
         openPopup={openEditPopup}
         setOpenPopup={setOpenEditPopup}
       >
-        <UpdateForm
+        <UpdateForm {...props}
             recordForEdit={recordForEdit}
             edit={edit} />
       </Popup>

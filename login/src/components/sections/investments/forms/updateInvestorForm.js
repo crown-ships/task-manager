@@ -5,8 +5,7 @@ import Input from "../../../controls/Input";
 import { useForm, Form } from '../../useForm';
 
 const initialFValues = {
-  dueDate: '',
-  capitalPaid: ''
+  contactNo: ''
 }
 
 export default function UpdateForm(props) {
@@ -36,6 +35,7 @@ export default function UpdateForm(props) {
         if (validate()) {
             const approved = (props.auth.user.role === "admin")?"approved":"wait";
             const input = {
+              contactNo: values.contactNo,
               capitalPaid: values.capitalPaid,
               dueDate: values.dueDate,
               approved: approved
@@ -54,29 +54,14 @@ export default function UpdateForm(props) {
     return (
         <Form onSubmit={handleSubmit}>
             <Grid container>
-                <Grid item xs={7}>
+                <Grid item xs={12}>
                     <Input
-                        name="capitalPaid"
-                        label="Capital Paid"
-                        value={values.capitalPaid}
+                        name="contactNo"
+                        label="Contact No."
+                        value={values.contactNo}
                         onChange={handleInputChange}
-                        error={errors.capitalPaid}
+                        error={errors.contactNo}
                     />
-                    <Input
-                      id="date"
-                      type="date"
-                      defaultValue="2017-05-24"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      name="dueDate"
-                      label="Due Date"
-                      value={values.dueDate}
-                      onChange={handleInputChange}
-                      error={errors.dueDate}
-                    />
-                </Grid>
-                <Grid item xs={5}>
                     <div>
                         <Button
                             type="submit"

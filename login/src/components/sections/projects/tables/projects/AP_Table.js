@@ -32,9 +32,12 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from "prop-types";
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import HelpIcon from '@material-ui/icons/Help';
+import CancelIcon from '@material-ui/icons/Cancel';
 // Generate Order Data
 function createData(id ,name, date, details, createdBy, update,del) {
-  return { _id:id, projectName: name, dueDate: date, projectDetails: details, creatorName: createdBy, updated:update,delete:del};
+  return { _id:id, projectName: name, dueDate: date, projectDetails: details, companyName: createdBy, percentComplete:0, ownerName:name, enabled: "true", updated:update,delete:del};
 }
 
 function CircularProgressWithLabel(props) {
@@ -88,12 +91,13 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const headCells = [
-    { id: 'projectName', label: 'Task Name' },
+    { id: 'projectName', label: 'Project Name' },
+    { id: 'approved', label: 'Approved' },
     { id: 'dueDate', label: 'Due Date' },
-    { id: 'creatorName', label: 'Creator' },
-    { id: 'projectDetails', label: 'Task Details'},
+    { id: 'projectDetails', label: 'Project Details'},
     { id: 'companyName', label: 'Company Name'},
     { id: 'percentComplete', label: 'Progress'},
+    { id: 'ownerName', label: 'Owner'},
     { id: 'enabled', label: 'Enable', disableSorting: true },
     { id: 'update', label: 'Update', disableSorting: true },
     { id: 'delete', label: 'Delete', disableSorting: true }
@@ -186,7 +190,7 @@ export default function AP_Table(props) {
     setFilterFn({
         fn: items => {
             if (target.value == "")
-                return items;
+                return items.filter(x => x.enabled.includes("true"));
             else
                 return items.filter(x => x.projectName.toLowerCase().includes(target.value.toLowerCase()))
         }
@@ -318,6 +322,24 @@ export default function AP_Table(props) {
 
     }
   }
+
+  const approvedIcon = (status) => {
+
+    if (status === "approved") {
+      console.log(status);
+      console.log("yes");
+      return <CheckCircleIcon fontSize="small" style={{ color: "#00b386" }}/>
+    }
+    else if (status === "wait") {
+      console.log("what");
+      return <HelpIcon fontSize="small"  style={{ color: "#ffbf00" }}/>
+    }
+    else if (status === "rejected") {
+      console.log("what");
+      return <CancelIcon fontSize="small"  style={{ color: "#DC143C" }}/>
+    }
+  }
+
   const dateToString = (date) => {
     var d = date.toString();
 
@@ -378,11 +400,12 @@ export default function AP_Table(props) {
               recordsAfterPagingAndSorting().map(row =>
               (<TableRow key={row._id}>
                 <TableCell backgroundColor = "primary">{row.projectName}</TableCell>
+                <TableCell>{approvedIcon(row.approved)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
-                <TableCell>{row.creatorName}</TableCell>
                 <TableCell>{row.projectDetails}</TableCell>
                 <TableCell>{row.companyName}</TableCell>
                 <TableCell>  <CircularProgressWithLabel value={row.percentComplete} /></TableCell>
+                <TableCell>{row.ownerName}</TableCell>
                 <TableCell>
                   <Switch
                     onChange={(e,val)=>handleSwitch(val, row)}

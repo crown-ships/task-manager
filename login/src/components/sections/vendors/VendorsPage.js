@@ -30,9 +30,10 @@ import { mainListItems, secondaryListItems } from '../listitem';
 import { logoutUser } from "../../../actions/authActions";
 import { getAllCompanies } from "../../../actions/companyActions";
 import { getAllVendors, deleteVendor, updateVendor, registerVendor } from "../../../actions/vendorActions";
-import { getAllPayments, deletePayment, updatePayment, registerPayment } from "../../../actions/paymentActions";
+import { getAllPayments, deletePayment, updatePayment, updateAllPayments, registerPayment } from "../../../actions/paymentActions";
 import VendorTablePicker from "./pickers/VendorTablePicker"
-//import PaymentTablePicker from "./pickers/PaymentTablePicker"
+import PaymentTablePicker from "./pickers/PaymentTablePicker"
+import LogTablePicker from "./pickers/LogTablePicker"
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -240,10 +241,17 @@ const VendorsPage =  (props) => {
                 <Tabs value={value} centered onChange={handleChange} aria-label="simple tabs example">
                   <Tab label="Vendors" {...a11yProps(0)} />
                   <Tab label="Payments" {...a11yProps(1)} />
+                  <Tab label="Logs" {...a11yProps(2)} />
                 </Tabs>
               </AppBar>
               <TabPanel value={value} index={0}>
                 <VendorTablePicker {...props}/>
+              </TabPanel>
+              <TabPanel value={value} index={1}>
+                <PaymentTablePicker {...props}/>
+              </TabPanel>
+              <TabPanel value={value} index={2}>
+                <LogTablePicker {...props}/>
               </TabPanel>
 
               </Paper>
@@ -268,7 +276,7 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { logoutUser, getAllVendors, deleteVendor, updateVendor, registerVendor,getAllPayments, deletePayment, updatePayment, registerPayment }
+  { logoutUser, getAllVendors, deleteVendor, updateVendor, registerVendor,updateAllPayments,getAllPayments, deletePayment, updatePayment, registerPayment }
 )(withRouter(VendorsPage));
 
 // <TabPanel value={value} index={1}>
