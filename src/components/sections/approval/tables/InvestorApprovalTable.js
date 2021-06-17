@@ -22,15 +22,17 @@ import Button from "../../../controls/Button"
 import Input from "../../../controls/Input"
 import Notification from "../../../elements/Notification"
 import Popup from "../../../elements/Popup"
-
+import CancelIcon from '@material-ui/icons/Cancel';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import HelpIcon from '@material-ui/icons/Help';
 import UseTable from "../../useTable"
-
+import RejectForm from "../forms/rejectForm"
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 // Generate Order Data
-function createData(id ,name, date, details, createdBy, update,del) {
-  return { _id:id, taskName: name, dueDate: date, taskDetails: details, personName: createdBy, updated:update,delete:del};
+function createData() {
+  return { _id:"", investorName: "", contactNo: "", investorEmail: "", approved:"", updated:"",delete:""};
 }
 
 const useStyles = makeStyles(theme => ({
@@ -54,17 +56,16 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const headCells = [
-    { id: 'projectName', label: 'Project Name' },
-    { id: 'dueDate', label: 'Due Date' },
-    { id: 'personName', label: 'Creator' },
-    { id: 'taskDetails', label: 'Task Details'},
-    { id: 'companyName', label: 'Company Name'},
+    { id: 'investorName', label: 'Investor Name' },
+    { id: 'approved', label: 'Approved' },
+    { id: 'contactNo', label: 'Contact No.' },
+    { id: 'investorEmail', label: 'Email Address' },
     { id: 'approve', label: 'Approve', disableSorting: true },
     { id: 'reject', label: 'Reject', disableSorting: true }
 ];
 
 const rows = [
-  createData("", "", "", "","","","")
+  createData()
 ];
 
 function preventDefault(event) {
@@ -72,14 +73,10 @@ function preventDefault(event) {
 }
 
 const getData = (prop) => {
-  return prop.getAllProjects({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
-}
-const getDropdownList = (prop) => {
-  return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  return prop.getAllInvestors({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
-
-export default function FeatureApprovalTable(props) {
+export default function InvestorApprovalTable(props) {
 
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
@@ -87,26 +84,14 @@ export default function FeatureApprovalTable(props) {
   const [list, setList] = React.useState([]);
   const [company, setCompany] = React.useState("");
   const [recordForEdit, setRecordForEdit] = React.useState(null);
-  const [openEditPopup, setOpenEditPopup] = React.useState(false);
-  const [openRegPopup, setOpenRegPopup] = React.useState(false);
+  const [openRejectPopup, setOpenRejectPopup] = React.useState(false);
   const [records, setRecords] = React.useState(data);
   const classes = useStyles();
 
-  React.useEffect(async () => {
-    const d = await getDropdownList(props);
-    var complist = d.data.map(function(item) {
-      return item.companyName;
-    });
-    const len = complist.length;
-    var selList = [];
-    var i;
-    selList[0] = {key:0, item: ""};
-    for(i=0; i<len; i++) {
-      selList[i+1] = {key:i+1, item: complist[i]};
-    }
-    console.log(selList);
-    setList(selList);
-  },[]);
+  const openInRejectPopup = item => {
+    setRecordForEdit(item);
+    setOpenRejectPopup(true);
+  }
 
   React.useEffect(async () => {
     const d = await getData(props);
@@ -114,10 +99,7 @@ export default function FeatureApprovalTable(props) {
     setRecords(d.data);
     setFilterFn({
         fn: items => {
-            if (company == "")
-                return items.filter(x => x.approved.includes("wait"));
-            else
-                return items.filter(x => x.companyName.includes(company) && x.approved.includes("wait"))
+            return items.filter(x =>  x.approved.includes("wait"))
         }
     })
   },[notify, list]);
@@ -134,10 +116,10 @@ export default function FeatureApprovalTable(props) {
     let target = e.target;
     setFilterFn({
         fn: items => {
-            if (company == "")
+            if (target.value == "")
                 return items.filter(x => x.approved.includes("wait"));
             else
-                return items.filter(x => x.taskName.toLowerCase().includes(target.value.toLowerCase()))
+                return items.filter(x => x.investorName.toLowerCase().includes(target.value.toLowerCase()))
         }
     })
   }
@@ -146,80 +128,87 @@ export default function FeatureApprovalTable(props) {
       checkedB: true,
     });
 
-    const handleChange = (event) => {
-      let val = event.target;
-      console.log(val.value);
-      setCompany(val.value);
-      setFilterFn({
-          fn: items => {
-              if (val.value == "")
-                  return items.filter(x => x.approved.includes("wait"));
-              else
-                  return items.filter(x => x.companyName.includes(val.value) && x.approved.includes("wait"))
-          }
-      })
-      };
-
-  const onApprove = og_projectName => {
+  const onApprove = og_id => {
     const input = {
       params: {
         email: props.auth.user.email,
-        projectName: og_projectName,
+        investorID: og_id,
         auth: props.auth.isAuthenticated
       },
       body: {
-        approved: "approved"
+        approved: "approved",
+        rejectReason: ""
       }
     };
 
     if(props.auth.user.role === "admin"){
-      props.updateProject(input, props.history);
+      props.updateInvestor(input, props.history);
       setNotify({
         isOpen: true,
-        message: "Project Approved.",
+        message: "Investor Approved.",
         type: 'success'
       });
     }
   }
 
-  const onReject = og_projectName => {
+  const onReject = (og_id, reason, resetForm) => {
     const input = {
       params: {
         email: props.auth.user.email,
-        projectName: og_projectName,
+        investorID: og_id,
         auth: props.auth.isAuthenticated
       },
       body: {
-        approved: "rejected"
+        approved: "rejected",
+        rejectReason: reason
       }
     };
 
     if(props.auth.user.role === "admin"){
-      props.updateProject(input, props.history);
+      props.updateInvestor(input, props.history);
+      resetForm();
+      setOpenRejectPopup(false);
       setNotify({
         isOpen: true,
-        message: "Project Rejeected.",
+        message: "Investor Rejected.",
         type: 'success'
       });
     }
   }
 
   const dateToString = (date) => {
+    console.log(date);
     var d = date.toString();
 
     d = d.substring(0, d.indexOf('T'));
     return d;
   }
 
+  const approvedIcon = (status) => {
+
+    if (status === "approved") {
+      console.log(status);
+      console.log("yes");
+      return <CheckCircleIcon fontSize="small" style={{ color: "#00b386" }}/>
+    }
+    else if (status === "wait") {
+      console.log("what");
+      return <HelpIcon fontSize="small"  style={{ color: "#ffbf00" }}/>
+    }
+    else if (status === "rejected") {
+      console.log("what");
+      return <CancelIcon fontSize="small"  style={{ color: "#DC143C" }}/>
+    }
+  }
 
   return (
     <React.Fragment>
     <Paper className={classes.pageContent}>
       <Toolbar>
         <Grid container>
-          <Grid item xs={9}>
+          <Grid item xs={12}>
             <Input
-                label="Search Projects"
+                label="Search Investors"
                 className={classes.searchInput}
                 InputProps={{
                     startAdornment: (<InputAdornment position="start">
@@ -229,23 +218,6 @@ export default function FeatureApprovalTable(props) {
                 onChange={handleSearch}
             />
           </Grid>
-          <Grid item xs={3}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
-              <Select
-                native
-                value={state.age}
-                onChange={handleChange}
-                label="Company"
-                inputProps={{
-                  name: 'company',
-                  id: 'outlined-company-native-simple',
-                }}
-              >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
-              </Select>
-            </FormControl>
-          </Grid>
-
         </Grid>
       </Toolbar>
       <TblContainer>
@@ -254,22 +226,21 @@ export default function FeatureApprovalTable(props) {
             {
               recordsAfterPagingAndSorting().map(row =>
               (<TableRow key={row._id}>
-                <TableCell>{row.projectName}</TableCell>
-                <TableCell>{dateToString(row.dueDate)}</TableCell>
-                <TableCell>{row.creatorName}</TableCell>
-                <TableCell>{row.projectDetails}</TableCell>
-                <TableCell>{row.companyName}</TableCell>
+                <TableCell>{row.investorName}</TableCell>
+                <TableCell>{approvedIcon(row.approved)}</TableCell>
+                <TableCell>{row.contactNo}</TableCell>
+                <TableCell>{row.investorEmail}</TableCell>
                 <TableCell>
                   <ActionButton
                     color="light"
-                    onClick={() => {onApprove(row.projectName)}}>
+                    onClick={() => {onApprove(row._id)}}>
                     <CheckIcon fontSize="small" />
                   </ActionButton>
                 </TableCell>
                 <TableCell>
                   <ActionButton
                     color="light"
-                    onClick={() => {onReject(row.projectName)}}>
+                    onClick={() => { openInRejectPopup(row) }}>
                     <CloseIcon fontSize="small" />
                   </ActionButton>
                 </TableCell>
@@ -279,13 +250,15 @@ export default function FeatureApprovalTable(props) {
       </TblContainer>
       <TblPagination />
     </Paper>
-      <Popup
-        title="Register New Project"
-        openPopup={openRegPopup}
-        setOpenPopup={setOpenRegPopup}
-      >
-
-      </Popup>
+    <Popup
+      title="Reject Investor"
+      openPopup={openRejectPopup}
+      setOpenPopup={setOpenRejectPopup}
+    >
+      <RejectForm
+          recordForReject={recordForEdit}
+          reject={onReject} />
+    </Popup>
       <Notification
                notify={notify}
                setNotify={setNotify}

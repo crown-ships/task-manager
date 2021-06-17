@@ -1,17 +1,12 @@
 import React from 'react';
 import Link from '@material-ui/core/Link';
-import { makeStyles, createMuiTheme } from '@material-ui/core/styles';
-import red from "@material-ui/core/colors/red";
-import orange from "@material-ui/core/colors/orange";
-import green from "@material-ui/core/colors/green";
+import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
 import AddIcon from '@material-ui/icons/Add';
 import {Search} from '@material-ui/icons';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import HelpIcon from '@material-ui/icons/Help';
 import TableCell from '@material-ui/core/TableCell';
 import Paper from '@material-ui/core/Paper';
 import TableHead from '@material-ui/core/TableHead';
@@ -27,31 +22,27 @@ import Input from "../../../../controls/Input"
 import ConfirmDialog from "../../../../elements/ConfirmDialog"
 import Notification from "../../../../elements/Notification"
 import Popup from "../../../../elements/Popup"
-import UpdateForm from "../../forms/updateProjectForm"
+import UpdateForm from "../../forms/updateInvestorForm"
 import UseTable from "../../../useTable"
-import RegisterForm from "../../forms/registerProjectForm"
+import RegisterForm from "../../forms/registerInvestorForm"
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import PropTypes from "prop-types";
 import CancelIcon from '@material-ui/icons/Cancel';
-
-function createData(id ,name, app, date, details, createdBy, update,del) {
-  return { _id:id, projectName: name, approved: app ,dueDate: date, projectDetails: details, creatorName: createdBy, updated:update,delete:del};
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import HelpIcon from '@material-ui/icons/Help';
+// Generate Order Data
+function createData() {
+  return {
+    _id:"",
+    investorName: "",
+    contactNo: "",
+    approved: ""
+  }
 }
-
-const theme = createMuiTheme({
-  palette: {
-    green: {
-      main: '#1a9c34'
-    },
-    yellow: {
-      main: '#f5ca20'
-    },
-    yellow: {
-      main: '#f5ca20'
-    },
-  },
-});
 
 const useStyles = makeStyles(theme => ({
     pageContent: {
@@ -74,23 +65,15 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const headCells = [
-    { id: 'projectName', label: 'Project Name' },
-    { id: 'approvedIcon', label: 'Approved',disableSorting: true  },
-
-    { id: 'update', label: 'Update', disableSorting: true },
-    { id: 'delete', label: 'Delete', disableSorting: true }
+    { id: 'investorName', label: 'Investor Name' },
+    { id: 'approved', label: 'Approved' },
+    { id: 'investorEmail', label: 'Email'},
+    { id: 'contactNo', label: 'Contact No.' },
+    { id: 'update', label: 'Update', disableSorting: true }
 ];
 
 const rows = [
-  createData("", "","", "", "","","",""),
-  createData("", "", "","", "","","",""),
-  createData("", "", "","", "","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","","")
+  createData()
 ];
 
 function preventDefault(event) {
@@ -98,21 +81,15 @@ function preventDefault(event) {
 }
 
 const getData = (prop) => {
-  return prop.getAllProjects({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
-}
-const getDropdownList = (prop) => {
-  return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  return prop.getAllInvestors({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
-
-export default function AP_Table(props) {
+export default function UInv_Table(props) {
 
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
-  const [list, setList] = React.useState([]);
-  const [company, setCompany] = React.useState("");
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
@@ -120,34 +97,10 @@ export default function AP_Table(props) {
   const classes = useStyles();
 
   React.useEffect(async () => {
-    const d = await getDropdownList(props);
-    var complist = d.data.map(function(item) {
-      return item.companyName;
-    });
-    const len = complist.length;
-    var selList = [];
-    var i;
-    selList[0] = {key:0, item: ""};
-    for(i=0; i<len; i++) {
-      selList[i+1] = {key:i+1, item: complist[i]};
-    }
-    console.log(selList);
-    setList(selList);
-  },[]);
-
-  React.useEffect(async () => {
     const d = await getData(props);
     setData(d.data);
     setRecords(d.data);
-    setFilterFn({
-        fn: items => {
-            if (company == "")
-                return items;
-            else
-                return items.filter(x => x.companyName.includes(company))
-        }
-    })
-  },[notify, list]);
+  },[notify]);
 
 
   const {
@@ -164,36 +117,17 @@ export default function AP_Table(props) {
             if (target.value == "")
                 return items;
             else
-                return items.filter(x => x.projectName.toLowerCase().includes(target.value))
+                return items.filter(x => x.investorName.toLowerCase().includes(target.value.toLowerCase()));
         }
     })
   }
-  const [state, setState] = React.useState({
-      checkedA: true,
-      checkedB: true,
-    });
 
-  const handleChange = (event) => {
-    let val = event.target;
-    console.log(val.value);
-    setCompany(val.value);
-    setFilterFn({
-        fn: items => {
-            if (val.value == "")
-                return items;
-            else
-                return items.filter(x => x.companyName.includes(val.value))
-        }
-    })
-
-  };
   const openInEditPopup = item => {
     setRecordForEdit(item);
     setOpenEditPopup(true);
   }
 
   const openInRegPopup = item => {
-
     setOpenRegPopup(true);
   }
 
@@ -205,8 +139,7 @@ export default function AP_Table(props) {
       },
       body: data
     };
-    console.log(input);
-    props.registerProject(input, props.history);
+    props.registerInvestor(input, props.history);
     resetForm();
     setOpenRegPopup(false);
     setNotify({
@@ -215,55 +148,53 @@ export default function AP_Table(props) {
       type: 'success'
     });
   }
-  const edit = (data, resetForm, og_email) => {
+
+  const edit = (data, resetForm, id) => {
 
     const input = {
       params: {
         email: props.auth.user.email,
-        emailupdate: og_email,
+        investorID: id,
         auth: props.auth.isAuthenticated
       },
       body: data
     };
+    props.updateInvestor(input, props.history);
+    resetForm();
+    setRecordForEdit(null);
+    setOpenEditPopup(false);
+    setNotify({
+      isOpen: true,
+      message: "Update Successfully",
+      type: 'success'
+    });
 
-    if(props.auth.user.role === "admin"){
-      props.updateProject(input, props.history);
-      resetForm();
-      setRecordForEdit(null);
-      setOpenEditPopup(false);
-      setNotify({
-        isOpen: true,
-        message: "Update Successfully",
-        type: 'success'
-      });
-    }
   }
 
-  const onDelete = company => {
+  const onDelete = investor => {
     setConfirmDialog({
         ...confirmDialog,
         isOpen: false
     })
 
     const input = {
-      emailDelete: company.email,
+      investorID: investor._id,
       email: props.auth.user.email,
       auth: props.auth.isAuthenticated
     };
 
 
-      props.deleteProject(input, props.history);
-      setNotify({
-        isOpen: true,
-        message: "Deleted Successfully",
-        type: 'success'
-      });
+    props.deleteInvestor(input, props.history);
+    setNotify({
+      isOpen: true,
+      message: "Deleted Successfully",
+      type: 'success'
+    });
 
 
   }
   const dateToString = (date) => {
     var d = date.toString();
-
     d = d.substring(0, d.indexOf('T'));
     return d;
   }
@@ -288,12 +219,12 @@ export default function AP_Table(props) {
 
   return (
     <React.Fragment>
-    <Paper className={classes.pageContent}>
+
       <Toolbar>
         <Grid container>
-          <Grid item xs={7}>
+          <Grid item xs={9}>
             <Input
-                label="Search Projects"
+                label="Search Investors"
                 className={classes.searchInput}
                 InputProps={{
                     startAdornment: (<InputAdornment position="start">
@@ -304,29 +235,12 @@ export default function AP_Table(props) {
             />
           </Grid>
           <Grid item xs={3}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
-              <Select
-                native
-                value={state.age}
-                onChange={handleChange}
-                label="Company"
-                inputProps={{
-                  name: 'company',
-                  id: 'outlined-company-native-simple',
-                }}
-              >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={2}>
             <Button
                 text="Add New"
                 variant="outlined"
                 startIcon={<AddIcon />}
                 className={classes.newButton}
                 onClick={() => { setOpenRegPopup(true); }}
-                disabled = {(company==="")}
             />
           </Grid>
         </Grid>
@@ -337,12 +251,10 @@ export default function AP_Table(props) {
             {
               recordsAfterPagingAndSorting().map(row =>
               (<TableRow key={row._id}>
-                <TableCell>{row.projectName}</TableCell>
-                <TableCell align='center'>{approvedIcon(row.approved)}</TableCell>
-                <TableCell>{dateToString(row.dueDate)}</TableCell>
-                <TableCell>{row.creatorName}</TableCell>
-                <TableCell>{row.projectDetails}</TableCell>
-                <TableCell>{row.companyName}</TableCell>
+                <TableCell>{row.investorName}</TableCell>
+                <TableCell>{approvedIcon(row.approved)}</TableCell>
+                <TableCell>{row.investorEmail}</TableCell>
+                <TableCell>{row.contactNo}</TableCell>
                 <TableCell>
                   <ActionButton
                     color="light"
@@ -350,41 +262,27 @@ export default function AP_Table(props) {
                     <EditOutlinedIcon fontSize="small" />
                   </ActionButton>
                 </TableCell>
-                <TableCell>
-                  <ActionButton
-                    color="light"
-                    onClick={() => {
-                      setConfirmDialog({
-                        isOpen: true,
-                        title: 'Are you sure to delete this record?',
-                        subTitle: "You can't undo this operation",
-                        onConfirm: () => { onDelete(row) }
-                      })
-                    }}>
-                    <CloseIcon fontSize="small" />
-                  </ActionButton>
-                </TableCell>
               </TableRow>
           ))}
         </TableBody>
       </TblContainer>
       <TblPagination />
-    </Paper>
+
       <Popup
-        title="Edit Project Details"
+        title="Edit Investor Details"
         openPopup={openEditPopup}
         setOpenPopup={setOpenEditPopup}
       >
-        <UpdateForm
+        <UpdateForm  {...props}
             recordForEdit={recordForEdit}
             edit={edit} />
       </Popup>
       <Popup
-        title="Register New Project"
+        title="Register New Investor"
         openPopup={openRegPopup}
         setOpenPopup={setOpenRegPopup}
       >
-        <RegisterForm {...props} create={create} company={company}/>
+        <RegisterForm {...props} create={create} />
       </Popup>
       <Notification
                notify={notify}

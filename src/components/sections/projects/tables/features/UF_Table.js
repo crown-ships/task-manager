@@ -104,11 +104,11 @@ const getData = (prop) => {
   return prop.getAllFeatures({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 const getDropdownList = (prop) => {
-  return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  return prop.getAllProjects({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
 
-export default function AP_Table(props) {
+export default function UF_Table(props) {
 
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
@@ -125,7 +125,7 @@ export default function AP_Table(props) {
   React.useEffect(async () => {
     const d = await getDropdownList(props);
     var complist = d.data.map(function(item) {
-      return item.companyName;
+      return item.projectName;
     });
     const len = complist.length;
     var selList = [];
@@ -147,7 +147,7 @@ export default function AP_Table(props) {
             if (company == "")
                 return items;
             else
-                return items.filter(x => x.companyName.includes(company))
+                return items.filter(x => x.projectName.includes(company))
         }
     })
   },[notify, list]);
@@ -185,7 +185,7 @@ export default function AP_Table(props) {
             if (val.value == "")
                 return items;
             else
-                return items.filter(x => x.companyName.includes(val.value))
+                return items.filter(x => x.projectName.includes(val.value))
         }
     })
 

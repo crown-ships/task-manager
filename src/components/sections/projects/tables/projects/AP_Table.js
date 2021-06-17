@@ -170,9 +170,9 @@ export default function AP_Table(props) {
     setFilterFn({
         fn: items => {
             if (company == "")
-                return items.filter(x => x.enabled.includes("true"));
+                return items.filter(x => x.approved.includes("approved"));
             else
-                return items.filter(x => x.companyName.includes(company) && x.approved.includes("approved"))
+                return items.filter(x => x.companyName.includes(company) && x.approved.includes("approved"));
         }
     })
   },[notify, list]);
@@ -190,9 +190,9 @@ export default function AP_Table(props) {
     setFilterFn({
         fn: items => {
             if (target.value == "")
-                return items.filter(x => x.enabled.includes("true"));
+                return items.filter(x => x.approved.includes("approved"));
             else
-                return items.filter(x => x.projectName.toLowerCase().includes(target.value.toLowerCase()))
+                return items.filter(x => x.projectName.toLowerCase().includes(target.value.toLowerCase()) && x.approved.includes("approved"));
         }
     })
   }
@@ -208,9 +208,9 @@ export default function AP_Table(props) {
     setFilterFn({
         fn: items => {
             if (val.value == "")
-                return items;
+                return items.filter(x =>  x.approved.includes("approved"));
             else
-                return items.filter(x => x.companyName.includes(val.value) && x.approved.includes("approved"))
+                return items.filter(x => x.companyName.includes(val.value) && x.approved.includes("approved"));
         }
     })
 

@@ -1,4 +1,4 @@
-// import UI_Table from "../tables/investments/UI_Table"
+import UI_Table from "../tables/investments/UI_Table"
 import AI_Table from "../tables/investments/AI_Table"
 
 
@@ -11,11 +11,11 @@ const InvestmentTablePicker = (props) => {
       <AI_Table {...props}/>
     );
   }
-  // if (user.role === "user"){
-  //   console.log("user");
-  //   return(
-  //     <UI_Table {...props}/>
-  //   );
-  // }
+  if (user.role === "user"){
+    console.log("user");
+    return(
+      <UI_Table {...props}/>
+    );
+  }
 }
 export default InvestmentTablePicker;

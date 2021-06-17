@@ -1,17 +1,12 @@
 import React from 'react';
 import Link from '@material-ui/core/Link';
-import { makeStyles, createMuiTheme } from '@material-ui/core/styles';
-import red from "@material-ui/core/colors/red";
-import orange from "@material-ui/core/colors/orange";
-import green from "@material-ui/core/colors/green";
+import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
 import AddIcon from '@material-ui/icons/Add';
 import {Search} from '@material-ui/icons';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import HelpIcon from '@material-ui/icons/Help';
 import TableCell from '@material-ui/core/TableCell';
 import Paper from '@material-ui/core/Paper';
 import TableHead from '@material-ui/core/TableHead';
@@ -27,31 +22,37 @@ import Input from "../../../../controls/Input"
 import ConfirmDialog from "../../../../elements/ConfirmDialog"
 import Notification from "../../../../elements/Notification"
 import Popup from "../../../../elements/Popup"
-import UpdateForm from "../../forms/updateProjectForm"
+import UpdateForm from "../../forms/updateInvestmentForm"
 import UseTable from "../../../useTable"
-import RegisterForm from "../../forms/registerProjectForm"
+import RegisterForm from "../../forms/registerInvestmentForm"
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import PropTypes from "prop-types";
 import CancelIcon from '@material-ui/icons/Cancel';
-
-function createData(id ,name, app, date, details, createdBy, update,del) {
-  return { _id:id, projectName: name, approved: app ,dueDate: date, projectDetails: details, creatorName: createdBy, updated:update,delete:del};
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import HelpIcon from '@material-ui/icons/Help';
+// Generate Order Data
+function createData() {
+  return {
+    _id:"",
+    investorName: "",
+    contactNo: "",
+    profitPercent:0,
+    capitalAmt: 0,
+    capitalPaid:0,
+    investmentType: "",
+    paymentTerms: "",
+    startDate: "",
+    dueDate:"",
+    pendingAmt:0,
+    creatorName: "",
+    approved: ""
+  }
 }
-
-const theme = createMuiTheme({
-  palette: {
-    green: {
-      main: '#1a9c34'
-    },
-    yellow: {
-      main: '#f5ca20'
-    },
-    yellow: {
-      main: '#f5ca20'
-    },
-  },
-});
 
 const useStyles = makeStyles(theme => ({
     pageContent: {
@@ -74,26 +75,21 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const headCells = [
-    { id: 'projectName', label: 'Project Name' },
-    { id: 'approvedIcon', label: 'Approved',disableSorting: true  },
+    { id: 'investorName', label: 'Investor Name' },
+    { id: 'investmentName', label: 'Investment Name' },
+    { id: 'approved', label: 'Approved' },
+    { id: 'startDate', label: 'Start Date' },
     { id: 'dueDate', label: 'Due Date' },
-    { id: 'creatorName', label: 'Creator' },
-    { id: 'projectDetails', label: 'Project Details'},
-    { id: 'companyName', label: 'Company Name'},
-    { id: 'update', label: 'Update', disableSorting: true },
-    { id: 'delete', label: 'Delete', disableSorting: true }
+    { id: 'capitalAmt', label: 'Capital Amount'},
+    { id: 'capitalPaid', label: 'Amount Paid'},
+    { id: 'profitPercent', label: 'Rate'},
+    { id: 'investmentType', label: 'Type'},
+    { id: 'paymentTerms', label: 'Terms'},
+    { id: 'update', label: 'Update', disableSorting: true }
 ];
 
 const rows = [
-  createData("", "","", "", "","","",""),
-  createData("", "", "","", "","","",""),
-  createData("", "", "","", "","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","","")
+  createData()
 ];
 
 function preventDefault(event) {
@@ -101,12 +97,12 @@ function preventDefault(event) {
 }
 
 const getData = (prop) => {
-  return prop.getAllProjects({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
-}
-const getDropdownList = (prop) => {
-  return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  return prop.getAllInvestments({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
+const getDropdownList = (prop) => {
+  return prop.getAllInvestors({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+}
 
 export default function AP_Table(props) {
 
@@ -115,7 +111,8 @@ export default function AP_Table(props) {
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
   const [list, setList] = React.useState([]);
-  const [company, setCompany] = React.useState("");
+  const [investor, setInvestor] = React.useState("");
+  const [allInvestors, setAllInvestors] = React.useState([]);
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
@@ -124,15 +121,24 @@ export default function AP_Table(props) {
 
   React.useEffect(async () => {
     const d = await getDropdownList(props);
+    setAllInvestors(d.data);
     var complist = d.data.map(function(item) {
-      return item.companyName;
+        return item.investorName;
     });
-    const len = complist.length;
+
+    var j;
+    var len = 0;
+    var trimlist = [];
+    for(j=0; j<complist.length; j++) {
+      if(complist[j] !== "0"){
+        trimlist[len++] = complist[j];
+      }
+    }
     var selList = [];
     var i;
     selList[0] = {key:0, item: ""};
     for(i=0; i<len; i++) {
-      selList[i+1] = {key:i+1, item: complist[i]};
+      selList[i+1] = {key:i+1, item: trimlist[i]};
     }
     console.log(selList);
     setList(selList);
@@ -142,14 +148,6 @@ export default function AP_Table(props) {
     const d = await getData(props);
     setData(d.data);
     setRecords(d.data);
-    setFilterFn({
-        fn: items => {
-            if (company == "")
-                return items;
-            else
-                return items.filter(x => x.companyName.includes(company))
-        }
-    })
   },[notify, list]);
 
 
@@ -167,25 +165,21 @@ export default function AP_Table(props) {
             if (target.value == "")
                 return items;
             else
-                return items.filter(x => x.projectName.toLowerCase().includes(target.value))
+                return items.filter(x => x.investmentName.toLowerCase().includes(target.value.toLowerCase()));
         }
     })
   }
-  const [state, setState] = React.useState({
-      checkedA: true,
-      checkedB: true,
-    });
 
   const handleChange = (event) => {
     let val = event.target;
     console.log(val.value);
-    setCompany(val.value);
+    setInvestor(val.value);
     setFilterFn({
         fn: items => {
             if (val.value == "")
                 return items;
             else
-                return items.filter(x => x.companyName.includes(val.value))
+                return items.filter(x => x.investorName.includes(val.value));
         }
     })
 
@@ -200,6 +194,75 @@ export default function AP_Table(props) {
     setOpenRegPopup(true);
   }
 
+  function monthDiff(d1, d2) {
+      var months;
+      months = (d2.getFullYear() - d1.getFullYear()) * 12;
+      months -= d1.getMonth();
+      months += d2.getMonth();
+      return months <= 0 ? 0 : months;
+  }
+  const createReturns = (data) => {
+      var date1 = new Date(data.startDate);
+      var date2 = new Date(data.dueDate);
+      var months = monthDiff(date1, date2);
+      console.log(months);
+      var divider= 0;
+
+      if (data.paymentTerms === "monthly")
+        divider = 1;
+      else if (data.paymentTerms === "quarterly")
+        divider = 4;
+      else if (data.paymentTerms === "half-yearly")
+        divider = 6;
+      else if (data.paymentTerms === "yearly")
+        divider = 12;
+
+
+      if (data.investmentType ==="one-time") {
+        const input = {
+          params: {
+            email: props.auth.user.email,
+            auth: props.auth.isAuthenticated
+          },
+          body: {
+            investorName: data.investorName,
+            investorID: data.investorID,
+            investmentName: data.investmentName,
+            paymentTerms: data.paymentTerms,
+            totalInterestAmt: ((data.profitPercent*data.capitalAmt)/100),
+            returnAmt: ((data.profitPercent*data.capitalAmt)/100),
+            localDueDate: data.dueDate,
+            dueDate: data.dueDate
+          }
+        }
+        props.registerReturn(input, props.history);
+      }
+      else {
+        var noOfPayments = months/divider;
+        var i;
+        var input;
+        for(i=1; i<=noOfPayments; i++) {
+          input = {
+            params: {
+              email: props.auth.user.email,
+              auth: props.auth.isAuthenticated
+            },
+            body: {
+              investorName: data.investorName,
+              investorID: data.investorID,
+              investmentName: data.investmentName,
+              paymentTerms: data.paymentTerms,
+              totalInterestAmt: ((data.profitPercent*data.capitalAmt)/100),
+              returnAmt: ((data.profitPercent*data.capitalAmt)/100)/noOfPayments,
+              localDueDate: date1.setMonth(date1.getMonth() + divider),
+              dueDate: data.dueDate
+            }
+          }
+          props.registerReturn(input, props.history);
+        }
+      }
+  }
+
   const create = (data, resetForm) => {
     const input = {
       params: {
@@ -209,7 +272,7 @@ export default function AP_Table(props) {
       body: data
     };
     console.log(input);
-    props.registerProject(input, props.history);
+    props.registerInvestment(input, props.history);
     resetForm();
     setOpenRegPopup(false);
     setNotify({
@@ -218,51 +281,61 @@ export default function AP_Table(props) {
       type: 'success'
     });
   }
-  const edit = (data, resetForm, og_email) => {
+
+  const edit = (data, resetForm, id) => {
 
     const input = {
       params: {
         email: props.auth.user.email,
-        emailupdate: og_email,
+        investmentID: id,
         auth: props.auth.isAuthenticated
       },
       body: data
     };
 
-    if(props.auth.user.role === "admin"){
-      props.updateProject(input, props.history);
-      resetForm();
-      setRecordForEdit(null);
-      setOpenEditPopup(false);
-      setNotify({
-        isOpen: true,
-        message: "Update Successfully",
-        type: 'success'
-      });
-    }
+
+    props.updateInvestment(input, props.history);
+    resetForm();
+    setRecordForEdit(null);
+    setOpenEditPopup(false);
+    setNotify({
+      isOpen: true,
+      message: "Update Successfully",
+      type: 'success'
+    });
+
   }
 
-  const onDelete = company => {
+  const handleSwitch = (val, row) => {
+    console.log(val);
+      // if(val== true)
+      //   changeEnable("true",row.email, row.companyName);
+      // if(val == false)
+      //   changeEnable("false",row.email, row.companyName);
+  };
+
+  const onDelete = investment => {
     setConfirmDialog({
         ...confirmDialog,
         isOpen: false
     })
 
     const input = {
-      emailDelete: company.email,
+      investmentID: investment._id,
       email: props.auth.user.email,
       auth: props.auth.isAuthenticated
     };
 
 
-      props.deleteProject(input, props.history);
+    if(props.auth.user.role === "admin"){
+      props.deleteInvestment(input, props.history);
       setNotify({
         isOpen: true,
         message: "Deleted Successfully",
         type: 'success'
       });
 
-
+    }
   }
   const dateToString = (date) => {
     var d = date.toString();
@@ -291,12 +364,12 @@ export default function AP_Table(props) {
 
   return (
     <React.Fragment>
-    <Paper className={classes.pageContent}>
+
       <Toolbar>
         <Grid container>
           <Grid item xs={7}>
             <Input
-                label="Search Projects"
+                label="Search Investments"
                 className={classes.searchInput}
                 InputProps={{
                     startAdornment: (<InputAdornment position="start">
@@ -308,15 +381,14 @@ export default function AP_Table(props) {
           </Grid>
           <Grid item xs={3}>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
+              <InputLabel htmlFor="outlined-company-native-simple">Investor</InputLabel>
               <Select
                 native
-                value={state.age}
                 onChange={handleChange}
-                label="Company"
+                label="Investor"
                 inputProps={{
-                  name: 'company',
-                  id: 'outlined-company-native-simple',
+                  name: '// investor',
+                  id: 'outlined-investor-native-simple',
                 }}
               >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
               </Select>
@@ -329,7 +401,7 @@ export default function AP_Table(props) {
                 startIcon={<AddIcon />}
                 className={classes.newButton}
                 onClick={() => { setOpenRegPopup(true); }}
-                disabled = {(company==="")}
+                disabled = {(investor==="")}
             />
           </Grid>
         </Grid>
@@ -340,12 +412,16 @@ export default function AP_Table(props) {
             {
               recordsAfterPagingAndSorting().map(row =>
               (<TableRow key={row._id}>
-                <TableCell>{row.projectName}</TableCell>
-                <TableCell align='center'>{approvedIcon(row.approved)}</TableCell>
+                <TableCell>{row.investorName}</TableCell>
+                <TableCell>{row.investmentName}</TableCell>
+                <TableCell>{approvedIcon(row.approved)}</TableCell>
+                <TableCell>{dateToString(row.startDate)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
-                <TableCell>{row.creatorName}</TableCell>
-                <TableCell>{row.projectDetails}</TableCell>
-                <TableCell>{row.companyName}</TableCell>
+                <TableCell>{row.capitalAmt}</TableCell>
+                <TableCell>{row.capitalPaid}</TableCell>
+                <TableCell>{row.profitPercent + "%"}</TableCell>
+                <TableCell>{row.investmentType}</TableCell>
+                <TableCell>{row.paymentTerms}</TableCell>
                 <TableCell>
                   <ActionButton
                     color="light"
@@ -353,41 +429,26 @@ export default function AP_Table(props) {
                     <EditOutlinedIcon fontSize="small" />
                   </ActionButton>
                 </TableCell>
-                <TableCell>
-                  <ActionButton
-                    color="light"
-                    onClick={() => {
-                      setConfirmDialog({
-                        isOpen: true,
-                        title: 'Are you sure to delete this record?',
-                        subTitle: "You can't undo this operation",
-                        onConfirm: () => { onDelete(row) }
-                      })
-                    }}>
-                    <CloseIcon fontSize="small" />
-                  </ActionButton>
-                </TableCell>
               </TableRow>
           ))}
         </TableBody>
       </TblContainer>
       <TblPagination />
-    </Paper>
       <Popup
-        title="Edit Project Details"
+        title="Edit Investment Details"
         openPopup={openEditPopup}
         setOpenPopup={setOpenEditPopup}
       >
-        <UpdateForm
+        <UpdateForm  {...props}
             recordForEdit={recordForEdit}
             edit={edit} />
       </Popup>
       <Popup
-        title="Register New Project"
+        title="Register New Investment"
         openPopup={openRegPopup}
         setOpenPopup={setOpenRegPopup}
       >
-        <RegisterForm {...props} create={create} company={company}/>
+        <RegisterForm {...props} create={create} investor={investor} allInvestors={allInvestors} />
       </Popup>
       <Notification
                notify={notify}

@@ -22,15 +22,17 @@ import Button from "../../../controls/Button"
 import Input from "../../../controls/Input"
 import Notification from "../../../elements/Notification"
 import Popup from "../../../elements/Popup"
-
+import RejectForm from "../forms/rejectForm"
 import UseTable from "../../useTable"
-
+import CancelIcon from '@material-ui/icons/Cancel';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import HelpIcon from '@material-ui/icons/Help';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 // Generate Order Data
 function createData(id ,name, date, details, createdBy, update,del) {
-  return { _id:id, taskName: name, dueDate: date, taskDetails: details, personName: createdBy, updated:update,delete:del};
+  return { _id:id, investorName: name, startDate: "", dueDate: "", amtToBePaid: details, approved: "", updated:update,delete:del};
 }
 
 const useStyles = makeStyles(theme => ({
@@ -54,11 +56,16 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const headCells = [
-    { id: 'projectName', label: 'Project Name' },
+    { id: 'investorName', label: 'Investor Name' },
+    { id: 'investmentName', label: 'Investment Name' },
+    { id: 'approved', label: 'Approved' },
+    { id: 'startDate', label: 'Start Date' },
     { id: 'dueDate', label: 'Due Date' },
-    { id: 'personName', label: 'Creator' },
-    { id: 'taskDetails', label: 'Task Details'},
-    { id: 'companyName', label: 'Company Name'},
+    { id: 'capitalAmt', label: 'Capital Amount'},
+    { id: 'capitalPaid', label: 'Amount Paid'},
+    { id: 'profitPercent', label: 'Rate'},
+    { id: 'investmentType', label: 'Type'},
+    { id: 'paymentTerms', label: 'Terms'},
     { id: 'approve', label: 'Approve', disableSorting: true },
     { id: 'reject', label: 'Reject', disableSorting: true }
 ];
@@ -72,30 +79,29 @@ function preventDefault(event) {
 }
 
 const getData = (prop) => {
-  return prop.getAllProjects({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  return prop.getAllInvestments({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 const getDropdownList = (prop) => {
-  return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  return prop.getAllInvestors({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
 
-export default function TaskApprovalTable(props) {
+export default function InvestmentApprovalTable(props) {
 
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
   const [list, setList] = React.useState([]);
-  const [company, setCompany] = React.useState("");
+  const [investor, setInvestor] = React.useState("");
   const [recordForEdit, setRecordForEdit] = React.useState(null);
-  const [openEditPopup, setOpenEditPopup] = React.useState(false);
-  const [openRegPopup, setOpenRegPopup] = React.useState(false);
+  const [openRejectPopup, setOpenRejectPopup] = React.useState(false);
   const [records, setRecords] = React.useState(data);
   const classes = useStyles();
 
   React.useEffect(async () => {
     const d = await getDropdownList(props);
     var complist = d.data.map(function(item) {
-      return item.companyName;
+      return item.investorName;
     });
     const len = complist.length;
     var selList = [];
@@ -114,10 +120,10 @@ export default function TaskApprovalTable(props) {
     setRecords(d.data);
     setFilterFn({
         fn: items => {
-            if (company == "")
+            if (investor == "")
                 return items.filter(x => x.approved.includes("wait"));
             else
-                return items.filter(x => x.companyName.includes(company) && x.approved.includes("wait"))
+                return items.filter(x => x.investorName.includes(investor) && x.approved.includes("wait"))
         }
     })
   },[notify, list]);
@@ -134,10 +140,10 @@ export default function TaskApprovalTable(props) {
     let target = e.target;
     setFilterFn({
         fn: items => {
-            if (company == "")
+            if (investor == "")
                 return items.filter(x => x.approved.includes("wait"));
             else
-                return items.filter(x => x.taskName.toLowerCase().includes(target.value.toLowerCase()))
+                return items.filter(x => x.investmentName.toLowerCase().includes(target.value.toLowerCase()) && x.approved.includes("wait"));
         }
     })
   }
@@ -146,25 +152,30 @@ export default function TaskApprovalTable(props) {
       checkedB: true,
     });
 
+    const openInRejectPopup = item => {
+      setRecordForEdit(item);
+      setOpenRejectPopup(true);
+    }
+
     const handleChange = (event) => {
       let val = event.target;
       console.log(val.value);
-      setCompany(val.value);
+      setInvestor(val.value);
       setFilterFn({
           fn: items => {
               if (val.value == "")
-                  return items.filter(x => x.approved.includes("wait"));
+                  return items.filter(x => x.approved.includes("wait"))
               else
-                  return items.filter(x => x.companyName.includes(val.value) && x.approved.includes("wait"))
+                  return items.filter(x => x.investorName.includes(val.value) && x.approved.includes("wait"))
           }
       })
       };
 
-  const onApprove = og_projectName => {
+  const onApprove = og_id => {
     const input = {
       params: {
         email: props.auth.user.email,
-        projectName: og_projectName,
+        investmenttID: og_id,
         auth: props.auth.isAuthenticated
       },
       body: {
@@ -173,32 +184,35 @@ export default function TaskApprovalTable(props) {
     };
 
     if(props.auth.user.role === "admin"){
-      props.updateProject(input, props.history);
+      props.updateInvestment(input, props.history);
       setNotify({
         isOpen: true,
-        message: "Project Approved.",
+        message: "Investment Approved.",
         type: 'success'
       });
     }
   }
 
-  const onReject = og_projectName => {
+  const onReject = (og_id, reason, resetForm) => {
     const input = {
       params: {
         email: props.auth.user.email,
-        projectName: og_projectName,
+        investmentID: og_id,
         auth: props.auth.isAuthenticated
       },
       body: {
-        approved: "rejected"
+        approved: "rejected",
+        rejectReason: reason
       }
     };
 
     if(props.auth.user.role === "admin"){
-      props.updateProject(input, props.history);
+      props.updateInvestment(input, props.history);
+      resetForm();
+      setOpenRejectPopup(false);
       setNotify({
         isOpen: true,
-        message: "Project Rejeected.",
+        message: "Investor Rejected.",
         type: 'success'
       });
     }
@@ -211,15 +225,31 @@ export default function TaskApprovalTable(props) {
     return d;
   }
 
+  const approvedIcon = (status) => {
+
+    if (status === "approved") {
+      console.log(status);
+      console.log("yes");
+      return <CheckCircleIcon fontSize="small" style={{ color: "#00b386" }}/>
+    }
+    else if (status === "wait") {
+      console.log("what");
+      return <HelpIcon fontSize="small"  style={{ color: "#ffbf00" }}/>
+    }
+    else if (status === "rejected") {
+      console.log("what");
+      return <CancelIcon fontSize="small"  style={{ color: "#DC143C" }}/>
+    }
+  }
 
   return (
     <React.Fragment>
-    <Paper className={classes.pageContent}>
+
       <Toolbar>
         <Grid container>
           <Grid item xs={9}>
             <Input
-                label="Search Projects"
+                label="Search Investments"
                 className={classes.searchInput}
                 InputProps={{
                     startAdornment: (<InputAdornment position="start">
@@ -231,15 +261,15 @@ export default function TaskApprovalTable(props) {
           </Grid>
           <Grid item xs={3}>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
+              <InputLabel htmlFor="outlined-investor-native-simple">Investor</InputLabel>
               <Select
                 native
                 value={state.age}
                 onChange={handleChange}
-                label="Company"
+                label="Investor"
                 inputProps={{
-                  name: 'company',
-                  id: 'outlined-company-native-simple',
+                  name: 'investor',
+                  id: 'outlined-investor-native-simple',
                 }}
               >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
               </Select>
@@ -254,22 +284,27 @@ export default function TaskApprovalTable(props) {
             {
               recordsAfterPagingAndSorting().map(row =>
               (<TableRow key={row._id}>
-                <TableCell>{row.projectName}</TableCell>
+                <TableCell>{row.investorName}</TableCell>
+                <TableCell>{row.investmentName}</TableCell>
+                <TableCell>{approvedIcon(row.approved)}</TableCell>
+                <TableCell>{dateToString(row.startDate)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
-                <TableCell>{row.creatorName}</TableCell>
-                <TableCell>{row.projectDetails}</TableCell>
-                <TableCell>{row.companyName}</TableCell>
+                <TableCell>{row.capitalAmt}</TableCell>
+                <TableCell>{row.capitalPaid}</TableCell>
+                <TableCell>{row.profitPercent + "%"}</TableCell>
+                <TableCell>{row.investmentType}</TableCell>
+                <TableCell>{row.paymentTerms}</TableCell>
                 <TableCell>
                   <ActionButton
                     color="light"
-                    onClick={() => {onApprove(row.projectName)}}>
+                    onClick={() => {onApprove(row._id)}}>
                     <CheckIcon fontSize="small" />
                   </ActionButton>
                 </TableCell>
                 <TableCell>
                   <ActionButton
                     color="light"
-                    onClick={() => {onReject(row.projectName)}}>
+                    onClick={() => { openInRejectPopup(row) }}>
                     <CloseIcon fontSize="small" />
                   </ActionButton>
                 </TableCell>
@@ -278,14 +313,15 @@ export default function TaskApprovalTable(props) {
         </TableBody>
       </TblContainer>
       <TblPagination />
-    </Paper>
-      <Popup
-        title="Register New Project"
-        openPopup={openRegPopup}
-        setOpenPopup={setOpenRegPopup}
-      >
-
-      </Popup>
+    <Popup
+      title="Reject Investor"
+      openPopup={openRejectPopup}
+      setOpenPopup={setOpenRejectPopup}
+    >
+      <RejectForm
+          recordForReject={recordForEdit}
+          reject={onReject} />
+    </Popup>
       <Notification
                notify={notify}
                setNotify={setNotify}

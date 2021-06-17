@@ -74,17 +74,35 @@ export const mainListItems = (
 
 export const secondaryListItems = (
   <div>
-  <ListItem button component={Link} to="/projects">
+  <ListItem button component={Link} to="/dashboard">
     <ListItemIcon>
       <DashboardIcon />
+    </ListItemIcon>
+    <ListItemText primary="Dashboard" />
+  </ListItem>
+  <ListItem button component={Link} to="/projects">
+    <ListItemIcon>
+      <AssignmentIcon />
     </ListItemIcon>
     <ListItemText primary="Projects" />
   </ListItem>
+  <ListItem button component={Link} to="/investments">
+    <ListItemIcon>
+      <MonetizationOnIcon />
+    </ListItemIcon>
+    <ListItemText primary="Investments" />
+  </ListItem>
   <ListItem button component={Link} to="/vendors">
     <ListItemIcon>
-      <DashboardIcon />
+      <ContactsIcon />
     </ListItemIcon>
     <ListItemText primary="Vendors" />
+  </ListItem>
+  <ListItem button component={Link} to="/rejection">
+    <ListItemIcon>
+      <CancelIcon />
+    </ListItemIcon>
+    <ListItemText primary="Rejection" />
   </ListItem>
   </div>
 );

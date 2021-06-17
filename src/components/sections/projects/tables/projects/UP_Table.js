@@ -1,17 +1,12 @@
 import React from 'react';
 import Link from '@material-ui/core/Link';
-import { makeStyles, createMuiTheme } from '@material-ui/core/styles';
-import red from "@material-ui/core/colors/red";
-import orange from "@material-ui/core/colors/orange";
-import green from "@material-ui/core/colors/green";
+import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
 import AddIcon from '@material-ui/icons/Add';
 import {Search} from '@material-ui/icons';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import HelpIcon from '@material-ui/icons/Help';
 import TableCell from '@material-ui/core/TableCell';
 import Paper from '@material-ui/core/Paper';
 import TableHead from '@material-ui/core/TableHead';
@@ -33,25 +28,47 @@ import RegisterForm from "../../forms/registerProjectForm"
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import PropTypes from "prop-types";
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import HelpIcon from '@material-ui/icons/Help';
 import CancelIcon from '@material-ui/icons/Cancel';
-
-function createData(id ,name, app, date, details, createdBy, update,del) {
-  return { _id:id, projectName: name, approved: app ,dueDate: date, projectDetails: details, creatorName: createdBy, updated:update,delete:del};
+// Generate Order Data
+function createData(id ,name, date, details, createdBy, update,del) {
+  return { _id:id, projectName: name, dueDate: date, projectDetails: details, companyName: createdBy, percentComplete:0, ownerName:name, enabled: "true", updated:update,delete:del};
 }
 
-const theme = createMuiTheme({
-  palette: {
-    green: {
-      main: '#1a9c34'
-    },
-    yellow: {
-      main: '#f5ca20'
-    },
-    yellow: {
-      main: '#f5ca20'
-    },
-  },
-});
+function CircularProgressWithLabel(props) {
+  return (
+    <Box position="relative" display="inline-flex">
+      <CircularProgress variant="determinate" {...props} />
+      <Box
+        top={0}
+        left={0}
+        bottom={0}
+        right={0}
+        position="absolute"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Typography variant="caption" component="div" color="textSecondary">{`${Math.round(
+          props.value,
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
+
+CircularProgressWithLabel.propTypes = {
+  /**
+   * The value of the progress indicator for the determinate and buffer variants.
+   * Value between 0 and 100.
+   */
+  value: PropTypes.number.isRequired,
+};
 
 const useStyles = makeStyles(theme => ({
     pageContent: {
@@ -75,25 +92,17 @@ const useStyles = makeStyles(theme => ({
 
 const headCells = [
     { id: 'projectName', label: 'Project Name' },
-    { id: 'approvedIcon', label: 'Approved',disableSorting: true  },
+    { id: 'approved', label: 'Approved' },
     { id: 'dueDate', label: 'Due Date' },
-    { id: 'creatorName', label: 'Creator' },
     { id: 'projectDetails', label: 'Project Details'},
     { id: 'companyName', label: 'Company Name'},
-    { id: 'update', label: 'Update', disableSorting: true },
-    { id: 'delete', label: 'Delete', disableSorting: true }
+    { id: 'percentComplete', label: 'Progress'},
+    { id: 'ownerName', label: 'Owner'},
+    { id: 'update', label: 'Update', disableSorting: true }
 ];
 
 const rows = [
-  createData("", "","", "", "","","",""),
-  createData("", "", "","", "","","",""),
-  createData("", "", "","", "","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","","")
+  createData("", "", "", "","","","")
 ];
 
 function preventDefault(event) {
@@ -108,7 +117,7 @@ const getDropdownList = (prop) => {
 }
 
 
-export default function AP_Table(props) {
+export default function UP_Table(props) {
 
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
@@ -116,6 +125,7 @@ export default function AP_Table(props) {
   const [data, setData] = React.useState(rows);
   const [list, setList] = React.useState([]);
   const [company, setCompany] = React.useState("");
+  const [allCompanies, setAllCompanies] = React.useState([]);
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
@@ -124,15 +134,27 @@ export default function AP_Table(props) {
 
   React.useEffect(async () => {
     const d = await getDropdownList(props);
+    setAllCompanies(d.data);
     var complist = d.data.map(function(item) {
-      return item.companyName;
+      if(item.enabled === "true")
+        return item.companyName;
+      else
+        return "0"
     });
-    const len = complist.length;
+
+    var j;
+    var len = 0;
+    var trimlist = [];
+    for(j=0; j<complist.length; j++) {
+      if(complist[j] !== "0"){
+        trimlist[len++] = complist[j];
+      }
+    }
     var selList = [];
     var i;
     selList[0] = {key:0, item: ""};
     for(i=0; i<len; i++) {
-      selList[i+1] = {key:i+1, item: complist[i]};
+      selList[i+1] = {key:i+1, item: trimlist[i]};
     }
     console.log(selList);
     setList(selList);
@@ -140,14 +162,15 @@ export default function AP_Table(props) {
 
   React.useEffect(async () => {
     const d = await getData(props);
+        console.log(d.data);
     setData(d.data);
     setRecords(d.data);
     setFilterFn({
         fn: items => {
             if (company == "")
-                return items;
+                return items.filter(x => x.enabled.includes("true"));
             else
-                return items.filter(x => x.companyName.includes(company))
+                return items.filter(x => x.companyName.includes(company) && x.enabled.includes("true"));
         }
     })
   },[notify, list]);
@@ -165,9 +188,9 @@ export default function AP_Table(props) {
     setFilterFn({
         fn: items => {
             if (target.value == "")
-                return items;
+                return items.filter(x => x.enabled.includes("true"));
             else
-                return items.filter(x => x.projectName.toLowerCase().includes(target.value))
+                return items.filter(x => x.projectName.toLowerCase().includes(target.value.toLowerCase()) && x.enabled.includes("true"));
         }
     })
   }
@@ -183,9 +206,9 @@ export default function AP_Table(props) {
     setFilterFn({
         fn: items => {
             if (val.value == "")
-                return items;
+                return items.filter(x => x.enabled.includes("true"));
             else
-                return items.filter(x => x.companyName.includes(val.value))
+                return items.filter(x => x.companyName.includes(val.value) && x.enabled.includes("true"))
         }
     })
 
@@ -218,12 +241,12 @@ export default function AP_Table(props) {
       type: 'success'
     });
   }
-  const edit = (data, resetForm, og_email) => {
+  const edit = (data, resetForm, og_id) => {
 
     const input = {
       params: {
         email: props.auth.user.email,
-        emailupdate: og_email,
+        projectID: og_id,
         auth: props.auth.isAuthenticated
       },
       body: data
@@ -242,34 +265,6 @@ export default function AP_Table(props) {
     }
   }
 
-  const onDelete = company => {
-    setConfirmDialog({
-        ...confirmDialog,
-        isOpen: false
-    })
-
-    const input = {
-      emailDelete: company.email,
-      email: props.auth.user.email,
-      auth: props.auth.isAuthenticated
-    };
-
-
-      props.deleteProject(input, props.history);
-      setNotify({
-        isOpen: true,
-        message: "Deleted Successfully",
-        type: 'success'
-      });
-
-
-  }
-  const dateToString = (date) => {
-    var d = date.toString();
-
-    d = d.substring(0, d.indexOf('T'));
-    return d;
-  }
 
   const approvedIcon = (status) => {
 
@@ -286,6 +281,13 @@ export default function AP_Table(props) {
       console.log("what");
       return <CancelIcon fontSize="small"  style={{ color: "#DC143C" }}/>
     }
+  }
+
+  const dateToString = (date) => {
+    var d = date.toString();
+
+    d = d.substring(0, d.indexOf('T'));
+    return d;
   }
 
 
@@ -340,31 +342,18 @@ export default function AP_Table(props) {
             {
               recordsAfterPagingAndSorting().map(row =>
               (<TableRow key={row._id}>
-                <TableCell>{row.projectName}</TableCell>
-                <TableCell align='center'>{approvedIcon(row.approved)}</TableCell>
+                <TableCell backgroundColor = "primary">{row.projectName}</TableCell>
+                <TableCell>{approvedIcon(row.approved)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
-                <TableCell>{row.creatorName}</TableCell>
                 <TableCell>{row.projectDetails}</TableCell>
                 <TableCell>{row.companyName}</TableCell>
+                <TableCell>  <CircularProgressWithLabel value={row.percentComplete} /></TableCell>
+                <TableCell>{row.ownerName}</TableCell>
                 <TableCell>
                   <ActionButton
                     color="light"
                     onClick={() => { openInEditPopup(row) }}>
                     <EditOutlinedIcon fontSize="small" />
-                  </ActionButton>
-                </TableCell>
-                <TableCell>
-                  <ActionButton
-                    color="light"
-                    onClick={() => {
-                      setConfirmDialog({
-                        isOpen: true,
-                        title: 'Are you sure to delete this record?',
-                        subTitle: "You can't undo this operation",
-                        onConfirm: () => { onDelete(row) }
-                      })
-                    }}>
-                    <CloseIcon fontSize="small" />
                   </ActionButton>
                 </TableCell>
               </TableRow>
@@ -378,7 +367,7 @@ export default function AP_Table(props) {
         openPopup={openEditPopup}
         setOpenPopup={setOpenEditPopup}
       >
-        <UpdateForm
+        <UpdateForm {...props}
             recordForEdit={recordForEdit}
             edit={edit} />
       </Popup>
@@ -387,7 +376,7 @@ export default function AP_Table(props) {
         openPopup={openRegPopup}
         setOpenPopup={setOpenRegPopup}
       >
-        <RegisterForm {...props} create={create} company={company}/>
+        <RegisterForm {...props} create={create} company={company} allCompanies = {allCompanies}/>
       </Popup>
       <Notification
                notify={notify}

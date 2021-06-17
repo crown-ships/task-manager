@@ -31,6 +31,9 @@ import { logoutUser } from "../../../actions/authActions";
 import { getAllCompanies } from "../../../actions/companyActions";
 import { getAllProjects, deleteProject, updateProject, registerProject } from "../../../actions/projectActions";
 import { getAllVendors, deleteVendor, updateVendor, registerVendor } from "../../../actions/vendorActions";
+import { getAllPayments, deletePayment, updatePayment, registerPayment } from "../../../actions/paymentActions";
+import { getAllInvestments, deleteInvestment, updateInvestment, registerInvestment } from "../../../actions/investmentActions";
+import { getAllInvestors, deleteInvestor, updateInvestor, registerInvestor } from "../../../actions/investorActions";
 import ProjectRejectionTable from "./tables/ProjectRejectionTable"
 import InvestorRejectionTable from "./tables/InvestorRejectionTable"
 import InvestmentRejectionTable from "./tables/InvestmentRejectionTable"
@@ -291,5 +294,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { logoutUser, getAllProjects, getAllCompanies, deleteProject, updateProject, registerProject, getAllVendors, deleteVendor, updateVendor, registerVendor}
+    { getAllInvestments, deleteInvestment, updateInvestment, registerInvestment, logoutUser, getAllPayments, deletePayment, updatePayment, registerPayment, getAllInvestors, deleteInvestor, updateInvestor, registerInvestor, getAllProjects, getAllCompanies, deleteProject, updateProject, registerProject, getAllVendors, deleteVendor, updateVendor, registerVendor}
 )(withRouter(RejectionPage));

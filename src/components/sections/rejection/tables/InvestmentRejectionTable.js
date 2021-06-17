@@ -22,15 +22,16 @@ import Button from "../../../controls/Button"
 import Input from "../../../controls/Input"
 import Notification from "../../../elements/Notification"
 import Popup from "../../../elements/Popup"
-
 import UseTable from "../../useTable"
-
+import CancelIcon from '@material-ui/icons/Cancel';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import HelpIcon from '@material-ui/icons/Help';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 // Generate Order Data
 function createData(id ,name, date, details, createdBy, update,del) {
-  return { _id:id, taskName: name, dueDate: date, taskDetails: details, personName: createdBy, updated:update,delete:del};
+  return { _id:id, investorName: name, startDate: "", dueDate: "", amtToBePaid: details, approved: "", updated:update,delete:del};
 }
 
 const useStyles = makeStyles(theme => ({
@@ -54,13 +55,17 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const headCells = [
-    { id: 'projectName', label: 'Project Name' },
+    { id: 'investorName', label: 'Investor Name' },
+    { id: 'investmentName', label: 'Investment Name' },
+    { id: 'approved', label: 'Approved' },
+    { id: 'startDate', label: 'Start Date' },
     { id: 'dueDate', label: 'Due Date' },
-    { id: 'personName', label: 'Creator' },
-    { id: 'taskDetails', label: 'Task Details'},
-    { id: 'companyName', label: 'Company Name'},
-    { id: 'approve', label: 'Approve', disableSorting: true },
-    { id: 'reject', label: 'Reject', disableSorting: true }
+    { id: 'capitalAmt', label: 'Capital Amount'},
+    { id: 'capitalPaid', label: 'Amount Paid'},
+    { id: 'profitPercent', label: 'Rate'},
+    { id: 'investmentType', label: 'Type'},
+    { id: 'paymentTerms', label: 'Terms'},
+    { id: 'rejectReason', label: 'Reject Reason'}
 ];
 
 const rows = [
@@ -72,30 +77,29 @@ function preventDefault(event) {
 }
 
 const getData = (prop) => {
-  return prop.getAllProjects({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  return prop.getAllInvestments({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 const getDropdownList = (prop) => {
-  return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  return prop.getAllInvestors({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
 
-export default function TaskApprovalTable(props) {
+export default function InvestmentApprovalTable(props) {
 
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
   const [list, setList] = React.useState([]);
-  const [company, setCompany] = React.useState("");
+  const [investor, setInvestor] = React.useState("");
   const [recordForEdit, setRecordForEdit] = React.useState(null);
-  const [openEditPopup, setOpenEditPopup] = React.useState(false);
-  const [openRegPopup, setOpenRegPopup] = React.useState(false);
+  const [openRejectPopup, setOpenRejectPopup] = React.useState(false);
   const [records, setRecords] = React.useState(data);
   const classes = useStyles();
 
   React.useEffect(async () => {
     const d = await getDropdownList(props);
     var complist = d.data.map(function(item) {
-      return item.companyName;
+      return item.investorName;
     });
     const len = complist.length;
     var selList = [];
@@ -114,10 +118,10 @@ export default function TaskApprovalTable(props) {
     setRecords(d.data);
     setFilterFn({
         fn: items => {
-            if (company == "")
-                return rows;
+            if (investor == "")
+                return items.filter(x => x.approved.includes("rejected"));
             else
-                return items.filter(x => x.companyName.includes(company) && x.approved.includes("wait"))
+                return items.filter(x => x.investorName.includes(investor) && x.approved.includes("rejected"))
         }
     })
   },[notify, list]);
@@ -134,10 +138,10 @@ export default function TaskApprovalTable(props) {
     let target = e.target;
     setFilterFn({
         fn: items => {
-            if (company == "")
-                return items;
+            if (investor == "")
+                return items.filter(x => x.approved.includes("rejected"));
             else
-                return items.filter(x => x.taskName.toLowerCase().includes(target.value.toLowerCase()))
+                return items.filter(x => x.investmentName.toLowerCase().includes(target.value.toLowerCase()) && x.approved.includes("rejected"));
         }
     })
   }
@@ -146,63 +150,20 @@ export default function TaskApprovalTable(props) {
       checkedB: true,
     });
 
+
     const handleChange = (event) => {
       let val = event.target;
       console.log(val.value);
-      setCompany(val.value);
+      setInvestor(val.value);
       setFilterFn({
           fn: items => {
               if (val.value == "")
-                  return rows;
+                  return items.filter(x => x.approved.includes("rejected"))
               else
-                  return items.filter(x => x.companyName.includes(val.value) && x.approved.includes("wait"))
+                  return items.filter(x => x.investorName.includes(val.value) && x.approved.includes("rejected"))
           }
       })
       };
-
-  const onApprove = og_projectName => {
-    const input = {
-      params: {
-        email: props.auth.user.email,
-        projectName: og_projectName,
-        auth: props.auth.isAuthenticated
-      },
-      body: {
-        approved: "approved"
-      }
-    };
-
-    if(props.auth.user.role === "admin"){
-      props.updateProject(input, props.history);
-      setNotify({
-        isOpen: true,
-        message: "Project Approved.",
-        type: 'success'
-      });
-    }
-  }
-
-  const onReject = og_projectName => {
-    const input = {
-      params: {
-        email: props.auth.user.email,
-        projectName: og_projectName,
-        auth: props.auth.isAuthenticated
-      },
-      body: {
-        approved: "rejected"
-      }
-    };
-
-    if(props.auth.user.role === "admin"){
-      props.updateProject(input, props.history);
-      setNotify({
-        isOpen: true,
-        message: "Project Rejeected.",
-        type: 'success'
-      });
-    }
-  }
 
   const dateToString = (date) => {
     var d = date.toString();
@@ -211,15 +172,31 @@ export default function TaskApprovalTable(props) {
     return d;
   }
 
+  const approvedIcon = (status) => {
+
+    if (status === "approved") {
+      console.log(status);
+      console.log("yes");
+      return <CheckCircleIcon fontSize="small" style={{ color: "#00b386" }}/>
+    }
+    else if (status === "wait") {
+      console.log("what");
+      return <HelpIcon fontSize="small"  style={{ color: "#ffbf00" }}/>
+    }
+    else if (status === "rejected") {
+      console.log("what");
+      return <CancelIcon fontSize="small"  style={{ color: "#DC143C" }}/>
+    }
+  }
 
   return (
     <React.Fragment>
-    <Paper className={classes.pageContent}>
+
       <Toolbar>
         <Grid container>
           <Grid item xs={9}>
             <Input
-                label="Search Projects"
+                label="Search Investments"
                 className={classes.searchInput}
                 InputProps={{
                     startAdornment: (<InputAdornment position="start">
@@ -231,15 +208,15 @@ export default function TaskApprovalTable(props) {
           </Grid>
           <Grid item xs={3}>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
+              <InputLabel htmlFor="outlined-investor-native-simple">Investor</InputLabel>
               <Select
                 native
                 value={state.age}
                 onChange={handleChange}
-                label="Company"
+                label="Investor"
                 inputProps={{
-                  name: 'company',
-                  id: 'outlined-company-native-simple',
+                  name: 'investor',
+                  id: 'outlined-investor-native-simple',
                 }}
               >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
               </Select>
@@ -254,42 +231,22 @@ export default function TaskApprovalTable(props) {
             {
               recordsAfterPagingAndSorting().map(row =>
               (<TableRow key={row._id}>
-                <TableCell>{row.projectName}</TableCell>
+                <TableCell>{row.investorName}</TableCell>
+                <TableCell>{row.investmentName}</TableCell>
+                <TableCell>{approvedIcon(row.approved)}</TableCell>
+                <TableCell>{dateToString(row.startDate)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
-                <TableCell>{row.creatorName}</TableCell>
-                <TableCell>{row.projectDetails}</TableCell>
-                <TableCell>{row.companyName}</TableCell>
-                <TableCell>
-                  <ActionButton
-                    color="light"
-                    onClick={() => {onApprove(row.projectName)}}>
-                    <CheckIcon fontSize="small" />
-                  </ActionButton>
-                </TableCell>
-                <TableCell>
-                  <ActionButton
-                    color="light"
-                    onClick={() => {onReject(row.projectName)}}>
-                    <CloseIcon fontSize="small" />
-                  </ActionButton>
-                </TableCell>
+                <TableCell>{row.capitalAmt}</TableCell>
+                <TableCell>{row.capitalPaid}</TableCell>
+                <TableCell>{row.profitPercent + "%"}</TableCell>
+                <TableCell>{row.investmentType}</TableCell>
+                <TableCell>{row.paymentTerms}</TableCell>
+                <TableCell>{row.rejectReason}</TableCell>
               </TableRow>
           ))}
         </TableBody>
       </TblContainer>
       <TblPagination />
-    </Paper>
-      <Popup
-        title="Register New Project"
-        openPopup={openRegPopup}
-        setOpenPopup={setOpenRegPopup}
-      >
-
-      </Popup>
-      <Notification
-               notify={notify}
-               setNotify={setNotify}
-           />
     </React.Fragment>
   );
 }

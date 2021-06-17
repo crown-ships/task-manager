@@ -21,8 +21,11 @@ import ActionButton from "../../../controls/ActionButton"
 import Button from "../../../controls/Button"
 import Input from "../../../controls/Input"
 import Notification from "../../../elements/Notification"
+import RejectForm from "../forms/rejectForm"
 import Popup from "../../../elements/Popup"
-
+import CancelIcon from '@material-ui/icons/Cancel';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import HelpIcon from '@material-ui/icons/Help';
 import UseTable from "../../useTable"
 
 import InputLabel from '@material-ui/core/InputLabel';
@@ -30,7 +33,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 // Generate Order Data
 function createData(id ,name, date, details, createdBy, update,del) {
-  return { _id:id, taskName: name, dueDate: date, taskDetails: details, personName: createdBy, updated:update,delete:del};
+  return { _id:id, projectName: name, dueDate: date, projectDetails: details, ownerName: createdBy, updated:update,delete:del};
 }
 
 const useStyles = makeStyles(theme => ({
@@ -55,8 +58,9 @@ const useStyles = makeStyles(theme => ({
 
 const headCells = [
     { id: 'projectName', label: 'Project Name' },
+    { id: 'approved', label: 'Approved'},
     { id: 'dueDate', label: 'Due Date' },
-    { id: 'personName', label: 'Creator' },
+    { id: 'ownerName', label: 'Owner' },
     { id: 'taskDetails', label: 'Task Details'},
     { id: 'companyName', label: 'Company Name'},
     { id: 'approve', label: 'Approve', disableSorting: true },
@@ -86,6 +90,7 @@ export default function ProjectApprovalTable(props) {
   const [data, setData] = React.useState(rows);
   const [list, setList] = React.useState([]);
   const [company, setCompany] = React.useState("");
+  const [openRejectPopup, setOpenRejectPopup] = React.useState(false);
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
@@ -137,7 +142,7 @@ export default function ProjectApprovalTable(props) {
             if (company == "")
                 return items.filter(x => x.approved.includes("wait"));
             else
-                return items.filter(x => x.taskName.toLowerCase().includes(target.value.toLowerCase()))
+                return items.filter(x => x.taskName.toLowerCase().includes(target.value.toLowerCase()) && x.approved.includes("wait"));
         }
     })
   }
@@ -153,18 +158,18 @@ export default function ProjectApprovalTable(props) {
       setFilterFn({
           fn: items => {
               if (val.value == "")
-                  return items;
+                  return items.filter(x => x.approved.includes("wait"));
               else
                   return items.filter(x => x.companyName.includes(val.value) && x.approved.includes("wait"))
           }
       })
       };
 
-  const onApprove = og_projectName => {
+  const onApprove = og_id => {
     const input = {
       params: {
         email: props.auth.user.email,
-        projectName: og_projectName,
+        projectID: og_id,
         auth: props.auth.isAuthenticated
       },
       body: {
@@ -182,26 +187,9 @@ export default function ProjectApprovalTable(props) {
     }
   }
 
-  const onReject = og_projectName => {
-    const input = {
-      params: {
-        email: props.auth.user.email,
-        projectName: og_projectName,
-        auth: props.auth.isAuthenticated
-      },
-      body: {
-        approved: "rejected"
-      }
-    };
-
-    if(props.auth.user.role === "admin"){
-      props.updateProject(input, props.history);
-      setNotify({
-        isOpen: true,
-        message: "Project Rejeected.",
-        type: 'success'
-      });
-    }
+  const openInRejectPopup = item => {
+    setRecordForEdit(item);
+    setOpenRejectPopup(true);
   }
 
   const dateToString = (date) => {
@@ -211,6 +199,47 @@ export default function ProjectApprovalTable(props) {
     return d;
   }
 
+  const onReject = (og_id, reason, resetForm) => {
+    const input = {
+      params: {
+        email: props.auth.user.email,
+        projectID: og_id,
+        auth: props.auth.isAuthenticated
+      },
+      body: {
+        approved: "rejected",
+        rejectReason: reason
+      }
+    };
+
+    if(props.auth.user.role === "admin"){
+      props.updateProject(input, props.history);
+      resetForm();
+      setOpenRejectPopup(false);
+      setNotify({
+        isOpen: true,
+        message: "Payment Rejected.",
+        type: 'success'
+      });
+    }
+  }
+
+  const approvedIcon = (status) => {
+
+    if (status === "approved") {
+      console.log(status);
+      console.log("yes");
+      return <CheckCircleIcon fontSize="small" style={{ color: "#00b386" }}/>
+    }
+    else if (status === "wait") {
+      console.log("what");
+      return <HelpIcon fontSize="small"  style={{ color: "#ffbf00" }}/>
+    }
+    else if (status === "rejected") {
+      console.log("what");
+      return <CancelIcon fontSize="small"  style={{ color: "#DC143C" }}/>
+    }
+  }
 
   return (
     <React.Fragment>
@@ -255,21 +284,22 @@ export default function ProjectApprovalTable(props) {
               recordsAfterPagingAndSorting().map(row =>
               (<TableRow key={row._id}>
                 <TableCell>{row.projectName}</TableCell>
+                <TableCell>{approvedIcon(row.approved)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
-                <TableCell>{row.creatorName}</TableCell>
+                <TableCell>{row.ownerName}</TableCell>
                 <TableCell>{row.projectDetails}</TableCell>
                 <TableCell>{row.companyName}</TableCell>
                 <TableCell>
                   <ActionButton
                     color="light"
-                    onClick={() => {onApprove(row.projectName)}}>
+                    onClick={() => {onApprove(row._id)}}>
                     <CheckIcon fontSize="small" />
                   </ActionButton>
                 </TableCell>
                 <TableCell>
                   <ActionButton
                     color="light"
-                    onClick={() => {onReject(row.projectName)}}>
+                    onClick={() => {onReject(row)}}>
                     <CloseIcon fontSize="small" />
                   </ActionButton>
                 </TableCell>
@@ -279,13 +309,15 @@ export default function ProjectApprovalTable(props) {
       </TblContainer>
       <TblPagination />
     </Paper>
-      <Popup
-        title=" Project Details"
-        openPopup={openRegPopup}
-        setOpenPopup={setOpenRegPopup}
-      >
-
-      </Popup>
+    <Popup
+      title="Reject Project"
+      openPopup={openRejectPopup}
+      setOpenPopup={setOpenRejectPopup}
+    >
+      <RejectForm
+          recordForReject={recordForEdit}
+          reject={onReject} />
+    </Popup>
       <Notification
                notify={notify}
                setNotify={setNotify}

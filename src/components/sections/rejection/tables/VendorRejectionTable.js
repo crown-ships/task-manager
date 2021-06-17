@@ -185,10 +185,6 @@ export default function VendorRejectionTable(props) {
       </TblContainer>
       <TblPagination />
     </Paper>
-      <Notification
-               notify={notify}
-               setNotify={setNotify}
-           />
     </React.Fragment>
   );
 }
