@@ -4,12 +4,11 @@ const path = require("path");
 const port = process.env.PORT || 4000
 
 if (process.env.NODE_ENV === "production") {
-  // Step 1:
-    app.use(express.static(path.resolve(__dirname, "./client/build")));
-    // Step 2:
-    app.get("*", function (request, response) {
-    response.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
-    });
+  app.use(express.static("client/build"));
+  const path = require("path");
+  app.get("*", (req, res) => {
+      res.sendFile(path.resolve('client', 'build', 'index.html'));
+  })
 }
 
 app.listen(port, () => console.log("server is up and running"));
