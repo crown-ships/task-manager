@@ -237,7 +237,7 @@ export default function APay_Table(props) {
       const v_inp = {
         params: {
           email: props.auth.user.email,
-          paymentID: vendorID,
+          vendorID: vendorID,
           auth: props.auth.isAuthenticated
         },
         body: {

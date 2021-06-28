@@ -232,15 +232,16 @@ export default function UPay_Table(props) {
           break;
         }
       }
+      var newPending = pAmt - payAmt;
 
       const v_inp = {
         params: {
           email: props.auth.user.email,
-          paymentID: vendorID,
+          vendorID: vendorID,
           auth: props.auth.isAuthenticated
         },
         body: {
-          pendingAmt: (pAmt - payAmt)
+          pendingAmt: newPending
         }
       };
       props.updateVendor(v_inp, props.history);
