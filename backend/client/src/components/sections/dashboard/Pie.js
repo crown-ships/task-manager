@@ -104,9 +104,6 @@ export default function Graphs(props) {
       <Chart
         data={project}
       >
-        <ArgumentAxis />
-        <ValueAxis max={100} />
-
         <PieSeries
           valueField="percentComplete"
           argumentField="projectName"
