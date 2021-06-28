@@ -56,11 +56,10 @@ const useStyles = makeStyles(theme => ({
 
 const headCells = [
     { id: 'vendorName', label: 'Vendor Name' },
-    { id: 'personName', label: 'Approved' },
+    { id: 'approved', label: 'Approved' },
     { id: 'amtToBePaid', label: 'Payment Amt.' },
     { id: 'dueDate', label: 'Due Date' },
-    { id: 'approve', label: 'Approve', disableSorting: true },
-    { id: 'reject', label: 'Reject', disableSorting: true }
+    { id: 'rejectReason', label: 'Reject Reason', disableSorting: true }
 ];
 
 const rows = [
@@ -79,7 +78,7 @@ const getDropdownList = (prop) => {
 }
 
 
-export default function PaymentApprovalTable(props) {
+export default function PaymentRejectionTable(props) {
 
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
@@ -174,7 +173,7 @@ export default function PaymentApprovalTable(props) {
       console.log("yes");
       return <CheckCircleIcon fontSize="small" style={{ color: "#00b386" }}/>
     }
-    else if (status === "rejected") {
+    else if (status === "wait") {
       console.log("what");
       return <HelpIcon fontSize="small"  style={{ color: "#ffbf00" }}/>
     }
@@ -228,7 +227,7 @@ export default function PaymentApprovalTable(props) {
               (<TableRow key={row._id}>
                 <TableCell>{row.vendorName}</TableCell>
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
-                <TableCell>{row.projectDetails}</TableCell>
+                <TableCell>{row.amtToBePaid}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
                 <TableCell>{row.rejectReason}</TableCell>
               </TableRow>
