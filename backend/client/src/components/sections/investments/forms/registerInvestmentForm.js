@@ -122,14 +122,14 @@ export default function RegisterForm(props) {
       <React.Fragment>
         <Form onSubmit={handleSubmit}>
             <Grid container>
-                <Grid item xs={8}>
-                <Input
-                    name="investmentName"
-                    label="Investment Name"
-                    value={values.investmentName}
-                    onChange={handleInputChange}
-                    error={errors.investmentName}
-                />
+                <Grid item xs={4}>
+                    <Input
+                        name="investmentName"
+                        label="Investment Name"
+                        value={values.investmentName}
+                        onChange={handleInputChange}
+                        error={errors.investmentName}
+                    />
                     <Input
                         name="profitPercent"
                         label="Rate"
@@ -151,7 +151,9 @@ export default function RegisterForm(props) {
                         onChange={handleInputChange}
                         error={errors.capitalPaid}
                     />
-
+                </Grid>
+                <Grid item xs={4}>
+                    <FormControl variant="outlined">
                       <InputLabel htmlFor="outlined-investmentType-native-simple">Investment Type</InputLabel>
                       <Select
                         native
@@ -164,8 +166,8 @@ export default function RegisterForm(props) {
                         }}
                       >{invtype.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
                       </Select>
-
-
+                    </FormControl>
+                    <FormControl variant="outlined">
                       <InputLabel htmlFor="outlined-paymentTerms-native-simple">Payment Terms</InputLabel>
                       <Select
                         native
@@ -178,7 +180,7 @@ export default function RegisterForm(props) {
                         }}
                       >{payterms.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
                       </Select>
-                    
+                    </FormControl>
                 </Grid>
                 <Grid item xs={4}>
                 <Input
