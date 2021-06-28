@@ -20,6 +20,44 @@ const initialFValues = {
     paymentTerms: 'none'
 }
 
+const invtype = [
+  {
+    key:0,
+    item: ""
+  },
+  {
+    key:1,
+    item: "one-time"
+  },
+  {
+    key: 2,
+    item: "recurring"
+  }
+];
+
+const payterms = [
+  {
+    key:0,
+    item: "none"
+  },
+  {
+    key: 1,
+    item: "monthly"
+  },
+  {
+    key:2,
+    item: "quarterly"
+  },
+  {
+    key: 3,
+    item: "half-yearly"
+  },
+  {
+    key: 4,
+    item: "yearly"
+  }
+];
+
 export default function RegisterForm(props) {
 
 
@@ -49,43 +87,7 @@ export default function RegisterForm(props) {
         investorDetails = props.allInvestors[i];
     }
 
-    const invtype = [
-      {
-        key:0,
-        item: ""
-      },
-      {
-        key:1,
-        item: "one-time"
-      },
-      {
-        key: 2,
-        item: "recurring"
-      }
-    ];
 
-    const payterms = [
-      {
-        key:0,
-        item: "none"
-      },
-      {
-        key: 1,
-        item: "monthly"
-      },
-      {
-        key:2,
-        item: "quarterly"
-      },
-      {
-        key: 3,
-        item: "half-yearly"
-      },
-      {
-        key: 4,
-        item: "yearly"
-      }
-    ]
     const handleSubmit = e => {
         e.preventDefault()
         if (validate()) {
@@ -108,15 +110,8 @@ export default function RegisterForm(props) {
         }
     }
 
-    useEffect(() => {
-        if (props.recordForEdit != null)
-            setValues({
-                ...props.recordForEdit
-            })
-    }, [props.recordForEdit])
-
     return (
-      <>
+      <React.Fragment>
         <Form onSubmit={handleSubmit}>
             <Grid container>
                 <Grid item xs={8}>
@@ -216,6 +211,6 @@ export default function RegisterForm(props) {
                 </Grid>
             </Grid>
         </Form>
-        </>
+        </React.Fragment>
     )
 }

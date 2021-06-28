@@ -40,6 +40,8 @@ export default function Graphs(props) {
       var complist = d.data.map(function(item) {
         return {projectName: item.projectName, percentComplete: item.percentComplete}
       });
+      console.log(complist);
+      setProject(complist)
     }
     else {
       var complist = d.data.map(function(item) {
@@ -49,8 +51,9 @@ export default function Graphs(props) {
           return {projectName: item.projectName, percentComplete: item.percentComplete}
         }
       });
+      console.log(complist);
+      setProject(complist)
     }
-    setProject(complist);
   },[company]);
 
   React.useEffect(async () => {
