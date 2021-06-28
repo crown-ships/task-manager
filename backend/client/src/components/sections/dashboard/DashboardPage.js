@@ -33,6 +33,7 @@ import { getAllProjects, deleteProject, updateProject, registerProject } from ".
 import { getAllTasks, deleteTask, updateTask, registerTask ,updateAllTasks } from "../../../actions/taskActions";
 import { getAllFeatures, deleteFeature, updateFeature, registerFeature, updateAllFeatures } from "../../../actions/featureActions";
 import Graphs from "./Graphs"
+import Pie from "./Pie"
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -239,11 +240,14 @@ const ProjectsPage =  (props) => {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-              <Graphs {...props}/>
-              </Paper>
-            </Grid>
+
+          <Paper className={classes.paper}>
+          <Graphs {...props}/>
+          </Paper>
+
+          <Paper className={classes.paper}>
+          <Pie {...props}/>
+          </Paper>
 
           <Box pt={4}>
             <Copyright />

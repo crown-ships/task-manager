@@ -244,7 +244,7 @@ export default function InvestmentApprovalTable(props) {
     const input = {
       params: {
         email: props.auth.user.email,
-        investmenttID: og._id,
+        investmentID: og._id,
         auth: props.auth.isAuthenticated
       },
       body: {
@@ -254,12 +254,12 @@ export default function InvestmentApprovalTable(props) {
 
     if(props.auth.user.role === "admin"){
       props.updateInvestment(input, props.history);
-      createReturns(og);
       setNotify({
         isOpen: true,
         message: "Investment Approved.",
         type: 'success'
       });
+      createReturns(og);
     }
   }
 

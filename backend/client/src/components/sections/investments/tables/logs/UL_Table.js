@@ -94,7 +94,10 @@ export default function AF_Table(props) {
   React.useEffect(async () => {
     const d = await getDropdownList(props);
     var complist = d.data.map(function(item) {
-      return item.investmentName;
+      if (item.approved === "approved")
+        return item.investorName;
+      else
+        return "0"
     });
     console.log(complist);
     var j;
