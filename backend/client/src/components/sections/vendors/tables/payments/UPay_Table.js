@@ -164,9 +164,9 @@ export default function UPay_Table(props) {
     setFilterFn({
         fn: items => {
             if (vendor == "")
-                return items.filter(x => x.isPaid.includes("no") && x.approved.includes("approved")&& x.enabled.includes("true"));
+                return items.filter(x => x.isPaid.includes("no")&& x.enabled.includes("true"));
             else
-                return items.filter(x => x.vendorName.includes(vendor) && x.approved.includes("approved") && x.isPaid.includes("no")&& x.enabled.includes("true"));
+                return items.filter(x => x.vendorName.includes(vendor)  && x.isPaid.includes("no")&& x.enabled.includes("true"));
         }
     })
   },[notify, list]);
@@ -184,9 +184,9 @@ export default function UPay_Table(props) {
     setFilterFn({
         fn: items => {
             if (target.value == "")
-                return items.filter(x => x.isPaid.includes("no") && x.approved.includes("approved") && x.enabled.includes("true"));
+                return items.filter(x => x.isPaid.includes("no")  && x.enabled.includes("true"));
             else
-                return items.filter(x => x.vendorName.toLowerCase().includes(target.value.toLowerCase()) && x.isPaid.includes("no") && x.approved.includes("approved") && x.enabled.includes("true"));
+                return items.filter(x => x.vendorName.toLowerCase().includes(target.value.toLowerCase()) && x.isPaid.includes("no")  && x.enabled.includes("true"));
         }
     })
   }
@@ -204,7 +204,7 @@ export default function UPay_Table(props) {
             if (val.value == "")
                 return items;
             else
-                return items.filter(x => x.vendorName.includes(val.value) && x.approved.includes("approved")&& x.isPaid.includes("no")&& x.enabled.includes("true"));
+                return items.filter(x => x.vendorName.includes(val.value) && x.isPaid.includes("no")&& x.enabled.includes("true"));
         }
     })
 
