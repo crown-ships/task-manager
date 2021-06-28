@@ -27,34 +27,41 @@ const invtype = [
   },
   {
     key:1,
-    item: "one-time"
+    item: "one-time",
+    label: "One Time"
   },
   {
     key: 2,
-    item: "recurring"
+    item: "recurring",
+    label: "Recurring"
   }
 ];
 
 const payterms = [
   {
     key:0,
-    item: "none"
+    item: "none",
+    label: ""
   },
   {
     key: 1,
-    item: "monthly"
+    item: "monthly",
+    label: "Monthly"
   },
   {
     key:2,
-    item: "quarterly"
+    item: "quarterly",
+    label: "Quarterly"
   },
   {
     key: 3,
-    item: "half-yearly"
+    item: "half-yearly",
+    label: "Half Yearly"
   },
   {
     key: 4,
-    item: "yearly"
+    item: "yearly",
+    label: "Yearly"
   }
 ];
 
@@ -156,7 +163,7 @@ export default function RegisterForm(props) {
                           name: 'investmentType',
                           id: 'outlined-investmentType-native-simple'
                         }}
-                      >{invtype.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+                      >{invtype.map(item =><option key={item.key} value={item.item}>{item.label}</option>)}
                       </Select>
                     </FormControl>
                     <FormControl variant="outlined">
@@ -170,7 +177,7 @@ export default function RegisterForm(props) {
                           name: 'paymentTerms',
                           id: 'outlined-paymentTerms-native-simple'
                         }}
-                      >{payterms.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+                      >{payterms.map(item =><option key={item.key} value={item.item}>{item.label}</option>)}
                       </Select>
                     </FormControl>
                 </Grid>

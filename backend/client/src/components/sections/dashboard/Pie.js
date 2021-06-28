@@ -132,7 +132,7 @@ export default function Graphs(props) {
         id="pie"
         type="doughnut"
         title="Project Progress"
-        palette="Soft Pastel"
+        palette="Material"
         dataSource={project}
       >
         <Series argumentField="projectName">
@@ -142,7 +142,7 @@ export default function Graphs(props) {
         </Series>
         <Export enabled={true} />
         <Legend
-          margin={0}
+          margin={50}
           horizontalAlignment="right"
           verticalAlignment="top"
         />
