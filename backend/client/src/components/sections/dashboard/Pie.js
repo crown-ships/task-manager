@@ -50,9 +50,21 @@ export default function Graphs(props) {
         if(company === item.companyName) {
           return {projectName: item.projectName, percentComplete: item.percentComplete}
         }
+        else {
+          return null;
+        }
       });
-      console.log(complist);
-      setProject(complist)
+
+      var j;
+      var len = 0;
+      var trimlist = [];
+      for(j=0; j<complist.length; j++) {
+        if(complist[j] !== null){
+          trimlist[len++] = complist[j];
+        }
+      }
+      console.log(trimlist);
+      setProject(trimlist)
     }
   },[company]);
 

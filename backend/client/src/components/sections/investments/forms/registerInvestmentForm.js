@@ -110,6 +110,14 @@ export default function RegisterForm(props) {
         }
     }
 
+    const handleInvChange = (event) => {
+      let val = event.target;
+      values.investmentType = val;
+    };
+    const handleTermChange = (event) => {
+      let val = event.target;
+      values.paymentTerms = val;
+    };
     return (
       <React.Fragment>
         <Form onSubmit={handleSubmit}>
@@ -148,7 +156,7 @@ export default function RegisterForm(props) {
                       <Select
                         native
                         value={values.investmentType}
-                        onChange={handleInputChange}
+                        onChange={handleInvChange}
                         label="Investment Type"
                         inputProps={{
                           name: 'Investment Type',
@@ -162,7 +170,7 @@ export default function RegisterForm(props) {
                       <Select
                         native
                         value={values.paymentTerms}
-                        onChange={handleInputChange}
+                        onChange={handleTermChange}
                         label="Payment Terms"
                         inputProps={{
                           name: 'company',
