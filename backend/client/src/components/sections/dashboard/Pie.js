@@ -49,7 +49,7 @@ export default function Graphs(props) {
       });
     }
     setProject(complist);
-  },[]);
+  },[company]);
 
   React.useEffect(async () => {
     const d = await getDropdownList(props);

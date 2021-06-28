@@ -46,6 +46,43 @@ export default function RegisterForm(props) {
         investorDetails = props.allInvestors[i];
     }
 
+    const invtype = [
+      {
+        key:0,
+        item: ""
+      },
+      {
+        key:1,
+        item: "one-time"
+      },
+      {
+        key: 2,
+        item: "recurring"
+      }
+    ];
+
+    const payterms = [
+      {
+        key:0,
+        item: "none"
+      },
+      {
+        key: 1,
+        item: "monthly"
+      },
+      {
+        key:2,
+        item: "quarterly"
+      },
+      {
+        key: 3,
+        item: "half-yearly"
+      },
+      {
+        key: 4,
+        item: "yearly"
+      }
+    ]
     const handleSubmit = e => {
         e.preventDefault()
         if (validate()) {
@@ -107,20 +144,35 @@ export default function RegisterForm(props) {
                         onChange={handleInputChange}
                         error={errors.capitalPaid}
                     />
-                    <Input
-                        name="investmentType"
-                        label="Investment Type"
+                    <FormControl variant="outlined">
+                      <InputLabel htmlFor="outlined-investmentType-native-simple">Investment Type</InputLabel>
+                      <Select
+                        native
                         value={values.investmentType}
                         onChange={handleInputChange}
-                        error={errors.investmentType}
-                    />
-                    <Input
-                        name="paymentTerms"
-                        label="paymentTerms"
+                        label="Company"
+                        inputProps={{
+                          name: 'Investment Type',
+                          id: 'outlined-investmentType-native-simple',
+                        }}
+                      >{invtype.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+                      </Select>
+                    </FormControl>
+                    <FormControl variant="outlined">
+                      <InputLabel htmlFor="outlined-paymentTerms-native-simple">Payment Terms</InputLabel>
+                      <Select
+                        native
+                        disabled= {(values.investmentType !== "recurring")}
                         value={values.paymentTerms}
                         onChange={handleInputChange}
-                        error={errors.paymentTerms}
-                    />
+                        label="Payment Terms"
+                        inputProps={{
+                          name: 'company',
+                          id: 'outlined-company-native-simple',
+                        }}
+                      >{payterms.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+                      </Select>
+                    </FormControl>
                 </Grid>
                 <Grid item xs={4}>
                 <Input
