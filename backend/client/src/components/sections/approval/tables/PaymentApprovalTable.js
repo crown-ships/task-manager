@@ -246,7 +246,7 @@ export default function PaymentApprovalTable(props) {
         <Grid container>
           <Grid item xs={9}>
             <Input
-                label="Search Projects"
+                label="Search Payments"
                 className={classes.searchInput}
                 InputProps={{
                     startAdornment: (<InputAdornment position="start">
@@ -283,7 +283,7 @@ export default function PaymentApprovalTable(props) {
               (<TableRow key={row._id}>
                 <TableCell>{row.vendorName}</TableCell>
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
-                <TableCell>{row.projectDetails}</TableCell>
+                <TableCell>{row.amtToBePaid}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
                 <TableCell>{dateToString(row.vendorStartDate)}</TableCell>
                 <TableCell>{dateToString(row.vendorEndDate)}</TableCell>

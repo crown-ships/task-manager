@@ -56,6 +56,7 @@ export default function RegisterForm(props) {
               creatorID:props.auth.user.id,
               approved:approved
             };
+            console.log(input);
             props.create(input, resetForm);
         }
     }

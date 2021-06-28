@@ -89,6 +89,7 @@ const useStyles = makeStyles(theme => ({
 
 const headCells = [
     { id: 'vendorName', label: 'Vendor Name' },
+    { id: 'approved', label: 'Approved' },
     { id: 'amtToBePaid', label: 'Amount to Pay' },
     { id: 'dueDate', label: 'Due Date'},
     { id: 'isPaid', label: 'Pay', disableSorting: true },
@@ -313,6 +314,22 @@ export default function UPay_Table(props) {
   }
 
 
+  const approvedIcon = (status) => {
+
+    if (status === "approved") {
+      console.log(status);
+      console.log("yes");
+      return <CheckCircleIcon fontSize="small" style={{ color: "#00b386" }}/>
+    }
+    else if (status === "wait") {
+      console.log("what");
+      return <HelpIcon fontSize="small"  style={{ color: "#ffbf00" }}/>
+    }
+    else if (status === "rejected") {
+      console.log("what");
+      return <CancelIcon fontSize="small"  style={{ color: "#DC143C" }}/>
+    }
+  }
   return (
     <React.Fragment>
     <Paper className={classes.pageContent}>
@@ -364,7 +381,8 @@ export default function UPay_Table(props) {
             {
               recordsAfterPagingAndSorting().map(row =>
               (<TableRow key={row._id}>
-                <TableCell backgroundColor = "primary">{row.vendorName}</TableCell>
+                <TableCell>{row.vendorName}</TableCell>
+                <TableCell>{approvedIcon(row.approved)}</TableCell>
                 <TableCell>{row.amtToBePaid}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
                 <TableCell>
