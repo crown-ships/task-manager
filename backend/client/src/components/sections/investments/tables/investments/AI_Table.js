@@ -262,8 +262,8 @@ export default function AI_Table(props) {
               investmentName: data.investmentName,
               paymentTerms: data.paymentTerms,
               totalInterestAmt: ((data.profitPercent*data.capitalAmt)/100),
-              returnAmt: ((data.profitPercent*data.capitalAmt)/100)/noOfPayments,
-              localDueDate: date1.setMonth(date1.getMonth() + divider),
+              returnAmt: ((data.profitPercent*data.capitalAmt)/100)/divider,
+              localDueDate: date1.setMonth(date1.getMonth() + noOfPayments),
               dueDate: data.dueDate
             }
           }
