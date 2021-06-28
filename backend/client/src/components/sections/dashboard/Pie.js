@@ -17,7 +17,7 @@ function getProjects (props) {
     return props.getAllProjects({email:props.auth.user.email, auth:props.auth.isAuthenticed}, props.history)
 }
 
-function getDropdownList (prop) => {
+function getDropdownList (prop) {
   return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
