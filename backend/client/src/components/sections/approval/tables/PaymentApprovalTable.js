@@ -32,7 +32,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 // Generate Order Data
 function createData(id ,name, date, details, createdBy, update,del) {
-  return { _id:id, vendorName: name, dueDate: date, vendorStartDate: "", vendorEndDate:"", amtToBePaid: details, approved: "", updated:update,delete:del};
+  return { _id:id, vendorName: name, dueDate: date, vendorCrtAmt: "", vendorStartDate: "", vendorEndDate:"", amtToBePaid: details, approved: "", updated:update,delete:del};
 }
 
 const useStyles = makeStyles(theme => ({
@@ -114,6 +114,7 @@ export default function PaymentApprovalTable(props) {
   React.useEffect(async () => {
     const d = await getData(props);
     setData(d.data);
+    console.log(data);
     setRecords(d.data);
     setFilterFn({
         fn: items => {
