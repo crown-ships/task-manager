@@ -228,7 +228,7 @@ export default function APay_Table(props) {
 
       var i;
       var pAmt;
-      for (i=0; i< allVendors.length, i++) {
+      for (i=0; i< allVendors.length; i++) {
         if (allVendors[i]._id === vendorID) {
           pAmt = allVendors[i].pendingAmt;
           break;
