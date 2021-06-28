@@ -101,7 +101,7 @@ export default function AR_Table(props) {
     const d = await getDropdownList(props);
     var complist = d.data.map(function(item) {
       if (item.approved === "approved")
-        return item.investorName;
+        return item.investmentName;
       else
         return "0";
     });
@@ -258,7 +258,7 @@ export default function AR_Table(props) {
           </Grid>
           <Grid item xs={3}>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel htmlFor="outlined-investment-native-simple">Investor</InputLabel>
+              <InputLabel htmlFor="outlined-investment-native-simple">Investment</InputLabel>
               <Select
                 native
                 onChange={handleChange}

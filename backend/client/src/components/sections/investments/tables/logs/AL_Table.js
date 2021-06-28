@@ -96,7 +96,7 @@ export default function AL_Table(props) {
     const d = await getDropdownList(props);
     var complist = d.data.map(function(item) {
       if (item.approved === "approved")
-        return item.investorName;
+        return item.investmentName;
       else
         return "0";
     });

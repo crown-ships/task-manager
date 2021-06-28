@@ -151,12 +151,12 @@ export default function RegisterForm(props) {
                         onChange={handleInputChange}
                         error={errors.capitalPaid}
                     />
-                    <FormControl variant="outlined">
+
                       <InputLabel htmlFor="outlined-investmentType-native-simple">Investment Type</InputLabel>
                       <Select
                         native
                         value={values.investmentType}
-                        onChange={handleInvChange}
+                        onChange={handleInputChange}
                         label="Investment Type"
                         inputProps={{
                           name: 'Investment Type',
@@ -164,25 +164,25 @@ export default function RegisterForm(props) {
                         }}
                       >{invtype.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
                       </Select>
-                    </FormControl>
-                    <FormControl variant="outlined">
+
+
                       <InputLabel htmlFor="outlined-paymentTerms-native-simple">Payment Terms</InputLabel>
                       <Select
                         native
                         value={values.paymentTerms}
-                        onChange={handleTermChange}
+                        onChange={handleInputChange}
                         label="Payment Terms"
                         inputProps={{
-                          name: 'company',
-                          id: 'outlined-company-native-simple',
+                          name: 'Payment Terms',
+                          id: 'outlined-paymentTerms-native-simple',
                         }}
                       >{payterms.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
                       </Select>
-                    </FormControl>
+                    
                 </Grid>
                 <Grid item xs={4}>
                 <Input
-                  id="date"
+                  id="startDate"
                   type="date"
                   defaultValue="2017-05-24"
                   InputLabelProps={{
@@ -195,7 +195,7 @@ export default function RegisterForm(props) {
                   error={errors.startDate}
                 />
                 <Input
-                  id="date"
+                  id="dueDate"
                   type="date"
                   defaultValue="2017-05-24"
                   InputLabelProps={{
