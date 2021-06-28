@@ -17,7 +17,7 @@ const initialFValues = {
     capitalAmt: '',
     capitalPaid: '',
     investmentType: '',
-    paymentTerms: ''
+    paymentTerms: 'none'
 }
 
 export default function RegisterForm(props) {
@@ -153,7 +153,7 @@ export default function RegisterForm(props) {
                         native
                         value={values.investmentType}
                         onChange={handleInputChange}
-                        label="Company"
+                        label="Investment Type"
                         inputProps={{
                           name: 'Investment Type',
                           id: 'outlined-investmentType-native-simple',
@@ -165,7 +165,6 @@ export default function RegisterForm(props) {
                       <InputLabel htmlFor="outlined-paymentTerms-native-simple">Payment Terms</InputLabel>
                       <Select
                         native
-                        disabled= {(values.investmentType !== "recurring")}
                         value={values.paymentTerms}
                         onChange={handleInputChange}
                         label="Payment Terms"

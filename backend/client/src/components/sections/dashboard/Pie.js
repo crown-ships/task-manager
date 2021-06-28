@@ -36,16 +36,16 @@ export default function Graphs(props) {
     var data = d.data;
     console.log(data);
 
-    if (company !== "") {
+    if (company === "") {
       var complist = d.data.map(function(item) {
-        if(company === item.companyName) {
-          return {projectName: item.projectName, percentComplete: item.percentComplete}
-        }
+        return {projectName: item.projectName, percentComplete: item.percentComplete}
       });
     }
     else {
       var complist = d.data.map(function(item) {
-        return {projectName: item.projectName, percentComplete: item.percentComplete}
+        if(company === item.companyName) {
+          return {projectName: item.projectName, percentComplete: item.percentComplete}
+        }
       });
     }
     setProject(complist);
@@ -85,7 +85,6 @@ export default function Graphs(props) {
     setCompany(val.value);
   };
 
-  console.log(project);
   return (
     <>
     <Toolbar>
