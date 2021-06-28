@@ -26,6 +26,10 @@ export default function Graphs(props) {
   const [project, setProject] = React.useState([]);
   const [company, setCompany] = React.useState("");
   const [list, setList] = React.useState([]);
+  const [state, setState] = React.useState({
+      checkedA: true,
+      checkedB: true,
+    });
 
   React.useEffect(async () => {
     const d = await getProjects(props);
