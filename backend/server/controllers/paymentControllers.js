@@ -20,6 +20,9 @@ exports.addNew = async (req, res, next) => {
   const signedupPayment = new Payment({
    vendorName: req.body.vendorName,
    vendorID: req.body.vendorID,
+   vendorStartDate: req.body.vendorStartDate,
+   vendorEndDate: req.body.vendorEndDate,
+   vendorCrtAmt: req.body.vendorCrtAmt,
    paymentName: req.body.paymentName,
    amtToBePaid: req.body.amtToBePaid,
    dueDate: req.body.dueDate,

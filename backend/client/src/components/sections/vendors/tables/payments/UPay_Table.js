@@ -389,11 +389,13 @@ export default function UPay_Table(props) {
                 <TableCell>{row.amtToBePaid}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
                 <TableCell>
+                {(row.approved !== "approved")?null :
                   <ActionButton
                     color="light"
                     onClick={() => {onPaid(row._id, row.vendorID, row.amtToBePaid)}}>
                     <CheckIcon fontSize="small" />
                   </ActionButton>
+                }
                 </TableCell>
                 <TableCell>
                   <ActionButton
