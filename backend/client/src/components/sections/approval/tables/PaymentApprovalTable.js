@@ -32,7 +32,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 // Generate Order Data
 function createData(id ,name, date, details, createdBy, update,del) {
-  return { _id:id, vendorName: name, dueDate: date, amtToBePaid: details, approved: "", updated:update,delete:del};
+  return { _id:id, vendorName: name, dueDate: date, vendorStartDate: "", vendorEndDate:"", amtToBePaid: details, approved: "", updated:update,delete:del};
 }
 
 const useStyles = makeStyles(theme => ({
