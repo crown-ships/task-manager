@@ -9,10 +9,12 @@ const paymentModel = new mongoose.Schema({
     type: String
   },
   vendorStartDate: {
-    type: Date
+    type: Date,
+    default: Date.now
   },
   vendorEndDate: {
-    type: Date
+    type: Date,
+    default: Date.now
   },
   vendorCrtAmt: {
     type: Number

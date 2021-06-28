@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => ({
 
 const headCells = [
     { id: 'vendorName', label: 'Vendor Name' },
-    { id: 'personName', label: 'Approved' },
+    { id: 'approved', label: 'Approved' },
     { id: 'amtToBePaid', label: 'Payment Amt.' },
     { id: 'dueDate', label: 'Due Date' },
     { id: 'vendorStartDate', label: 'V Start Date' },
@@ -140,7 +140,7 @@ export default function PaymentApprovalTable(props) {
             if (vendor == "")
                 return items.filter(x => x.approved.includes("wait"));
             else
-                return items.filter(x => x.taskName.toLowerCase().includes(target.value.toLowerCase()) && x.approved.includes("wait"));
+                return items.filter(x => x.paymentName.toLowerCase().includes(target.value.toLowerCase()) && x.approved.includes("wait"));
         }
     })
   }
@@ -168,11 +168,11 @@ export default function PaymentApprovalTable(props) {
       })
       };
 
-  const onApprove = og_projectName => {
+  const onApprove = og_id => {
     const input = {
       params: {
         email: props.auth.user.email,
-        projectName: og_projectName,
+        paymentID: og_id,
         auth: props.auth.isAuthenticated
       },
       body: {
@@ -181,10 +181,10 @@ export default function PaymentApprovalTable(props) {
     };
 
     if(props.auth.user.role === "admin"){
-      props.updateProject(input, props.history);
+      props.updatePayment(input, props.history);
       setNotify({
         isOpen: true,
-        message: "Project Approved.",
+        message: "Payment Approved.",
         type: 'success'
       });
     }
@@ -194,7 +194,7 @@ export default function PaymentApprovalTable(props) {
     const input = {
       params: {
         email: props.auth.user.email,
-        vendorID: og_id,
+        paymentID: og_id,
         auth: props.auth.isAuthenticated
       },
       body: {
