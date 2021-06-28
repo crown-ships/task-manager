@@ -116,6 +116,7 @@ export default function RegisterForm(props) {
     }, [props.recordForEdit])
 
     return (
+      <>
         <Form onSubmit={handleSubmit}>
             <Grid container>
                 <Grid item xs={8}>
@@ -215,5 +216,6 @@ export default function RegisterForm(props) {
                 </Grid>
             </Grid>
         </Form>
+        </>
     )
 }

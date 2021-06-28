@@ -43,6 +43,8 @@ export default function Graphs(props) {
     }
     else {
       var complist = d.data.map(function(item) {
+        console.log(company);
+        console.log(item);
         if(company === item.companyName) {
           return {projectName: item.projectName, percentComplete: item.percentComplete}
         }
