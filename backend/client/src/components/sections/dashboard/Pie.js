@@ -89,7 +89,7 @@ export default function Graphs(props) {
         <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
         <Select
           native
-          value={""}
+          value={state.age}
           onChange={handleChange}
           label="Company"
           inputProps={{

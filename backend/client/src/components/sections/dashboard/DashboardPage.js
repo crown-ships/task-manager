@@ -241,13 +241,9 @@ const ProjectsPage =  (props) => {
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
 
-          <Paper className={classes.paper}>
           <Graphs {...props}/>
-          </Paper>
 
-          <Paper className={classes.paper}>
           <Pie {...props}/>
-          </Paper>
 
           <Box pt={4}>
             <Copyright />
