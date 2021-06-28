@@ -1,10 +1,14 @@
 import * as React from 'react';
 import Paper from '@material-ui/core/Paper';
-import {
-  Chart,
-  PieSeries,
-  Title,
-} from '@devexpress/dx-react-chart-material-ui';
+import PieChart, {
+  Legend,
+  Series,
+  Tooltip,
+  Format,
+  Label,
+  Connector,
+  Export
+} from 'devextreme-react/pie-chart';
 import { Animation } from '@devexpress/dx-react-chart';
 import Toolbar from '@material-ui/core/Toolbar';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -102,6 +106,11 @@ export default function Graphs(props) {
     setCompany(val.value);
   };
 
+  function customizeTooltip(arg) {
+      return {
+        text: `${arg.valueText}%`
+      };
+    }
   return (
     <>
     <Toolbar>
@@ -121,17 +130,27 @@ export default function Graphs(props) {
       </FormControl>
     </Toolbar>
     <Paper>
-      <Chart
-        data={project}
+    <PieChart
+        id="pie"
+        type="doughnut"
+        title="Project Progress"
+        palette="Soft Pastel"
+        dataSource={project}
       >
-        <PieSeries
-          valueField="percentComplete"
-          argumentField="projectName"
-          innerRadius={0.7}
+        <Series argumentField="projectName">
+          <Label visible={true}>
+            <Connector visible={true} />
+          </Label>
+        </Series>
+        <Export enabled={true} />
+        <Legend
+          margin={0}
+          horizontalAlignment="right"
+          verticalAlignment="top"
         />
-        <Title text="Projects" />
-        <Animation />
-      </Chart>
+        <Tooltip enabled={true} customizeTooltip={customizeTooltip}>
+        </Tooltip>
+      </PieChart>
     </Paper>
     </>
   );
