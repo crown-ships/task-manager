@@ -5,7 +5,6 @@ import Input from "../../../controls/Input";
 import { useForm, Form } from '../../useForm';
 
 const initialFValues = {
-  paymentName: '',
   amtToBePaid: '',
   dueDate: ''
 }
@@ -56,13 +55,6 @@ export default function UpdateForm(props) {
         <Form onSubmit={handleSubmit}>
             <Grid container>
                 <Grid item xs={7}>
-                    <Input
-                        name="paymentName"
-                        label="Payment Name"
-                        value={values.paymentName}
-                        onChange={handleInputChange}
-                        error={errors.paymentName}
-                    />
                     <Input
                         name="amtToBePaid"
                         label="Amount to Pay"

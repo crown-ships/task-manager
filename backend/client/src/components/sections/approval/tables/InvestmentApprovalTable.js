@@ -152,30 +152,99 @@ export default function InvestmentApprovalTable(props) {
       checkedB: true,
     });
 
-    const openInRejectPopup = item => {
-      setRecordForEdit(item);
-      setOpenRejectPopup(true);
-    }
+  const openInRejectPopup = item => {
+    setRecordForEdit(item);
+    setOpenRejectPopup(true);
+  }
 
-    const handleChange = (event) => {
-      let val = event.target;
-      console.log(val.value);
-      setInvestor(val.value);
-      setFilterFn({
-          fn: items => {
-              if (val.value == "")
-                  return items.filter(x => x.approved.includes("wait"))
-              else
-                  return items.filter(x => x.investorName.includes(val.value) && x.approved.includes("wait"))
+  const handleChange = (event) => {
+    let val = event.target;
+    console.log(val.value);
+    setInvestor(val.value);
+    setFilterFn({
+        fn: items => {
+            if (val.value == "")
+                return items.filter(x => x.approved.includes("wait"))
+            else
+                return items.filter(x => x.investorName.includes(val.value) && x.approved.includes("wait"))
+        }
+    })
+  };
+
+  function monthDiff(d1, d2) {
+      var months;
+      months = (d2.getFullYear() - d1.getFullYear()) * 12;
+      months -= d1.getMonth();
+      months += d2.getMonth();
+      return months <= 0 ? 0 : months;
+  }
+  const createReturns = (data) => {
+      var date1 = new Date(data.startDate);
+      var date2 = new Date(data.dueDate);
+      var months = monthDiff(date1, date2);
+      console.log(months);
+      var divider= 0;
+
+      if (data.paymentTerms === "monthly")
+        divider = 1;
+      else if (data.paymentTerms === "quarterly")
+        divider = 4;
+      else if (data.paymentTerms === "half-yearly")
+        divider = 6;
+      else if (data.paymentTerms === "yearly")
+        divider = 12;
+
+
+      if (data.investmentType ==="one-time") {
+        const input = {
+          params: {
+            email: props.auth.user.email,
+            auth: props.auth.isAuthenticated
+          },
+          body: {
+            investorName: data.investorName,
+            investorID: data.investorID,
+            investmentName: data.investmentName,
+            paymentTerms: data.paymentTerms,
+            totalInterestAmt: ((data.profitPercent*data.capitalAmt)/100),
+            returnAmt: ((data.profitPercent*data.capitalAmt)/100),
+            localDueDate: data.dueDate,
+            dueDate: data.dueDate
           }
-      })
-      };
+        }
+        props.registerReturn(input, props.history);
+      }
+      else {
+        var noOfPayments = months/divider;
+        var i;
+        var input;
+        for(i=1; i<=noOfPayments; i++) {
+          input = {
+            params: {
+              email: props.auth.user.email,
+              auth: props.auth.isAuthenticated
+            },
+            body: {
+              investorName: data.investorName,
+              investorID: data.investorID,
+              investmentName: data.investmentName,
+              paymentTerms: data.paymentTerms,
+              totalInterestAmt: ((data.profitPercent*data.capitalAmt)/100),
+              returnAmt: ((data.profitPercent*data.capitalAmt)/100)/noOfPayments,
+              localDueDate: date1.setMonth(date1.getMonth() + divider),
+              dueDate: data.dueDate
+            }
+          }
+          props.registerReturn(input, props.history);
+        }
+      }
+  }
 
-  const onApprove = og_id => {
+  const onApprove = og => {
     const input = {
       params: {
         email: props.auth.user.email,
-        investmenttID: og_id,
+        investmenttID: og._id,
         auth: props.auth.isAuthenticated
       },
       body: {
@@ -185,6 +254,7 @@ export default function InvestmentApprovalTable(props) {
 
     if(props.auth.user.role === "admin"){
       props.updateInvestment(input, props.history);
+      createReturns(og);
       setNotify({
         isOpen: true,
         message: "Investment Approved.",
@@ -297,7 +367,7 @@ export default function InvestmentApprovalTable(props) {
                 <TableCell>
                   <ActionButton
                     color="light"
-                    onClick={() => {onApprove(row._id)}}>
+                    onClick={() => {onApprove(row)}}>
                     <CheckIcon fontSize="small" />
                   </ActionButton>
                 </TableCell>
