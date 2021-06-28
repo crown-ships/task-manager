@@ -113,23 +113,21 @@ export default function Graphs(props) {
     }
   return (
     <>
-    <Toolbar>
-      <FormControl variant="outlined">
-        <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
-        <Select
-          native
-          value={state.age}
-          onChange={handleChange}
-          label="Company"
-          inputProps={{
-            name: 'company',
-            id: 'outlined-company-native-simple',
-          }}
-        >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
-        </Select>
-      </FormControl>
-    </Toolbar>
     <Paper>
+    <FormControl variant="outlined">
+      <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
+      <Select
+        native
+        value={state.age}
+        onChange={handleChange}
+        label="Company"
+        inputProps={{
+          name: 'company',
+          id: 'outlined-company-native-simple',
+        }}
+      >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+      </Select>
+    </FormControl>
     <PieChart
         id="pie"
         type="doughnut"
