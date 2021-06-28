@@ -60,6 +60,9 @@ const headCells = [
     { id: 'personName', label: 'Approved' },
     { id: 'amtToBePaid', label: 'Payment Amt.' },
     { id: 'dueDate', label: 'Due Date' },
+    { id: 'vendorStartDate', label: 'V Start Date' },
+    { id: 'vendorEndDate', label: 'V End Date' },
+    { id: 'vendorCrtAmt', label: 'Contract Amount' },
     { id: 'approve', label: 'Approve', disableSorting: true },
     { id: 'reject', label: 'Reject', disableSorting: true }
 ];
@@ -282,6 +285,9 @@ export default function PaymentApprovalTable(props) {
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
                 <TableCell>{row.projectDetails}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
+                <TableCell>{dateToString(row.vendorStartDate)}</TableCell>
+                <TableCell>{dateToString(row.vendorEndDate)}</TableCell>
+                <TableCell>{row.vendorCrtAmt}</TableCell>
                 <TableCell>
                   <ActionButton
                     color="light"

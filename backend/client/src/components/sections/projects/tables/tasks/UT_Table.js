@@ -1,17 +1,12 @@
 import React from 'react';
 import Link from '@material-ui/core/Link';
-import { makeStyles, createMuiTheme } from '@material-ui/core/styles';
-import red from "@material-ui/core/colors/red";
-import orange from "@material-ui/core/colors/orange";
-import green from "@material-ui/core/colors/green";
+import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
 import AddIcon from '@material-ui/icons/Add';
 import {Search} from '@material-ui/icons';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import HelpIcon from '@material-ui/icons/Help';
 import TableCell from '@material-ui/core/TableCell';
 import Paper from '@material-ui/core/Paper';
 import TableHead from '@material-ui/core/TableHead';
@@ -33,25 +28,44 @@ import RegisterForm from "../../forms/registerTaskForm"
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import CancelIcon from '@material-ui/icons/Cancel';
-
-function createData(id ,name, app, date, details, createdBy, update,del) {
-  return { _id:id, taskName: name, approved: app ,dueDate: date, taskDetails: details, creatorName: createdBy, updated:update,delete:del};
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import PropTypes from "prop-types";
+// Generate Order Data
+function createData(id ,name, date, details, createdBy, update,del) {
+  return { _id:id, taskName: name, dueDate: date, taskDetails: details, creatorName: createdBy, updated:update,delete:del};
 }
 
-const theme = createMuiTheme({
-  palette: {
-    green: {
-      main: '#1a9c34'
-    },
-    yellow: {
-      main: '#f5ca20'
-    },
-    yellow: {
-      main: '#f5ca20'
-    },
-  },
-});
+function CircularProgressWithLabel(props) {
+  return (
+    <Box position="relative" display="inline-flex">
+      <CircularProgress variant="determinate" {...props} />
+      <Box
+        top={0}
+        left={0}
+        bottom={0}
+        right={0}
+        position="absolute"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Typography variant="caption" component="div" color="textSecondary">{`${Math.round(
+          props.value,
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
+
+CircularProgressWithLabel.propTypes = {
+  /**
+   * The value of the progress indicator for the determinate and buffer variants.
+   * Value between 0 and 100.
+   */
+  value: PropTypes.number.isRequired,
+};
 
 const useStyles = makeStyles(theme => ({
     pageContent: {
@@ -75,25 +89,17 @@ const useStyles = makeStyles(theme => ({
 
 const headCells = [
     { id: 'taskName', label: 'Task Name' },
-    { id: 'approvedIcon', label: 'Approved',disableSorting: true  },
     { id: 'dueDate', label: 'Due Date' },
-    { id: 'creatorName', label: 'Creator' },
+    { id: 'ownerName', label: 'ownerName' },
     { id: 'taskDetails', label: 'Task Details'},
-    { id: 'companyName', label: 'Company Name'},
+    { id: 'featureName', label: 'Feature Name'},
+    { id: 'percentComplete', label: 'Progress'},
     { id: 'update', label: 'Update', disableSorting: true },
     { id: 'delete', label: 'Delete', disableSorting: true }
 ];
 
 const rows = [
-  createData("", "","", "", "","","",""),
-  createData("", "", "","", "","","",""),
-  createData("", "", "","", "","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","","")
+  createData("", "", "", "","","","")
 ];
 
 function preventDefault(event) {
@@ -104,18 +110,19 @@ const getData = (prop) => {
   return prop.getAllTasks({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 const getDropdownList = (prop) => {
-  return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  return prop.getAllFeatures({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
 
-export default function AP_Table(props) {
+export default function UT_Table(props) {
 
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
   const [list, setList] = React.useState([]);
-  const [company, setCompany] = React.useState("");
+  const [allFeatures, setAllFeatures] = React.useState([]);
+  const [feature, setFeature] = React.useState("");
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
@@ -124,15 +131,27 @@ export default function AP_Table(props) {
 
   React.useEffect(async () => {
     const d = await getDropdownList(props);
+    setAllFeatures(d.data);
     var complist = d.data.map(function(item) {
-      return item.companyName;
+      if(item.enabled === "true")
+        return item.featureName;
+      else
+        return "0"
     });
-    const len = complist.length;
+    console.log(complist);
+    var j;
+    var len = 0;
+    var trimlist = [];
+    for(j=0; j<complist.length; j++) {
+      if(complist[j] !== "0"){
+        trimlist[len++] = complist[j];
+      }
+    }
     var selList = [];
     var i;
     selList[0] = {key:0, item: ""};
     for(i=0; i<len; i++) {
-      selList[i+1] = {key:i+1, item: complist[i]};
+      selList[i+1] = {key:i+1, item: trimlist[i]};
     }
     console.log(selList);
     setList(selList);
@@ -140,17 +159,107 @@ export default function AP_Table(props) {
 
   React.useEffect(async () => {
     const d = await getData(props);
+    var tasks = d.data.map(function(item) {
+      return ({fID: item.featureID, progress:item.percentComplete});
+    });
+    var i;
+    var j;
+    var k;
+    var sum = [];
+    var labels = [];
+    for (i=0; i<tasks.length; i++) {
+      labels[i] = tasks[i].fID;
+    }
+    var unique = labels.filter((v, i, a) => a.indexOf(v) === i);
+    var featureProgress = [];
+    var count = 0;
+    for (j=0; j<unique.length; j++) {
+      sum[j] = 0;
+      count = 0;
+      for(k=0; k<tasks.length; k++){
+        if (tasks[k].fID.includes(unique[j])){
+          sum[j] = sum[j] + tasks[k].progress;
+          count++;
+        }
+      }
+      console.log(count);
+      featureProgress[j] = {featureID:unique[j], percentComplete: (sum[j]/count)};
+    }
+    var input;
+
+    for(i=0; i<featureProgress.length; i++){
+      input = {
+        params: {
+          email: props.auth.user.email,
+          featureID: featureProgress[i].featureID,
+          auth: props.auth.isAuthenticated
+        },
+        body: {
+          percentComplete: featureProgress[i].percentComplete
+        }
+      };
+      props.updateFeature(input, props.history);
+    }
+
+  },[notify]);
+  React.useEffect(async () => {
+    const d = await getData(props);
     setData(d.data);
     setRecords(d.data);
     setFilterFn({
         fn: items => {
-            if (company == "")
-                return items;
+            if (feature == "")
+                return items.filter(x => x.enabled.includes("true"));
             else
-                return items.filter(x => x.companyName.includes(company))
+                return items.filter(x => x.featureName.includes(feature) )
         }
     })
   },[notify, list]);
+
+  React.useEffect(async () => {
+    const d = await getDropdownList(props);
+    var features = d.data.map(function(item) {
+      return ({pID: item.projectID, progress:item.percentComplete});
+    });
+    var i;
+    var j;
+    var k;
+    var sum = [];
+    var labels = [];
+    for (i=0; i<features.length; i++) {
+      labels[i] = features[i].pID;
+    }
+    var unique = labels.filter((v, i, a) => a.indexOf(v) === i);
+    var projectProgress = [];
+    var count = 0;
+    for (j=0; j<unique.length; j++) {
+      sum[j] = 0;
+      count = 0;
+      for(k=0; k<features.length; k++){
+        if (features[k].pID.includes(unique[j])){
+          sum[j] = sum[j] + features[k].progress;
+          count++;
+        }
+      }
+      projectProgress[j] = {projectID:unique[j], percentComplete: (sum[j]/count)};
+    }
+    var input;
+
+    for(i=0; i<projectProgress.length; i++){
+      input = {
+        params: {
+          email: props.auth.user.email,
+          projectID: projectProgress[i].projectID,
+          auth: props.auth.isAuthenticated
+        },
+        body: {
+          percentComplete: projectProgress[i].percentComplete
+        }
+      };
+      props.updateProject(input, props.history);
+    }
+
+  },[notify]);
 
 
   const {
@@ -165,9 +274,9 @@ export default function AP_Table(props) {
     setFilterFn({
         fn: items => {
             if (target.value == "")
-                return items;
+                return items.filter(x => x.enabled.includes("true"));
             else
-                return items.filter(x => x.taskName.toLowerCase().includes(target.value))
+                return items.filter(x => x.taskName.toLowerCase().includes(target.value.toLowerCase()))
         }
     })
   }
@@ -179,13 +288,13 @@ export default function AP_Table(props) {
   const handleChange = (event) => {
     let val = event.target;
     console.log(val.value);
-    setCompany(val.value);
+    setFeature(val.value);
     setFilterFn({
         fn: items => {
             if (val.value == "")
-                return items;
+                return items.filter(x => x.enabled.includes("true"));
             else
-                return items.filter(x => x.companyName.includes(val.value))
+                return items.filter(x => x.featureName.includes(val.value) )
         }
     })
 
@@ -218,18 +327,17 @@ export default function AP_Table(props) {
       type: 'success'
     });
   }
-  const edit = (data, resetForm, og_email) => {
+  const edit = (data, resetForm, og_id) => {
 
     const input = {
       params: {
         email: props.auth.user.email,
-        emailupdate: og_email,
+        taskID: og_id,
         auth: props.auth.isAuthenticated
       },
       body: data
     };
 
-    if(props.auth.user.role === "admin"){
       props.updateTask(input, props.history);
       resetForm();
       setRecordForEdit(null);
@@ -239,17 +347,16 @@ export default function AP_Table(props) {
         message: "Update Successfully",
         type: 'success'
       });
-    }
   }
 
-  const onDelete = company => {
+  const onDelete = task => {
     setConfirmDialog({
         ...confirmDialog,
         isOpen: false
     })
 
     const input = {
-      emailDelete: company.email,
+      taskID: task._id,
       email: props.auth.user.email,
       auth: props.auth.isAuthenticated
     };
@@ -269,23 +376,6 @@ export default function AP_Table(props) {
 
     d = d.substring(0, d.indexOf('T'));
     return d;
-  }
-
-  const approvedIcon = (status) => {
-
-    if (status === "approved") {
-      console.log(status);
-      console.log("yes");
-      return <CheckCircleIcon fontSize="small" style={{ color: "#00b386" }}/>
-    }
-    else if (status === "wait") {
-      console.log("what");
-      return <HelpIcon fontSize="small"  style={{ color: "#ffbf00" }}/>
-    }
-    else if (status === "rejected") {
-      console.log("what");
-      return <CancelIcon fontSize="small"  style={{ color: "#DC143C" }}/>
-    }
   }
 
 
@@ -308,15 +398,15 @@ export default function AP_Table(props) {
           </Grid>
           <Grid item xs={3}>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
+              <InputLabel htmlFor="outlined-feature-native-simple">Feature</InputLabel>
               <Select
                 native
                 value={state.age}
                 onChange={handleChange}
-                label="Company"
+                label="Feature"
                 inputProps={{
-                  name: 'company',
-                  id: 'outlined-company-native-simple',
+                  name: 'feature',
+                  id: 'outlined-feature-native-simple',
                 }}
               >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
               </Select>
@@ -329,7 +419,7 @@ export default function AP_Table(props) {
                 startIcon={<AddIcon />}
                 className={classes.newButton}
                 onClick={() => { setOpenRegPopup(true); }}
-                disabled = {(company==="")}
+                disabled = {(feature==="")}
             />
           </Grid>
         </Grid>
@@ -340,12 +430,12 @@ export default function AP_Table(props) {
             {
               recordsAfterPagingAndSorting().map(row =>
               (<TableRow key={row._id}>
-                <TableCell>{row.taskName}</TableCell>
-                <TableCell align='center'>{approvedIcon(row.approved)}</TableCell>
+                <TableCell backgroundColor = "primary">{row.taskName}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
-                <TableCell>{row.creatorName}</TableCell>
+                <TableCell>{row.ownerName}</TableCell>
                 <TableCell>{row.taskDetails}</TableCell>
-                <TableCell>{row.companyName}</TableCell>
+                <TableCell>{row.featureName}</TableCell>
+                <TableCell>  <CircularProgressWithLabel value={row.percentComplete} /></TableCell>
                 <TableCell>
                   <ActionButton
                     color="light"
@@ -387,7 +477,7 @@ export default function AP_Table(props) {
         openPopup={openRegPopup}
         setOpenPopup={setOpenRegPopup}
       >
-        <RegisterForm {...props} create={create} company={company}/>
+        <RegisterForm {...props} create={create} feature={feature} allFeatures={allFeatures}/>
       </Popup>
       <Notification
                notify={notify}

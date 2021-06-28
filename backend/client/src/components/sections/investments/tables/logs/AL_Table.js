@@ -81,7 +81,7 @@ const getDropdownList = (prop) => {
 
 
 
-export default function AF_Table(props) {
+export default function AL_Table(props) {
 
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
@@ -89,9 +89,6 @@ export default function AF_Table(props) {
   const [data, setData] = React.useState(rows);
   const [list, setList] = React.useState([]);
   const [investment, setInvestment] = React.useState("");
-  const [recordForEdit, setRecordForEdit] = React.useState(null);
-  const [openEditPopup, setOpenEditPopup] = React.useState(false);
-  const [openRegPopup, setOpenRegPopup] = React.useState(false);
   const [records, setRecords] = React.useState(data);
   const classes = useStyles();
 
@@ -169,57 +166,8 @@ export default function AF_Table(props) {
     })
 
   };
-  const openInEditPopup = item => {
-    setRecordForEdit(item);
-    setOpenEditPopup(true);
-  }
 
-  const openInRegPopup = item => {
 
-    setOpenRegPopup(true);
-  }
-
-  const create = (data, resetForm) => {
-    const input = {
-      params: {
-        email: props.auth.user.email,
-        auth: props.auth.isAuthenticated
-      },
-      body: data
-    };
-    console.log(input);
-    props.registerFeature(input, props.history);
-    resetForm();
-    setOpenRegPopup(false);
-    setNotify({
-      isOpen: true,
-      message: "Registered Successfully.",
-      type: 'success'
-    });
-  }
-  const edit = (data, resetForm, og_investmentName) => {
-
-    const input = {
-      params: {
-        email: props.auth.user.email,
-        investmentID: og_investmentName,
-        auth: props.auth.isAuthenticated
-      },
-      body: data
-    };
-
-    if(props.auth.user.role === "admin"){
-      props.updateReturn(input, props.history);
-      resetForm();
-      setRecordForEdit(null);
-      setOpenEditPopup(false);
-      setNotify({
-        isOpen: true,
-        message: "Update Successfully",
-        type: 'success'
-      });
-    }
-  }
 
   const onDelete = investment => {
     setConfirmDialog({

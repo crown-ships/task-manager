@@ -252,7 +252,6 @@ export default function UP_Table(props) {
       body: data
     };
 
-    if(props.auth.user.role === "admin"){
       props.updateProject(input, props.history);
       resetForm();
       setRecordForEdit(null);
@@ -262,7 +261,6 @@ export default function UP_Table(props) {
         message: "Update Successfully",
         type: 'success'
       });
-    }
   }
 
 

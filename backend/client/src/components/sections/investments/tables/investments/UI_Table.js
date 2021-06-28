@@ -104,7 +104,7 @@ const getDropdownList = (prop) => {
   return prop.getAllInvestors({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
-export default function AP_Table(props) {
+export default function UI_Table(props) {
 
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
@@ -314,29 +314,7 @@ export default function AP_Table(props) {
       //   changeEnable("false",row.email, row.companyName);
   };
 
-  const onDelete = investment => {
-    setConfirmDialog({
-        ...confirmDialog,
-        isOpen: false
-    })
 
-    const input = {
-      investmentID: investment._id,
-      email: props.auth.user.email,
-      auth: props.auth.isAuthenticated
-    };
-
-
-    if(props.auth.user.role === "admin"){
-      props.deleteInvestment(input, props.history);
-      setNotify({
-        isOpen: true,
-        message: "Deleted Successfully",
-        type: 'success'
-      });
-
-    }
-  }
   const dateToString = (date) => {
     var d = date.toString();
 

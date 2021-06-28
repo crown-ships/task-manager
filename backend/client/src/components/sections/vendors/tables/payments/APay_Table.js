@@ -113,7 +113,7 @@ const getDropdownList = (prop) => {
 
 
 
-export default function AF_Table(props) {
+export default function APay_Table(props) {
 
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
@@ -211,7 +211,7 @@ export default function AF_Table(props) {
 
   };
 
-  const onPaid = paymentID => {
+  const onPaid = (paymentID, vendorID, payAmt) => {
     const input = {
       params: {
         email: props.auth.user.email,
@@ -225,6 +225,26 @@ export default function AF_Table(props) {
 
     if(props.auth.user.role === "admin"){
       props.updatePayment(input, props.history);
+
+      var i;
+      var pAmt;
+      for (i=0; i< allVendors.length, i++) {
+        if (allVendors[i]._id === vendorID) {
+          pAmt = allVendors[i].pendingAmt;
+          break;
+        }
+      }
+      const v_inp = {
+        params: {
+          email: props.auth.user.email,
+          paymentID: vendorID,
+          auth: props.auth.isAuthenticated
+        },
+        body: {
+          pendingAmt: (pAmt - payAmt)
+        }
+      };
+      props.updateVendor(v_inp, props.history);
       setNotify({
         isOpen: true,
         message: "Return Paid",
@@ -373,7 +393,7 @@ export default function AF_Table(props) {
                 <TableCell>
                   <ActionButton
                     color="light"
-                    onClick={() => {onPaid(row._id)}}>
+                    onClick={() => {onPaid(row._id, row.vendorID, row.amtToBePaid)}}>
                     <CheckIcon fontSize="small" />
                   </ActionButton>
                 </TableCell>

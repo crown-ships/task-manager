@@ -8,8 +8,7 @@ const initialFValues = {
     vendorEmail:'',
     contactNo:'',
     contractAmt:0,
-    endDate:'',
-    pendingAmt:0
+    endDate:''
 }
 
 export default function UpdateForm(props) {
@@ -82,13 +81,6 @@ export default function UpdateForm(props) {
                         value={values.contractAmt}
                         onChange={handleInputChange}
                         error={errors.contractAmt}
-                    />
-                    <Input
-                        name="pendingAmt"
-                        label="Pending Amount"
-                        value={values.pendingAmt}
-                        onChange={handleInputChange}
-                        error={errors.pendingAmt}
                     />
                     <Input
                       id="date"

@@ -83,7 +83,7 @@ const getDropdownList = (prop) => {
 
 
 
-export default function AF_Table(props) {
+export default function AL_Table(props) {
 
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });

@@ -12,8 +12,7 @@ const initialFValues = {
   contactNo:'',
   contractAmt:0,
   startDate:'',
-  endDate:'',
-  pendingAmt:0
+  endDate:''
 }
 
 export default function RegisterForm(props) {
@@ -49,7 +48,7 @@ export default function RegisterForm(props) {
               contractAmt:values.contractAmt,
               startDate:values.startDate,
               endDate:values.endDate,
-              pendingAmt:values.pendingAmt,
+              pendingAmt:values.contractAmt,
               creatorName: props.auth.user.name,
               creatorID: props.auth.user.id,
               approved: approved
@@ -96,13 +95,6 @@ export default function RegisterForm(props) {
                       value={values.contractAmt}
                       onChange={handleInputChange}
                       error={errors.contractAmt}
-                  />
-                  <Input
-                      name="pendingAmt"
-                      label="Pending Amount"
-                      value={values.pendingAmt}
-                      onChange={handleInputChange}
-                      error={errors.pendingAmt}
                   />
                   <Input
                     id="date"

@@ -46,6 +46,9 @@ export default function RegisterForm(props) {
             const input = {
               vendorName: vendorDetails.vendorName,
               vendorID: vendorDetails._id,
+              vendorStartDate: vendorDetails.startDate,
+              vendorEndDate: vendorDetails.endDate,
+              vendorCrtAmt: vendorDetails.contractAmt,
               paymentName: values.paymentName,
               amtToBePaid: values.amtToBePaid,
               dueDate: values.dueDate,

@@ -8,6 +8,15 @@ const paymentModel = new mongoose.Schema({
   vendorID: {
     type: String
   },
+  vendorStartDate: {
+    type: Date
+  },
+  vendorEndDate: {
+    type: Date
+  },
+  vendorCrtAmt: {
+    type: Number
+  },
   amtToBePaid: {
     type: Number,
     required: true
