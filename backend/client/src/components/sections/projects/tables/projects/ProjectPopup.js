@@ -115,24 +115,51 @@ export default function ProjectPopup(props) {
   return (
     <React.Fragment>
       <Paper>
-        <Grid item xs={12}>
+        <Grid item xs={8}>
           {
             linkedFeatures.map(feature => (
-              <Accordion square expanded={expanded === feature._id} onChange={handleChange(feature._id)}>
-                <AccordionSummary aria-controls="panel-content" id={feature._id}>
-                  <Typography>{feature.featureName}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                {linkedTasks.map(task => (
-                  <Typography>{(task.featureID !== feature._id)?null: task.taskName}</Typography>
-                ))}
-                </AccordionDetails>
-              </Accordion>
-
+              <Typography>{(task.featureID !== feature._id)?null: task.taskName}</Typography>
           ))}
         </Grid>
-      </Paper>
-    </React.Fragment>
+        <Grid item xs = {4}>
+          <Accordion square expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+          <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
+            <Typography>Collapsible Group Item #1</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
+              sit amet blandit leo lobortis eget. Lorem ipsum dolor sit amet, consectetur adipiscing
+              elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+        <Accordion square expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
+          <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
+            <Typography>Collapsible Group Item #2</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
+              sit amet blandit leo lobortis eget. Lorem ipsum dolor sit amet, consectetur adipiscing
+              elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.
+            </Typography>
+          </AccordionDetails>
+          </Accordion>
+      </Grid>
+    </Paper>
+  </React.Fragment>
 
   );
 }
+
+// <Accordion square expanded={expanded === feature._id} onChange={handleChange(feature._id)}>
+//   <AccordionSummary aria-controls="panel-content" id={feature._id}>
+//     <Typography>{feature.featureName}</Typography>
+//   </AccordionSummary>
+//   <AccordionDetails>
+//   {linkedTasks.map(task => (
+//     <Typography>{(task.featureID !== feature._id)?null: task.taskName}</Typography>
+//   ))}
+//   </AccordionDetails>
+// </Accordion>
