@@ -35,6 +35,7 @@ import PropTypes from "prop-types";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import HelpIcon from '@material-ui/icons/Help';
 import CancelIcon from '@material-ui/icons/Cancel';
+import ProjectPopup from './ProjectPopup'
 // Generate Order Data
 function createData(id ,name, date, details, createdBy, update,del) {
   return { _id:id, projectName: name, dueDate: date, projectDetails: details, companyName: createdBy, percentComplete:0, ownerName:name, enabled: "true", updated:update,delete:del};
@@ -105,13 +106,6 @@ function preventDefault(event) {
   event.preventDefault();
 }
 
-
-const getFeatures = (prop) => {
-  return prop.getAllFeatures({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
-}
-const getTasks = (prop) => {
-  return prop.getAllTasks({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
-}
 const getData = (prop) => {
   return prop.getAllProjects({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
@@ -129,10 +123,9 @@ export default function AP_Table(props) {
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
+  const [openProjectPopup, setOpenProjectPopup] = React.useState(false);
   const [records, setRecords] = React.useState(data);
   const [projectDisplay, setProjectDisplay] = React.useState(rows[0]);
-  const [linkedFeatures, setLinkedFeatures] = React.useState(rows);
-  const [linkedTasks, setLinkedTasks] = React.useState(rows);
   const classes = useStyles();
 
   React.useEffect(async () => {
@@ -175,32 +168,6 @@ export default function AP_Table(props) {
         }
     })
   },[notify, list]);
-
-  React.useEffect(async () => {
-    const fullFeatures = await getFeatures(props);
-    console.log(fullFeatures);
-    const filteredFeatures = fullFeatures.data.map(function(item) {
-      if(item.projectID === projectDisplay._id) {
-        return item;
-      }
-      else {
-        return "0";
-      }
-    });
-    console.log(filteredFeatures);
-    const fullTasks = await getTasks(props);
-    const filteredTasks = fullTasks.data.map(function(item) {
-          if(item.projectID === projectDisplay._id) {
-            return item;
-          }
-          else {
-            return "0";
-          }
-        });
-
-    console.log(filteredTasks);
-    console.log(projectDisplay);
-  }, [projectDisplay]);
 
   const {
           TblContainer,
@@ -282,6 +249,7 @@ export default function AP_Table(props) {
       });
     }
   }
+
   const handleSwitch = (val, row) => {
     console.log(val);
       if(val== true)
@@ -289,6 +257,7 @@ export default function AP_Table(props) {
       if(val == false)
         changeEnable("false",row._id);
   };
+
   const changeEnable = (value, og_id) => {
     const input = {
       params: {
@@ -309,6 +278,7 @@ export default function AP_Table(props) {
       type: 'success'
     });
   }
+
   const onDelete = project => {
     setConfirmDialog({
         ...confirmDialog,
@@ -328,6 +298,7 @@ export default function AP_Table(props) {
       });
     }
   }
+
   const approvedIcon = (status) => {
     if (status === "approved") {
       console.log(status);
@@ -343,12 +314,17 @@ export default function AP_Table(props) {
       return <CancelIcon fontSize="small"  style={{ color: "#DC143C" }}/>
     }
   }
+
   const dateToString = (date) => {
     var d = date.toString();
     d = d.substring(0, d.indexOf('T'));
     return d;
   }
 
+  const openNest = row => {
+    setProjectDisplay(row);
+    setOpenProjectPopup(true);
+  }
 
   return (
     <React.Fragment>
@@ -400,7 +376,7 @@ export default function AP_Table(props) {
           <TableBody>
             {
               recordsAfterPagingAndSorting().map(row =>
-              (<TableRow key={row._id} onClick={() => setProjectDisplay(row)}>
+              (<TableRow key={row._id} onClick={() => openNest(row)}>
                 <TableCell backgroundColor = "primary">{row.projectName}</TableCell>
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
@@ -459,6 +435,13 @@ export default function AP_Table(props) {
         setOpenPopup={setOpenRegPopup}
       >
         <RegisterForm {...props} create={create} company={company} allCompanies = {allCompanies}/>
+      </Popup>
+      <Popup
+        title="Project Details"
+        openPopup={openProjectPopup}
+        setOpenPopup={setOpenProjectPopup}
+      >
+        <ProjectPopup {...props} projectDisplay = {projectDisplay}/>
       </Popup>
       <Notification
                notify={notify}

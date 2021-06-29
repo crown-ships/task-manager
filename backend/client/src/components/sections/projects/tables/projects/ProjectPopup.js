@@ -58,6 +58,13 @@ const f = [{
 //   },
 // }))(MuiAccordionDetails);
 
+const getFeatures = (prop) => {
+  return prop.getAllFeatures({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+}
+const getTasks = (prop) => {
+  return prop.getAllTasks({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+}
+
 export default function ProjectPopup(props) {
   const [expanded, setExpanded] = React.useState('panel1');
   const [linkedFeatures, setLinkedFeatures] = React.useState(f);
@@ -67,51 +74,49 @@ export default function ProjectPopup(props) {
     setExpanded(newExpanded ? panel : false);
   };
 
-React.useEffect(async () => {
-  const fullFeatures = await props.getAllFeatures({email:props.auth.user.email, auth: props.auth.isAuthenticated}, props.history);
-  const fullTasks = await props.getAllTasks({email:props.auth.user.email, auth: props.auth.isAuthenticated}, props.history);
 
-  const filteredFeatures = fullFeatures.data.map(function(item) {
-    if(item.projectID === props.projectDisplay._id) {
-      return item;
-    }
-    else {
-      return "0";
-    }
-  });
+  React.useEffect(async () => {
+    const fullFeatures = await getFeatures(props);
+    console.log(fullFeatures);
+    const filteredFeatures = fullFeatures.data.map(function(item) {
+      if(item.projectID === props.projectDisplay._id) {
+        return item;
+      }
+      else {
+        return "0";
+      }
+    });
 
-  const filteredTasks = fullTasks.data.map(function(item) {
-    if(item.projectID === props.projectDisplay._id) {
-      return item;
+    var j;
+    var len = 0;
+    var trimFeatures = [];
+    for(j=0; j<filteredFeatures.length; j++) {
+      if(filteredFeatures[j] !== "0"){
+        trimFeatures[len++] = filteredFeatures[j];
+      }
     }
-    else {
-      return "0";
-    }
-  });
+    console.log(trimTasks);
 
-  var j;
-  var len = 0;
-  var trimFeatures = [];
-  for(j=0; j<filteredFeatures.length; j++) {
-    if(filteredFeatures[j] !== "0"){
-      trimFeatures[len++] = filteredFeatures[j];
-    }
-  }
+    const fullTasks = await getTasks(props);
+    const filteredTasks = fullTasks.data.map(function(item) {
+      if(item.projectID === props.projectDisplay._id) {
+        return item;
+      }
+      else {
+        return "0";
+      }
+    });
 
-  var i;
-  var count = 0;
-  var trimTasks = [];
-  for(i=0; i<filteredTasks.length; j++) {
-    if(filteredTasks[i] !== "0"){
-      trimTasks[count++] = filteredTasks[j];
+    var i;
+    var count = 0;
+    var trimTasks = [];
+    for(i=0; i<filteredTasks.length; j++) {
+      if(filteredTasks[i] !== "0"){
+        trimTasks[count++] = filteredTasks[j];
+      }
     }
-  }
-
-  setLinkedTasks(trimTasks);
-  setLinkedFeatures(trimFeatures);
-  console.log(trimTasks);
-  console.log(trimFeatures)
-},[]);
+    console.log(trimTasks);
+  }, []);
 
 
   return (
