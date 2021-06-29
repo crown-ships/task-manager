@@ -104,6 +104,14 @@ const rows = [
 function preventDefault(event) {
   event.preventDefault();
 }
+
+
+const getFeatures = (prop) => {
+  return prop.getAllFeatures({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+}
+const getTasks = (prop) => {
+  return prop.getAllTasks({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+}
 const getData = (prop) => {
   return prop.getAllProjects({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
@@ -168,7 +176,29 @@ export default function AP_Table(props) {
     })
   },[notify, list]);
 
-  React.useEffect(() => {
+  React.useEffect(async () => {
+    const fullFeatures = await getFeatures(props);
+    console.log(fullFeatures);
+    const filteredFeatures = fullFeatures.data.map(function(item) {
+      if(item.projectID === projectDisplay._id) {
+        return item;
+      }
+      else {
+        return "0";
+      }
+    });
+    console.log(filteredFeatures);
+    const fullTasks = await getTasks(props);
+    const filteredTasks = fullTasks.data.map(function(item) {
+          if(item.projectID === projectDisplay._id) {
+            return item;
+          }
+          else {
+            return "0";
+          }
+        });
+
+    console.log(filteredTasks);
     console.log(projectDisplay);
   }, [projectDisplay]);
 
