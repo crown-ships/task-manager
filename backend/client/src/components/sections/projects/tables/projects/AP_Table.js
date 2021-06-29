@@ -134,9 +134,9 @@ export default function AP_Table(props) {
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
   const [records, setRecords] = React.useState(data);
   const [openProjectPopup, setOpenProjectPopup] = React.useState(false);
-  const [projectDisplay, setProjectDisplay] = React.useState(null);
-  const [linkedFeatures, setLinkedFeatures] = React.useState([]);
-  const [linkedTasks, setLinkedTasks] = React.useState([]);
+  const [projectDisplay, setProjectDisplay] = React.useState(row[0]);
+  const [linkedFeatures, setLinkedFeatures] = React.useState(row);
+  const [linkedTasks, setLinkedTasks] = React.useState(row);
 
   const classes = useStyles();
 
