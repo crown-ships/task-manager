@@ -164,7 +164,6 @@ export default function AP_Table(props) {
         }
     })
   },[notify, list]);
-    console.log(trimFeatures)
   const {
           TblContainer,
           TblHead,
