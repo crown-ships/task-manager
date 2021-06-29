@@ -35,12 +35,10 @@ import PropTypes from "prop-types";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import HelpIcon from '@material-ui/icons/Help';
 import CancelIcon from '@material-ui/icons/Cancel';
-import ProjectPopup from './ProjectPopup'
 // Generate Order Data
 function createData(id ,name, date, details, createdBy, update,del) {
   return { _id:id, projectName: name, dueDate: date, projectDetails: details, companyName: createdBy, percentComplete:0, ownerName:name, enabled: "true", updated:update,delete:del};
 }
-
 function CircularProgressWithLabel(props) {
   return (
     <Box position="relative" display="inline-flex">
@@ -62,7 +60,6 @@ function CircularProgressWithLabel(props) {
     </Box>
   );
 }
-
 CircularProgressWithLabel.propTypes = {
   /**
    * The value of the progress indicator for the determinate and buffer variants.
@@ -70,7 +67,6 @@ CircularProgressWithLabel.propTypes = {
    */
   value: PropTypes.number.isRequired,
 };
-
 const useStyles = makeStyles(theme => ({
     pageContent: {
         margin: theme.spacing(5),
@@ -90,7 +86,6 @@ const useStyles = makeStyles(theme => ({
     minWidth: 210,
   },
 }))
-
 const headCells = [
     { id: 'projectName', label: 'Project Name' },
     { id: 'approved', label: 'Approved' },
@@ -103,25 +98,19 @@ const headCells = [
     { id: 'update', label: 'Update', disableSorting: true },
     { id: 'delete', label: 'Delete', disableSorting: true }
 ];
-
 const rows = [
   createData("", "", "", "","","","")
 ];
-
 function preventDefault(event) {
   event.preventDefault();
 }
-
 const getData = (prop) => {
   return prop.getAllProjects({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 const getDropdownList = (prop) => {
   return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
-
-
 export default function AP_Table(props) {
-
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
@@ -133,11 +122,6 @@ export default function AP_Table(props) {
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
   const [records, setRecords] = React.useState(data);
-  const [openProjectPopup, setOpenProjectPopup] = React.useState(false);
-  const [projectDisplay, setProjectDisplay] = React.useState(rows[0]);
-  const [linkedFeatures, setLinkedFeatures] = React.useState(rows);
-  const [linkedTasks, setLinkedTasks] = React.useState(rows);
-
   const classes = useStyles();
 
   React.useEffect(async () => {
@@ -149,7 +133,6 @@ export default function AP_Table(props) {
       else
         return "0"
     });
-
     var j;
     var len = 0;
     var trimlist = [];
@@ -164,11 +147,12 @@ export default function AP_Table(props) {
     for(i=0; i<len; i++) {
       selList[i+1] = {key:i+1, item: trimlist[i]};
     }
+    console.log(selList);
     setList(selList);
   },[]);
-
   React.useEffect(async () => {
     const d = await getData(props);
+        console.log(d.data);
     setData(d.data);
     setRecords(d.data);
     setFilterFn({
@@ -180,60 +164,13 @@ export default function AP_Table(props) {
         }
     })
   },[notify, list]);
-
-  React.useEffect(async () => {
-    const fullFeatures = await props.getAllFeatures({email:props.auth.user.email, auth: props.auth.isAuthenticated}, props.history);
-    const fullTasks = await props.getAllTasks({email:props.auth.user.email, auth: props.auth.isAuthenticated}, props.history);
-
-    const filteredFeatures = fullFeatures.data.map(function(item) {
-      if(item.projectID === projectDisplay._id) {
-        return item;
-      }
-      else {
-        return "0";
-      }
-    });
-
-    const filteredTasks = fullTasks.data.map(function(item) {
-      if(item.projectID === projectDisplay._id) {
-        return item;
-      }
-      else {
-        return "0";
-      }
-    });
-
-    var j;
-    var len = 0;
-    var trimFeatures = [];
-    for(j=0; j<filteredFeatures.length; j++) {
-      if(filteredFeatures[j] !== "0"){
-        trimFeatures[len++] = filteredFeatures[j];
-      }
-    }
-
-    var i;
-    var count = 0;
-    var trimTasks = [];
-    for(i=0; i<filteredTasks.length; j++) {
-      if(filteredTasks[i] !== "0"){
-        trimTasks[count++] = filteredTasks[j];
-      }
-    }
-
-    setLinkedTasks(trimTasks);
-    setLinkedFeatures(trimFeatures);
-    console.log(trimTasks);
     console.log(trimFeatures)
-  },[projectDisplay]);
-
   const {
           TblContainer,
           TblHead,
           TblPagination,
           recordsAfterPagingAndSorting
       } = UseTable(records, headCells, filterFn);
-
   const handleSearch = e => {
     let target = e.target;
     setFilterFn({
@@ -249,9 +186,9 @@ export default function AP_Table(props) {
       checkedA: true,
       checkedB: true,
     });
-
   const handleChange = (event) => {
     let val = event.target;
+    console.log(val.value);
     setCompany(val.value);
     setFilterFn({
         fn: items => {
@@ -261,18 +198,14 @@ export default function AP_Table(props) {
                 return items.filter(x => x.companyName.includes(val.value) && x.approved.includes("approved"));
         }
     })
-
   };
   const openInEditPopup = item => {
     setRecordForEdit(item);
     setOpenEditPopup(true);
   }
-
   const openInRegPopup = item => {
-
     setOpenRegPopup(true);
   }
-
   const create = (data, resetForm) => {
     const input = {
       params: {
@@ -281,6 +214,7 @@ export default function AP_Table(props) {
       },
       body: data
     };
+    console.log(input);
     props.registerProject(input, props.history);
     resetForm();
     setOpenRegPopup(false);
@@ -291,7 +225,6 @@ export default function AP_Table(props) {
     });
   }
   const edit = (data, resetForm, og_id) => {
-
     const input = {
       params: {
         email: props.auth.user.email,
@@ -300,7 +233,6 @@ export default function AP_Table(props) {
       },
       body: data
     };
-
     if(props.auth.user.role === "admin"){
       props.updateProject(input, props.history);
       resetForm();
@@ -313,16 +245,14 @@ export default function AP_Table(props) {
       });
     }
   }
-
   const handleSwitch = (val, row) => {
+    console.log(val);
       if(val== true)
         changeEnable("true",row._id);
       if(val == false)
         changeEnable("false",row._id);
   };
-
   const changeEnable = (value, og_id) => {
-
     const input = {
       params: {
         email: props.auth.user.email,
@@ -333,8 +263,6 @@ export default function AP_Table(props) {
       enabled: value
       }
     };
-
-
     props.updateProject(input, props.history);
     props.updateAllFeatures(input, props.history);
     props.updateAllTasks(input, props.history);
@@ -344,20 +272,16 @@ export default function AP_Table(props) {
       type: 'success'
     });
   }
-
   const onDelete = project => {
     setConfirmDialog({
         ...confirmDialog,
         isOpen: false
     })
-
     const input = {
       projectID: project._id,
       email: props.auth.user.email,
       auth: props.auth.isAuthenticated
     };
-
-
     if(props.auth.user.role === "admin"){
       props.deleteProject(input, props.history);
       setNotify({
@@ -365,34 +289,29 @@ export default function AP_Table(props) {
         message: "Deleted Successfully",
         type: 'success'
       });
-
     }
   }
-
   const approvedIcon = (status) => {
-
     if (status === "approved") {
+      console.log(status);
+      console.log("yes");
       return <CheckCircleIcon fontSize="small" style={{ color: "#00b386" }}/>
     }
     else if (status === "wait") {
+      console.log("what");
       return <HelpIcon fontSize="small"  style={{ color: "#ffbf00" }}/>
     }
     else if (status === "rejected") {
+      console.log("what");
       return <CancelIcon fontSize="small"  style={{ color: "#DC143C" }}/>
     }
   }
-
   const dateToString = (date) => {
     var d = date.toString();
-
     d = d.substring(0, d.indexOf('T'));
     return d;
   }
 
-  const openList = (row) => {
-    setProjectDisplay(row);
-    setOpenProjectPopup(true);
-  }
 
   return (
     <React.Fragment>
@@ -444,10 +363,7 @@ export default function AP_Table(props) {
           <TableBody>
             {
               recordsAfterPagingAndSorting().map(row =>
-              (<TableRow key={row._id} onClick = {() => {
-                setProjectDisplay(row);
-                console.log(projectDisplay);
-              }}>
+              (<TableRow key={row._id}>
                 <TableCell backgroundColor = "primary">{row.projectName}</TableCell>
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
@@ -506,13 +422,6 @@ export default function AP_Table(props) {
         setOpenPopup={setOpenRegPopup}
       >
         <RegisterForm {...props} create={create} company={company} allCompanies = {allCompanies}/>
-      </Popup>
-      <Popup
-        title="Project Details"
-        openPopup={openProjectPopup}
-        setOpenPopup={setOpenProjectPopup}
-      >
-        <ProjectPopup {...props} projectDisplay = {projectDisplay} />
       </Popup>
       <Notification
                notify={notify}
