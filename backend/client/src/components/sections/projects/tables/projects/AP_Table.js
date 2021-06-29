@@ -134,9 +134,9 @@ export default function AP_Table(props) {
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
   const [records, setRecords] = React.useState(data);
   const [openProjectPopup, setOpenProjectPopup] = React.useState(false);
-  const [projectDisplay, setProjectDisplay] = React.useState(row[0]);
-  const [linkedFeatures, setLinkedFeatures] = React.useState(row);
-  const [linkedTasks, setLinkedTasks] = React.useState(row);
+  const [projectDisplay, setProjectDisplay] = React.useState(rows[0]);
+  const [linkedFeatures, setLinkedFeatures] = React.useState(rows);
+  const [linkedTasks, setLinkedTasks] = React.useState(rows);
 
   const classes = useStyles();
 
@@ -444,7 +444,10 @@ export default function AP_Table(props) {
           <TableBody>
             {
               recordsAfterPagingAndSorting().map(row =>
-              (<TableRow key={row._id} onClick = {() => setProjectDisplay(row)}>
+              (<TableRow key={row._id} onClick = {() => {
+                setProjectDisplay(row);
+                console.log(projectDisplay);
+              }}>
                 <TableCell backgroundColor = "primary">{row.projectName}</TableCell>
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
