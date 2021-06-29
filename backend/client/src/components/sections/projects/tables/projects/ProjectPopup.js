@@ -17,46 +17,46 @@ const f = [{
   _id: ""
 }];
 
-const Accordion = withStyles({
-  root: {
-    border: '1px solid rgba(0, 0, 0, .125)',
-    boxShadow: 'none',
-    '&:not(:last-child)': {
-      borderBottom: 0,
-    },
-    '&:before': {
-      display: 'none',
-    },
-    '&$expanded': {
-      margin: 'auto',
-    },
-  },
-  expanded: {},
-})(MuiAccordion);
-
-const AccordionSummary = withStyles({
-  root: {
-    backgroundColor: 'rgba(0, 0, 0, .03)',
-    borderBottom: '1px solid rgba(0, 0, 0, .125)',
-    marginBottom: -1,
-    minHeight: 56,
-    '&$expanded': {
-      minHeight: 56,
-    },
-  },
-  content: {
-    '&$expanded': {
-      margin: '12px 0',
-    },
-  },
-  expanded: {},
-})(MuiAccordionSummary);
-
-const AccordionDetails = withStyles((theme) => ({
-  root: {
-    padding: theme.spacing(2),
-  },
-}))(MuiAccordionDetails);
+// const Accordion = withStyles({
+//   root: {
+//     border: '1px solid rgba(0, 0, 0, .125)',
+//     boxShadow: 'none',
+//     '&:not(:last-child)': {
+//       borderBottom: 0,
+//     },
+//     '&:before': {
+//       display: 'none',
+//     },
+//     '&$expanded': {
+//       margin: 'auto',
+//     },
+//   },
+//   expanded: {},
+// })(MuiAccordion);
+//
+// const AccordionSummary = withStyles({
+//   root: {
+//     backgroundColor: 'rgba(0, 0, 0, .03)',
+//     borderBottom: '1px solid rgba(0, 0, 0, .125)',
+//     marginBottom: -1,
+//     minHeight: 56,
+//     '&$expanded': {
+//       minHeight: 56,
+//     },
+//   },
+//   content: {
+//     '&$expanded': {
+//       margin: '12px 0',
+//     },
+//   },
+//   expanded: {},
+// })(MuiAccordionSummary);
+//
+// const AccordionDetails = withStyles((theme) => ({
+//   root: {
+//     padding: theme.spacing(2),
+//   },
+// }))(MuiAccordionDetails);
 
 export default function ProjectPopup(props) {
   const [expanded, setExpanded] = React.useState('panel1');
@@ -67,82 +67,56 @@ export default function ProjectPopup(props) {
     setExpanded(newExpanded ? panel : false);
   };
 
-  React.useEffect(async () => {
-    const fullFeatures = await props.getAllFeatures({email:props.auth.user.email, auth: props.auth.isAuthenticated}, props.history);
-    const fullTasks = await props.getAllTasks({email:props.auth.user.email, auth: props.auth.isAuthenticated}, props.history);
+React.useEffect(async () => {
+  const fullFeatures = await props.getAllFeatures({email:props.auth.user.email, auth: props.auth.isAuthenticated}, props.history);
+  const fullTasks = await props.getAllTasks({email:props.auth.user.email, auth: props.auth.isAuthenticated}, props.history);
 
-    const filteredFeatures = fullFeatures.data.map(function(item) {
-      if(item.projectID === props.projectDisplay._id) {
-        return item;
-      }
-      else {
-        return "0";
-      }
-    });
-
-    const filteredTasks = fullTasks.data.map(function(item) {
-      if(item.projectID === props.projectDisplay._id) {
-        return item;
-      }
-      else {
-        return "0";
-      }
-    });
-
-    var j;
-    var len = 0;
-    var trimFeatures = [];
-    for(j=0; j<filteredFeatures.length; j++) {
-      if(filteredFeatures[j] !== "0"){
-        trimFeatures[len++] = filteredFeatures[j];
-      }
+  const filteredFeatures = fullFeatures.data.map(function(item) {
+    if(item.projectID === props.projectDisplay._id) {
+      return item;
     }
-
-    var i;
-    var count = 0;
-    var trimTasks = [];
-    for(i=0; i<filteredTasks.length; j++) {
-      if(filteredTasks[i] !== "0"){
-        trimTasks[count++] = filteredTasks[j];
-      }
+    else {
+      return "0";
     }
+  });
 
-    setLinkedTasks(trimTasks);
-    setLinkedFeatures(trimFeatures);
-    console.log(trimTasks);
-    console.log(trimFeatures)
-  },[]);
+  const filteredTasks = fullTasks.data.map(function(item) {
+    if(item.projectID === props.projectDisplay._id) {
+      return item;
+    }
+    else {
+      return "0";
+    }
+  });
+
+  var j;
+  var len = 0;
+  var trimFeatures = [];
+  for(j=0; j<filteredFeatures.length; j++) {
+    if(filteredFeatures[j] !== "0"){
+      trimFeatures[len++] = filteredFeatures[j];
+    }
+  }
+
+  var i;
+  var count = 0;
+  var trimTasks = [];
+  for(i=0; i<filteredTasks.length; j++) {
+    if(filteredTasks[i] !== "0"){
+      trimTasks[count++] = filteredTasks[j];
+    }
+  }
+
+  setLinkedTasks(trimTasks);
+  setLinkedFeatures(trimFeatures);
+  console.log(trimTasks);
+  console.log(trimFeatures)
+},[]);
 
 
   return (
     <React.Fragment>
       <Paper>
-        <Grid item xs = {12}>
-          <Accordion square expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
-          <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-            <Typography>Collapsible Group Item #1</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-              sit amet blandit leo lobortis eget. Lorem ipsum dolor sit amet, consectetur adipiscing
-              elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion square expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
-          <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
-            <Typography>Collapsible Group Item #2</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-              sit amet blandit leo lobortis eget. Lorem ipsum dolor sit amet, consectetur adipiscing
-              elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.
-            </Typography>
-          </AccordionDetails>
-          </Accordion>
-      </Grid>
     </Paper>
   </React.Fragment>
 
