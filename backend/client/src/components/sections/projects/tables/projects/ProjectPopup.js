@@ -4,6 +4,9 @@ import MuiAccordion from '@material-ui/core/Accordion';
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+
 
 const t = [{
   taskName: "",
@@ -112,20 +115,22 @@ export default function ProjectPopup(props) {
   return (
     <React.Fragment>
       <Paper>
-      {
-        linkedFeatures.map(feature => (
-          <Accordion square expanded={expanded === feature._id} onChange={handleChange(feature._id)}>
-            <AccordionSummary aria-controls="panel-content" id={feature._id}>
-              <Typography>{feature.featureName}</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-            {linkedTasks.map(task => (
-              <Typography>{(task.featureID !== feature._id)?null: task.taskName}</Typography>
-            ))}
-            </AccordionDetails>
-          </Accordion>
+        <Grid item xs={12}>
+          {
+            linkedFeatures.map(feature => (
+              <Accordion square expanded={expanded === feature._id} onChange={handleChange(feature._id)}>
+                <AccordionSummary aria-controls="panel-content" id={feature._id}>
+                  <Typography>{feature.featureName}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                {linkedTasks.map(task => (
+                  <Typography>{(task.featureID !== feature._id)?null: task.taskName}</Typography>
+                ))}
+                </AccordionDetails>
+              </Accordion>
 
-      ))}
+          ))}
+        </Grid>
       </Paper>
     </React.Fragment>
 
