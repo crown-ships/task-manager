@@ -115,13 +115,7 @@ export default function ProjectPopup(props) {
   return (
     <React.Fragment>
       <Paper>
-        <Grid item xs={8}>
-          {
-            linkedFeatures.map(feature => (
-              <Typography>{feature.featureName}</Typography>
-          ))}
-        </Grid>
-        <Grid item xs = {4}>
+        <Grid item xs = {12}>
           <Accordion square expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
           <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
             <Typography>Collapsible Group Item #1</Typography>
