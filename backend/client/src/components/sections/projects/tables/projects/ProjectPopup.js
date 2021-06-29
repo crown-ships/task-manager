@@ -57,8 +57,8 @@ const AccordionDetails = withStyles((theme) => ({
 
 export default function ProjectPopup(props) {
   const [expanded, setExpanded] = React.useState('panel1');
-  const [linkedFeatures, setLinkedFeatures] = React.useState([]);
-  const [linkedTasks, setLinkedTasks] = React.useState([]);
+  const [linkedFeatures, setLinkedFeatures] = React.useState(f);
+  const [linkedTasks, setLinkedTasks] = React.useState(t);
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
