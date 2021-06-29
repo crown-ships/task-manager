@@ -1,0 +1,121 @@
+import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import MuiAccordion from '@material-ui/core/Accordion';
+import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
+import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
+import Typography from '@material-ui/core/Typography';
+
+const Accordion = withStyles({
+  root: {
+    border: '1px solid rgba(0, 0, 0, .125)',
+    boxShadow: 'none',
+    '&:not(:last-child)': {
+      borderBottom: 0,
+    },
+    '&:before': {
+      display: 'none',
+    },
+    '&$expanded': {
+      margin: 'auto',
+    },
+  },
+  expanded: {},
+})(MuiAccordion);
+
+const AccordionSummary = withStyles({
+  root: {
+    backgroundColor: 'rgba(0, 0, 0, .03)',
+    borderBottom: '1px solid rgba(0, 0, 0, .125)',
+    marginBottom: -1,
+    minHeight: 56,
+    '&$expanded': {
+      minHeight: 56,
+    },
+  },
+  content: {
+    '&$expanded': {
+      margin: '12px 0',
+    },
+  },
+  expanded: {},
+})(MuiAccordionSummary);
+
+const AccordionDetails = withStyles((theme) => ({
+  root: {
+    padding: theme.spacing(2),
+  },
+}))(MuiAccordionDetails);
+
+export default function ProjectPopup(props) {
+  const [expanded, setExpanded] = React.useState('panel1');
+  const [linkedFeatures, setLinkedFeatures] = React.useState([]);
+  const [linkedTasks, setLinkedTasks] = React.useState([]);
+
+  const handleChange = (panel) => (event, newExpanded) => {
+    setExpanded(newExpanded ? panel : false);
+  };
+
+  React.useEffect(async () => {
+    const fullFeatures = await props.getAllFeatures({email:props.auth.user.email, auth: props.auth.isAuthenticated}, props.history);
+    const fullTasks = await props.getAllTasks({email:props.auth.user.email, auth: props.auth.isAuthenticated}, props.history);
+
+    const filteredFeatures = fullFeatures.data.map(function(item) {
+      if(item.projectID === props.projectDisplay._id) {
+        return item;
+      }
+      else {
+        return "0";
+      }
+    });
+
+    const filteredTasks = fullTasks.data.map(function(item) {
+      if(item.projectID === props.projectDisplay._id) {
+        return item;
+      }
+      else {
+        return "0";
+      }
+    });
+
+    var j;
+    var len = 0;
+    var trimFeatures = [];
+    for(j=0; j<filteredFeatures.length; j++) {
+      if(filteredFeatures[j] !== "0"){
+        trimFeatures[len++] = filteredFeatures[j];
+      }
+    }
+
+    var i;
+    var count = 0;
+    var trimTasks = [];
+    for(i=0; i<filteredTasks.length; j++) {
+      if(filteredTasks[i] !== "0"){
+        trimTasks[count++] = filteredTasks[j];
+      }
+    }
+
+    setLinkedTasks(trimTasks);
+    setLinkedFeatures(trimFeatures);
+  },[]);
+
+
+  return (
+    <div>
+    {
+      linkedFeatures.map(feature => (
+        <Accordion square expanded={expanded === feature._id} onChange={handleChange(feature._id)}>
+          <AccordionSummary aria-controls="panel-content" id={feature._id}>
+            <Typography>{feature.featureName}</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+          {linkedTasks.map(task => (
+            <Typography>{(task.featureID !== feature._id)?null: task.taskName}</Typography>
+          ))}
+          </AccordionDetails>
+        </Accordion>
+
+    ))}
+    </div>
+  );
+}

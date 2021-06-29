@@ -35,6 +35,7 @@ import PropTypes from "prop-types";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import HelpIcon from '@material-ui/icons/Help';
 import CancelIcon from '@material-ui/icons/Cancel';
+import ProjectPopup from './ProjectPopup'
 // Generate Order Data
 function createData(id ,name, date, details, createdBy, update,del) {
   return { _id:id, projectName: name, dueDate: date, projectDetails: details, companyName: createdBy, percentComplete:0, ownerName:name, enabled: "true", updated:update,delete:del};
@@ -132,6 +133,9 @@ export default function AP_Table(props) {
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
   const [records, setRecords] = React.useState(data);
+  const [openProjectPopup, setOpenProjectPopup] = React.useState(false);
+  const [projectDisplay, setProjectDisplay] = React.useState(null);
+
   const classes = useStyles();
 
   React.useEffect(async () => {
@@ -347,6 +351,10 @@ export default function AP_Table(props) {
     return d;
   }
 
+  const openList = (row) => {
+    setProjectDisplay(row);
+    setOpenProjectPopup(true);
+  }
 
   return (
     <React.Fragment>
@@ -398,7 +406,7 @@ export default function AP_Table(props) {
           <TableBody>
             {
               recordsAfterPagingAndSorting().map(row =>
-              (<TableRow key={row._id}>
+              (<TableRow key={row._id} onClick = {() => openList(row)}>
                 <TableCell backgroundColor = "primary">{row.projectName}</TableCell>
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
@@ -457,6 +465,13 @@ export default function AP_Table(props) {
         setOpenPopup={setOpenRegPopup}
       >
         <RegisterForm {...props} create={create} company={company} allCompanies = {allCompanies}/>
+      </Popup>
+      <Popup
+        title="Project Details"
+        openPopup={openProjectPopup}
+        setOpenPopup={setOpenProjectPopup}
+      >
+        <ProjectPopup {...props} projectDisplay = {projectDisplay} />
       </Popup>
       <Notification
                notify={notify}
