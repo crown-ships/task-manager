@@ -109,6 +109,8 @@ export default function ProjectPopup(props) {
 
     setLinkedTasks(trimTasks);
     setLinkedFeatures(trimFeatures);
+    console.log(trimTasks);
+    console.log(trimFeatures)
   },[]);
 
 
