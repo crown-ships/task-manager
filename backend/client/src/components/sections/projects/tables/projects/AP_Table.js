@@ -135,6 +135,8 @@ export default function AP_Table(props) {
   const [records, setRecords] = React.useState(data);
   const [openProjectPopup, setOpenProjectPopup] = React.useState(false);
   const [projectDisplay, setProjectDisplay] = React.useState(null);
+  const [linkedFeatures, setLinkedFeatures] = React.useState(f);
+  const [linkedTasks, setLinkedTasks] = React.useState(t);
 
   const classes = useStyles();
 
@@ -181,6 +183,51 @@ export default function AP_Table(props) {
     })
   },[notify, list]);
 
+  React.useEffect(async () => {
+    const fullFeatures = await props.getAllFeatures({email:props.auth.user.email, auth: props.auth.isAuthenticated}, props.history);
+    const fullTasks = await props.getAllTasks({email:props.auth.user.email, auth: props.auth.isAuthenticated}, props.history);
+
+    const filteredFeatures = fullFeatures.data.map(function(item) {
+      if(item.projectID === projectDisplay._id) {
+        return item;
+      }
+      else {
+        return "0";
+      }
+    });
+
+    const filteredTasks = fullTasks.data.map(function(item) {
+      if(item.projectID === projectDisplay._id) {
+        return item;
+      }
+      else {
+        return "0";
+      }
+    });
+
+    var j;
+    var len = 0;
+    var trimFeatures = [];
+    for(j=0; j<filteredFeatures.length; j++) {
+      if(filteredFeatures[j] !== "0"){
+        trimFeatures[len++] = filteredFeatures[j];
+      }
+    }
+
+    var i;
+    var count = 0;
+    var trimTasks = [];
+    for(i=0; i<filteredTasks.length; j++) {
+      if(filteredTasks[i] !== "0"){
+        trimTasks[count++] = filteredTasks[j];
+      }
+    }
+
+    setLinkedTasks(trimTasks);
+    setLinkedFeatures(trimFeatures);
+    console.log(trimTasks);
+    console.log(trimFeatures)
+  },[]);
 
   const {
           TblContainer,
@@ -406,7 +453,7 @@ export default function AP_Table(props) {
           <TableBody>
             {
               recordsAfterPagingAndSorting().map(row =>
-              (<TableRow key={row._id} onClick = {() => openList(row)}>
+              (<TableRow key={row._id} onClick = {() => setProjectDisplay(row)}>
                 <TableCell backgroundColor = "primary">{row.projectName}</TableCell>
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
