@@ -122,6 +122,9 @@ export default function AP_Table(props) {
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
   const [records, setRecords] = React.useState(data);
+  const [projectDisplay, setProjectDisplay] = React.useState(rows[0]);
+  const [linkedFeatures, setLinkedFeatures] = React.useState(rows);
+  const [linkedTasks, setLinkedTasks] = React.useState(rows);
   const classes = useStyles();
 
   React.useEffect(async () => {
@@ -164,6 +167,11 @@ export default function AP_Table(props) {
         }
     })
   },[notify, list]);
+
+  React.useEffect(() => {
+    console.log(projectDisplay);
+  }, [projectDisplay]);
+
   const {
           TblContainer,
           TblHead,
@@ -362,7 +370,7 @@ export default function AP_Table(props) {
           <TableBody>
             {
               recordsAfterPagingAndSorting().map(row =>
-              (<TableRow key={row._id}>
+              (<TableRow key={row._id} onClick={() => setProjectDisplay(row)}>
                 <TableCell backgroundColor = "primary">{row.projectName}</TableCell>
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
