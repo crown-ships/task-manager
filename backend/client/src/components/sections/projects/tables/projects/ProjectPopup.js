@@ -118,7 +118,7 @@ export default function ProjectPopup(props) {
         <Grid item xs={8}>
           {
             linkedFeatures.map(feature => (
-              <Typography>{(task.featureID !== feature._id)?null: task.taskName}</Typography>
+              <Typography>{feature.featureName}</Typography>
           ))}
         </Grid>
         <Grid item xs = {4}>
