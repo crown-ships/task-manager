@@ -214,10 +214,15 @@ const ProjectsPage =  (props) => {
           >
             <MenuIcon />
           </IconButton>
-          <img src="http://placekitten.com/25/25" alt="Kitten" height="25" width="25" />
-          <Button color="inherit" className={classes.btnstyle} onClick={onLogoutClick}>
-            Logout
-          </Button>
+          <Grid container>
+            <Grid item xs={10}>
+              <img src="/mcmlogo.png" alt="MCM" height="25" width="25" />
+            </Grid>
+            <Grid item xs={2}>
+              <Button color="inherit" className={classes.btnstyle} onClick={onLogoutClick}>
+                Logout
+              </Button>
+            </Grid>
         </Toolbar>
       </AppBar>
       <Drawer
