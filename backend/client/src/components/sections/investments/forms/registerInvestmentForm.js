@@ -170,7 +170,7 @@ export default function RegisterForm(props) {
                       <InputLabel htmlFor="outlined-paymentTerms-native-simple">Payment Terms</InputLabel>
                       <Select
                         native
-                        disabled={(values.investmentType === "recurring")}
+                        disabled={(values.investmentType !== "recurring")}
                         value={values.paymentTerms}
                         onChange={handleInputChange}
                         label="Payment Terms"

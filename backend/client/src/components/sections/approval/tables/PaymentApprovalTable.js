@@ -98,16 +98,27 @@ export default function PaymentApprovalTable(props) {
   React.useEffect(async () => {
     const d = await getDropdownList(props);
     var complist = d.data.map(function(item) {
-      return item.vendorName;
+      if (item.approved === "approved")
+        return item.vendorName;
+      else
+        return "0"
     });
-    const len = complist.length;
+
+    var j;
+    var len = 0;
+    var trimlist = [];
+    for(j=0; j<complist.length; j++) {
+      if(complist[j] !== "0"){
+        trimlist[len++] = complist[j];
+      }
+    }
+
     var selList = [];
     var i;
     selList[0] = {key:0, item: ""};
     for(i=0; i<len; i++) {
-      selList[i+1] = {key:i+1, item: complist[i]};
+      selList[i+1] = {key:i+1, item: trimlist[i]};
     }
-    console.log(selList);
     setList(selList);
   },[]);
 
