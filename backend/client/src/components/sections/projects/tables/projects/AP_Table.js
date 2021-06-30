@@ -181,6 +181,8 @@ export default function AP_Table(props) {
   const [projectDisplay, setProjectDisplay] = React.useState(rows[0]);
   const [linkedFeatures, setLinkedFeatures] = React.useState(rows);
   const [linkedTasks, setLinkedTasks] = React.useState(rows);
+  const [finalFeatures, setFinalFeatures] = React.useState(rows);
+  const [finalTasks, setFinalTasks] = React.useState(rows);
   const [expanded, setExpanded] = React.useState('panel1');
 
   const classes = useStyles();
@@ -254,6 +256,12 @@ export default function AP_Table(props) {
     console.log(filteredTasks);
     console.log(projectDisplay);
 
+    setLinkedFeatures(filteredFeatures);
+    setLinkedTasks(filteredTasks);
+  }, [projectDisplay]);
+
+
+  React.useEffect(() => {
     var i;
     var count = 0;
     var trimTasks = [];
@@ -281,10 +289,10 @@ export default function AP_Table(props) {
     }
     console.log(trimFeatures);
 
+    setFinalTasks(trimTasks);
+    setFinalFeatures(trimFeatures);
 
-    setLinkedFeatures(filteredFeatures);
-    setLinkedTasks(filteredTasks);
-  }, [projectDisplay]);
+  },[linkedTasks, linkedFeatures])
 
   const {
           TblContainer,
