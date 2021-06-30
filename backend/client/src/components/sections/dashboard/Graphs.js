@@ -1,13 +1,7 @@
 import * as React from 'react';
 import Paper from '@material-ui/core/Paper';
-import {
-  Chart,
-  BarSeries,
-  Title,
-  ArgumentAxis,
-  ValueAxis,
-} from '@devexpress/dx-react-chart-material-ui';
-import { Animation } from '@devexpress/dx-react-chart';
+import { Chart, Series } from 'devextreme-react/chart';
+
 
 const data = [
   { year: '1950', population: 2.525 },
@@ -41,19 +35,16 @@ export default function Graphs(props) {
   console.log(project);
   return (
     <Paper>
-      <Chart
-        data={project}
-      >
-        <ArgumentAxis />
-        <ValueAxis max={100} />
-
-        <BarSeries
+    <Chart id="chart" dataSource={project}>
+        <Series
           valueField="percentComplete"
           argumentField="projectName"
-        />
-        <Title text="Projects" />
-        <Animation />
+          name="Projects"
+          type="bar"
+          color="#ffaa66" />
       </Chart>
     </Paper>
+
+
   );
 }

@@ -271,8 +271,8 @@ export default function AP_Table(props) {
 
     console.log(projectDisplay);
 
-    // setLinkedFeatures(trimFeatures);
-    // setLinkedTasks(trimTasks);
+    setLinkedFeatures(filteredFeatures);
+    setLinkedTasks(filteredTasks);
   }, [projectDisplay]);
 
   const {
@@ -531,14 +531,20 @@ export default function AP_Table(props) {
       <TblPagination />
     </Paper>
     <Paper>
-      <Accordion square expanded={expanded === 'panel1'} onChange={handleExpand('panel1')}>
-        <AccordionSummary aria-controls="panel-content" id='panel1'>
-          <Typography>test FEature</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          test tasks
-        </AccordionDetails>
-      </Accordion>
+    {
+      linkedFeatures.map(item =>
+      (
+        <Accordion square expanded={expanded === item._id} onChange={handleExpand(item._id)}>
+          <AccordionSummary aria-controls="panel-content" id= {item._id}>
+            <Typography>{item}</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            test tasks
+          </AccordionDetails>
+        </Accordion>
+      ))
+    }
+
     </Paper>
       <Popup
         title="Edit Project Details"
