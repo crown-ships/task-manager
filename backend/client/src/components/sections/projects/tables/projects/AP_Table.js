@@ -535,7 +535,7 @@ export default function AP_Table(props) {
       <TblPagination />
     </Paper>
     <Paper>
-    {
+    { (projectDisplay === rows[0])? null:
       linkedFeatures.map(item => (
         <Accordion square expanded={expanded === 'panel1'} onChange={handleExpand('panel1')}>
           <AccordionSummary aria-controls="panel-content" id='panel1'>
