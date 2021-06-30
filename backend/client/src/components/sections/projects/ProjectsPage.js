@@ -244,7 +244,7 @@ const ProjectsPage =  (props) => {
               <AppBar position="static">
                 <Tabs value={value} centered onChange={handleChange} aria-label="simple tabs example">
                   <Tab label="Projects" {...a11yProps(0)} />
-                  <Tab label="Features" {...a11yProps(1)} />
+                  <Tab label="Milestones" {...a11yProps(1)} />
                   <Tab label="Tasks" {...a11yProps(2)} />
                 </Tabs>
               </AppBar>

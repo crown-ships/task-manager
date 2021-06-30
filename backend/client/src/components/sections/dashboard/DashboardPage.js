@@ -246,7 +246,6 @@ const ProjectsPage =  (props) => {
           </Grid>
           <Grid item xs={2}></Grid>
           <Grid item xs={5}>
-            <Pie {...props}/>
           </Grid>
         </Grid>
 
