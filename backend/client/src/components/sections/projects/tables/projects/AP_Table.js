@@ -475,9 +475,6 @@ export default function AP_Table(props) {
       </TblContainer>
       <TblPagination />
     </Paper>
-    <Paper>
-      <Typography>{linkedFeatures}</Typography>
-    </Paper>
       <Popup
         title="Edit Project Details"
         openPopup={openEditPopup}
