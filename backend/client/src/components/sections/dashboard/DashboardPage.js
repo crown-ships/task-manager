@@ -213,12 +213,16 @@ const ProjectsPage =  (props) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Projects
-          </Typography>
-          <Button color="inherit" className={classes.btnstyle} onClick={onLogoutClick}>
-            Logout
-          </Button>
+          <Grid container>
+            <Grid item xs={10}>
+              <img src="/mcmlogo.png" alt="MCM" height="25" width="25" />
+            </Grid>
+            <Grid item xs={2}>
+              <Button color="inherit" className={classes.btnstyle} onClick={onLogoutClick}>
+                Logout
+              </Button>
+            </Grid>
+          <Grid>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -241,12 +245,11 @@ const ProjectsPage =  (props) => {
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
         <Grid container>
-          <Grid item xs={5}>
+          <Grid item xs={3}></Grid>
+          <Grid item xs={6}>
             <Graphs {...props}/>
           </Grid>
-          <Grid item xs={2}></Grid>
-          <Grid item xs={5}>
-          </Grid>
+          <Grid item xs={3></Grid>
         </Grid>
 
           <Box pt={4}>

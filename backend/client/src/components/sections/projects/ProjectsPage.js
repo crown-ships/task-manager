@@ -223,6 +223,7 @@ const ProjectsPage =  (props) => {
                 Logout
               </Button>
             </Grid>
+          <Grid>
         </Toolbar>
       </AppBar>
       <Drawer
