@@ -249,7 +249,7 @@ const ProjectsPage =  (props) => {
           <Grid item xs={6}>
             <Graphs {...props}/>
           </Grid>
-          <Grid item xs={3></Grid>
+          <Grid item xs={3}></Grid>
         </Grid>
 
           <Box pt={4}>
