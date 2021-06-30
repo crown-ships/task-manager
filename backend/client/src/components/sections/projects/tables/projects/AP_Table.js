@@ -534,7 +534,7 @@ export default function AP_Table(props) {
 
         <Accordion square expanded={expanded === 'panel1'} onChange={handleExpand('panel1')}>
           <AccordionSummary aria-controls="panel-content" id='panel1'>
-            <Typography>{linkedFeatures[0]}</Typography>
+            <Typography>linkedFeatures</Typography>
           </AccordionSummary>
           <AccordionDetails>
             test tasks
