@@ -222,7 +222,7 @@ const ProjectsPage =  (props) => {
                 Logout
               </Button>
             </Grid>
-          </Grid>
+          <Grid>
         </Toolbar>
       </AppBar>
       <Drawer
