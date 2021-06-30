@@ -41,7 +41,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import ProjectPopup from './ProjectPopup'
 // Generate Order Data
 function createData(id ,name, date, details, createdBy, update,del) {
-  return { _id:id, projectName: name, dueDate: date, projectDetails: details, companyName: createdBy, percentComplete:0, ownerName:name, enabled: "true", updated:update,delete:del};
+  return { _id:id, projectName: name, dueDate: date, projectDetails: details, featureName: name, companyName: createdBy, percentComplete:0, ownerName:name, enabled: "true", updated:update,delete:del};
 }
 function CircularProgressWithLabel(props) {
   return (
@@ -531,16 +531,18 @@ export default function AP_Table(props) {
       <TblPagination />
     </Paper>
     <Paper>
-
+    {
+      linkedFeatures.map(item => (
         <Accordion square expanded={expanded === 'panel1'} onChange={handleExpand('panel1')}>
           <AccordionSummary aria-controls="panel-content" id='panel1'>
-            <Typography>linkedFeatures</Typography>
+            <Typography>{item.featureName}</Typography>
           </AccordionSummary>
           <AccordionDetails>
             test tasks
           </AccordionDetails>
         </Accordion>
-
+      ))
+    }
     </Paper>
       <Popup
         title="Edit Project Details"
