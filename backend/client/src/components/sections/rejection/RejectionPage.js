@@ -219,12 +219,16 @@ const RejectionPage =  (props) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Rejection
-          </Typography>
-          <Button color="inherit" className={classes.btnstyle} onClick={onLogoutClick}>
-            Logout
-          </Button>
+          <Grid container>
+            <Grid item xs={11}>
+              <img src="/mcmlogo.png" alt="MCM" height="50" width="50" />
+            </Grid>
+            <Grid item xs={1}>
+              <Button color="inherit" className={classes.btnstyle} onClick={onLogoutClick}>
+                Logout
+              </Button>
+            </Grid>
+          </Grid>
         </Toolbar>
       </AppBar>
       <Drawer

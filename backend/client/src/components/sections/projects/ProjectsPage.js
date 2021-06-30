@@ -215,10 +215,10 @@ const ProjectsPage =  (props) => {
             <MenuIcon />
           </IconButton>
           <Grid container>
-            <Grid item xs={10}>
-              <img src="/mcmlogo.png" alt="MCM" height="25" width="25" />
+            <Grid item xs={11}>
+              <img src="/mcmlogo.png" alt="MCM" height="50" width="50" />
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={1}>
               <Button color="inherit" className={classes.btnstyle} onClick={onLogoutClick}>
                 Logout
               </Button>
