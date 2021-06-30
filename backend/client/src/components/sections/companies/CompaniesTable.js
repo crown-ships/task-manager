@@ -219,7 +219,7 @@ export default function CompaniesTable(props) {
     })
 
     const input = {
-      emailDelete: company.email,
+      idDelete: company._id,
       email: props.auth.user.email,
       auth: props.auth.isAuthenticated
     };

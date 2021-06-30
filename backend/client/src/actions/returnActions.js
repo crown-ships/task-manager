@@ -31,7 +31,7 @@ export const deleteReturn = (userData, history) => dispatch => {
   console.log(userData);
   axios
     .delete("/api/delReturn", {params:userData})
-    .then(res => history.push("/returns"))
+    .then(res => history.push("/investments"))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
