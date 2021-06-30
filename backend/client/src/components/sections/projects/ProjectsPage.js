@@ -214,9 +214,7 @@ const ProjectsPage =  (props) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Projects
-          </Typography>
+          <img src="http://placekitten.com/25/25" alt="Kitten" height="25" width="25" />
           <Button color="inherit" className={classes.btnstyle} onClick={onLogoutClick}>
             Logout
           </Button>
