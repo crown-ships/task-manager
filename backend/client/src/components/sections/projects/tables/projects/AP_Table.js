@@ -265,9 +265,9 @@ export default function AP_Table(props) {
     var i;
     var count = 0;
     var trimTasks = [];
-    for(i=0; i<filteredTasks.length; j++) {
-      if(filteredTasks[i] !== "0"){
-        trimTasks[count++] = filteredTasks[j];
+    for(i=0; i<linkedTasks.length; j++) {
+      if(linkedTasks[i] !== "0"){
+        trimTasks[count++] = linkedTasks[j];
       }
     }
     if (count == 0) {
@@ -278,9 +278,9 @@ export default function AP_Table(props) {
     var j;
     var len = 0;
     var trimFeatures = [];
-    for(j=0; j<filteredFeatures.length; j++) {
-      if(filteredFeatures[j] !== "0"){
-        trimFeatures[len++] = filteredFeatures[j];
+    for(j=0; j<linkedFeatures.length; j++) {
+      if(linkedFeatures[j] !== "0"){
+        trimFeatures[len++] = linkedFeatures[j];
       }
     }
 
