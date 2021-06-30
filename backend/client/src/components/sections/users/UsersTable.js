@@ -23,8 +23,8 @@ import UpdateForm from "./Forms/UpdateForm"
 import UseTable from "../useTable"
 import RegisterForm from "./Forms/RegisterForm"
 
-function createData(id, name, email, role, createdBy, dateCreated, actions) {
-  return { _id:id, name: name, email: email, role: role, createdByName: createdBy, date: dateCreated, actions:actions};
+function createData() {
+  return { _id:"", name: "", email: "", role: "", createdByName: "", date: "", actions:""};
 }
 
 const useStyles = makeStyles(theme => ({
@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const headCells = [
-    { id: '_id', label: 'ID' },
+    { id: '_id', label: 'ID'},
     { id: 'name', label: 'Name' },
     { id: 'email', label: 'Email Address' },
     { id: 'role', label: 'Role' },
@@ -55,14 +55,7 @@ const headCells = [
 ];
 
 const rows = [
-  createData("", "", "", "","",".",""),
-  createData("", "", "", "","",".",""),
-  createData("", "", "", "","",".",""),
-  createData("", "", "", "","",".",""),
-  createData("", "", "", "","",".",""),
-  createData("", "", "", "","",".",""),
-  createData("", "", "", "","",".",""),
-  createData("", "", "", "","",".","")
+  createData()
 ];
 
 function preventDefault(event) {
