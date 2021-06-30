@@ -106,6 +106,13 @@ function preventDefault(event) {
   event.preventDefault();
 }
 
+
+const getFeatures = (prop) => {
+  return prop.getAllFeatures({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+}
+const getTasks = (prop) => {
+  return prop.getAllTasks({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+}
 const getData = (prop) => {
   return prop.getAllProjects({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
@@ -126,6 +133,8 @@ export default function AP_Table(props) {
   const [openProjectPopup, setOpenProjectPopup] = React.useState(false);
   const [records, setRecords] = React.useState(data);
   const [projectDisplay, setProjectDisplay] = React.useState(rows[0]);
+  const [linkedFeatures, setLinkedFeatures] = React.useState(rows);
+  const [linkedTasks, setLinkedTasks] = React.useState(rows);
   const classes = useStyles();
 
   React.useEffect(async () => {
@@ -168,6 +177,55 @@ export default function AP_Table(props) {
         }
     })
   },[notify, list]);
+
+  React.useEffect(async () => {
+    const fullFeatures = await getFeatures(props);
+
+    console.log(fullFeatures);
+    const filteredFeatures = fullFeatures.data.map(function(item) {
+      if(item.projectID === projectDisplay._id) {
+        return item;
+      }
+      else {
+        return "0";
+      }
+    });
+
+    var j;
+    var len = 0;
+    var trimFeatures = [];
+    for(j=0; j<filteredFeatures.length; j++) {
+      if(filteredFeatures[j] !== "0"){
+        trimFeatures[len++] = filteredFeatures[j];
+      }
+    }
+    console.log(trimFeatures);
+
+    const fullTasks = await getTasks(props);
+    const filteredTasks = fullTasks.data.map(function(item) {
+      if(item.projectID === projectDisplay._id) {
+        return item;
+      }
+      else {
+        return "0";
+      }
+    });
+
+    var i;
+    var count = 0;
+    var trimTasks = [];
+    for(i=0; i<filteredTasks.length; j++) {
+      if(filteredTasks[i] !== "0"){
+        trimTasks[count++] = filteredTasks[j];
+      }
+    }
+    console.log(trimTasks);
+
+    console.log(projectDisplay);
+
+    setLinkedFeatures(trimFeatures);
+    setLinkedTasks(trimTasks);
+  }, [projectDisplay]);
 
   const {
           TblContainer,
@@ -321,10 +379,7 @@ export default function AP_Table(props) {
     return d;
   }
 
-  const openNest = row => {
-    setProjectDisplay(row);
-    setOpenProjectPopup(true);
-  }
+
 
   return (
     <React.Fragment>
@@ -376,7 +431,7 @@ export default function AP_Table(props) {
           <TableBody>
             {
               recordsAfterPagingAndSorting().map(row =>
-              (<TableRow key={row._id} onClick={() => openNest(row)}>
+              (<TableRow key={row._id} onClick={() => setProjectDisplay(row)}>
                 <TableCell backgroundColor = "primary">{row.projectName}</TableCell>
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
@@ -420,6 +475,9 @@ export default function AP_Table(props) {
       </TblContainer>
       <TblPagination />
     </Paper>
+    <Paper>
+      <Typography>{linkedFeatures}</Typography>
+    </Paper>
       <Popup
         title="Edit Project Details"
         openPopup={openEditPopup}
@@ -435,13 +493,6 @@ export default function AP_Table(props) {
         setOpenPopup={setOpenRegPopup}
       >
         <RegisterForm {...props} create={create} company={company} allCompanies = {allCompanies}/>
-      </Popup>
-      <Popup
-        title="Project Details"
-        openPopup={openProjectPopup}
-        setOpenPopup={setOpenProjectPopup}
-      >
-        <ProjectPopup {...props} projectDisplay = {projectDisplay}/>
       </Popup>
       <Notification
                notify={notify}

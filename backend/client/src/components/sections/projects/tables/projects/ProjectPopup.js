@@ -122,7 +122,7 @@ export default function ProjectPopup(props) {
   return (
     <React.Fragment>
       <Paper>
-    </Paper>
+     </Paper>
   </React.Fragment>
 
   );
