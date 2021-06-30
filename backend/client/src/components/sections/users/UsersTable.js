@@ -24,7 +24,7 @@ import UseTable from "../useTable"
 import RegisterForm from "./Forms/RegisterForm"
 
 function createData() {
-  return { _id:"", name: "", email: "", role: "", createdByName: "", date: "", actions:""};
+  return { _id:"", name: "", email: "", role: "", createdByName: "", dateCreated: "", actions:""};
 }
 
 const useStyles = makeStyles(theme => ({
@@ -213,7 +213,7 @@ export default function UserTable(props) {
                 <TableCell>{row.email}</TableCell>
                 <TableCell>{row.role}</TableCell>
                 <TableCell>{row.createdByName}</TableCell>
-                <TableCell>{dateToString(row.date)}</TableCell>
+                <TableCell>{dateToString(row.dateCreated)}</TableCell>
                 <TableCell>
                   <ActionButton
                     color="primary"
