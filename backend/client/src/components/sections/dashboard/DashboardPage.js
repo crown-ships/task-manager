@@ -240,12 +240,14 @@ const ProjectsPage =  (props) => {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
-          <Grid item xs={12}>
+        <Grid container>
+          <Grid item xs={6}>
             <Graphs {...props}/>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <Pie {...props}/>
           </Grid>
+        </Grid>
 
           <Box pt={4}>
             <Copyright />

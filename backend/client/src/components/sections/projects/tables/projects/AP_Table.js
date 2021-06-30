@@ -254,29 +254,29 @@ export default function AP_Table(props) {
     console.log(filteredTasks);
     console.log(projectDisplay);
 
-    var i;
-    var count = 0;
-    var trimTasks = [];
-    for(i=0; i<filteredTasks.length; j++) {
-      if(filteredTasks[i] !== "0"){
-        trimTasks[count++] = filteredTasks[j];
-      }
-    }
-    console.log(trimTasks);
+    // var i;
+    // var count = 0;
+    // var trimTasks = [];
+    // for(i=0; i<filteredTasks.length; j++) {
+    //   if(filteredTasks[i] !== "0"){
+    //     trimTasks[count++] = filteredTasks[j];
+    //   }
+    // }
+    // console.log(trimTasks);
+    //
+    // var j;
+    // var len = 0;
+    // var trimFeatures = [];
+    // for(j=0; j<filteredFeatures.length; j++) {
+    //   if(filteredFeatures[j] !== "0"){
+    //     trimFeatures[len++] = filteredFeatures[j];
+    //   }
+    // }
+    // console.log(trimFeatures);
 
-    var j;
-    var len = 0;
-    var trimFeatures = [];
-    for(j=0; j<filteredFeatures.length; j++) {
-      if(filteredFeatures[j] !== "0"){
-        trimFeatures[len++] = filteredFeatures[j];
-      }
-    }
-    console.log(trimFeatures);
 
-
-    setLinkedFeatures(trimFeatures);
-    setLinkedTasks(trimTasks);
+    setLinkedFeatures(filteredFeatures);
+    setLinkedTasks(filteredTasks);
   }, [projectDisplay]);
 
   const {
