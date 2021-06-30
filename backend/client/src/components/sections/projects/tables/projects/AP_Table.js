@@ -271,8 +271,8 @@ export default function AP_Table(props) {
 
     console.log(projectDisplay);
 
-    setLinkedFeatures(trimFeatures);
-    setLinkedTasks(trimTasks);
+    // setLinkedFeatures(trimFeatures);
+    // setLinkedTasks(trimTasks);
   }, [projectDisplay]);
 
   const {
