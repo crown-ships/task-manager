@@ -74,11 +74,11 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const headCells = [
-    { id: 'featureName', label: 'Feature Name' },
+    { id: 'featureName', label: 'Milestone Name' },
     { id: 'approvedIcon', label: 'Approved',disableSorting: true  },
     { id: 'dueDate', label: 'Due Date' },
     { id: 'creatorName', label: 'Creator' },
-    { id: 'featureDetails', label: 'Feature Details'},
+    { id: 'featureDetails', label: 'Milestone Details'},
     { id: 'companyName', label: 'Company Name'},
     { id: 'update', label: 'Update', disableSorting: true },
     { id: 'delete', label: 'Delete', disableSorting: true }
@@ -374,7 +374,7 @@ export default function UF_Table(props) {
       <TblPagination />
     </Paper>
       <Popup
-        title="Edit Feature Details"
+        title="Edit Milestone Details"
         openPopup={openEditPopup}
         setOpenPopup={setOpenEditPopup}
       >
@@ -383,7 +383,7 @@ export default function UF_Table(props) {
             edit={edit} />
       </Popup>
       <Popup
-        title="Register New Feature"
+        title="Register New Milestone"
         openPopup={openRegPopup}
         setOpenPopup={setOpenRegPopup}
       >

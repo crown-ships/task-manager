@@ -92,7 +92,7 @@ const headCells = [
     { id: 'dueDate', label: 'Due Date' },
     { id: 'ownerName', label: 'ownerName' },
     { id: 'taskDetails', label: 'Task Details'},
-    { id: 'featureName', label: 'Feature Name'},
+    { id: 'featureName', label: 'Milestone Name'},
     { id: 'percentComplete', label: 'Progress'},
     { id: 'update', label: 'Update', disableSorting: true },
     { id: 'delete', label: 'Delete', disableSorting: true }
@@ -401,12 +401,12 @@ export default function AT_Table(props) {
           </Grid>
           <Grid item xs={3}>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel htmlFor="outlined-feature-native-simple">Feature</InputLabel>
+              <InputLabel htmlFor="outlined-feature-native-simple">Milestone</InputLabel>
               <Select
                 native
                 value={state.age}
                 onChange={handleChange}
-                label="Feature"
+                label="Milestone"
                 inputProps={{
                   name: 'feature',
                   id: 'outlined-feature-native-simple',

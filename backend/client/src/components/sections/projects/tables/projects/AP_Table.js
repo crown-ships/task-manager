@@ -1,9 +1,6 @@
 import React from 'react';
 import Link from '@material-ui/core/Link';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import MuiAccordion from '@material-ui/core/Accordion';
-import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
-import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
+import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import FormControl from '@material-ui/core/FormControl';
@@ -38,11 +35,11 @@ import PropTypes from "prop-types";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import HelpIcon from '@material-ui/icons/Help';
 import CancelIcon from '@material-ui/icons/Cancel';
-import ProjectPopup from './ProjectPopup'
 // Generate Order Data
 function createData(id ,name, date, details, createdBy, update,del) {
-  return { _id:id, projectName: name, dueDate: date, projectDetails: details, featureName: name, companyName: createdBy, percentComplete:0, ownerName:name, enabled: "true", updated:update,delete:del};
+  return { _id:id, projectName: name, dueDate: date, projectDetails: details, companyName: createdBy, percentComplete:0, ownerName:name, enabled: "true", updated:update,delete:del};
 }
+
 function CircularProgressWithLabel(props) {
   return (
     <Box position="relative" display="inline-flex">
@@ -64,6 +61,7 @@ function CircularProgressWithLabel(props) {
     </Box>
   );
 }
+
 CircularProgressWithLabel.propTypes = {
   /**
    * The value of the progress indicator for the determinate and buffer variants.
@@ -71,48 +69,6 @@ CircularProgressWithLabel.propTypes = {
    */
   value: PropTypes.number.isRequired,
 };
-
-const Accordion = withStyles({
-  root: {
-    border: '1px solid rgba(0, 0, 0, .125)',
-    boxShadow: 'none',
-    '&:not(:last-child)': {
-      borderBottom: 0,
-    },
-    '&:before': {
-      display: 'none',
-    },
-    '&$expanded': {
-      margin: 'auto',
-    },
-  },
-  expanded: {},
-})(MuiAccordion);
-
-const AccordionSummary = withStyles({
-  root: {
-    backgroundColor: 'rgba(0, 0, 0, .03)',
-    borderBottom: '1px solid rgba(0, 0, 0, .125)',
-    marginBottom: -1,
-    minHeight: 56,
-    '&$expanded': {
-      minHeight: 56,
-    },
-  },
-  content: {
-    '&$expanded': {
-      margin: '12px 0',
-    },
-  },
-  expanded: {},
-})(MuiAccordionSummary);
-
-const AccordionDetails = withStyles((theme) => ({
-  root: {
-    padding: theme.spacing(2),
-  },
-}))(MuiAccordionDetails);
-
 
 const useStyles = makeStyles(theme => ({
     pageContent: {
@@ -133,6 +89,7 @@ const useStyles = makeStyles(theme => ({
     minWidth: 210,
   },
 }))
+
 const headCells = [
     { id: 'projectName', label: 'Project Name' },
     { id: 'approved', label: 'Approved' },
@@ -145,27 +102,25 @@ const headCells = [
     { id: 'update', label: 'Update', disableSorting: true },
     { id: 'delete', label: 'Delete', disableSorting: true }
 ];
+
 const rows = [
   createData("", "", "", "","","","")
 ];
+
 function preventDefault(event) {
   event.preventDefault();
 }
 
-
-const getFeatures = (prop) => {
-  return prop.getAllFeatures({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
-}
-const getTasks = (prop) => {
-  return prop.getAllTasks({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
-}
 const getData = (prop) => {
   return prop.getAllProjects({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 const getDropdownList = (prop) => {
   return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
+
+
 export default function AP_Table(props) {
+
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
@@ -176,15 +131,7 @@ export default function AP_Table(props) {
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
-  const [openProjectPopup, setOpenProjectPopup] = React.useState(false);
   const [records, setRecords] = React.useState(data);
-  const [projectDisplay, setProjectDisplay] = React.useState(rows[0]);
-  const [linkedFeatures, setLinkedFeatures] = React.useState(rows);
-  const [linkedTasks, setLinkedTasks] = React.useState(rows);
-  const [finalFeatures, setFinalFeatures] = React.useState(rows);
-  const [finalTasks, setFinalTasks] = React.useState(rows);
-  const [expanded, setExpanded] = React.useState('panel1');
-
   const classes = useStyles();
 
   React.useEffect(async () => {
@@ -196,6 +143,7 @@ export default function AP_Table(props) {
       else
         return "0"
     });
+
     var j;
     var len = 0;
     var trimlist = [];
@@ -213,6 +161,7 @@ export default function AP_Table(props) {
     console.log(selList);
     setList(selList);
   },[]);
+
   React.useEffect(async () => {
     const d = await getData(props);
         console.log(d.data);
@@ -228,71 +177,6 @@ export default function AP_Table(props) {
     })
   },[notify, list]);
 
-  React.useEffect(async () => {
-    const fullFeatures = await getFeatures(props);
-
-    console.log(fullFeatures);
-    const filteredFeatures = fullFeatures.data.map(function(item) {
-      if(item.projectID === projectDisplay._id) {
-        return item;
-      }
-      else {
-        return "0";
-      }
-    });
-
-
-    console.log(filteredFeatures);
-
-    const fullTasks = await getTasks(props);
-    const filteredTasks = fullTasks.data.map(function(item) {
-      if(item.projectID === projectDisplay._id) {
-        return item;
-      }
-      else {
-        return "0";
-      }
-    });
-    console.log(filteredTasks);
-    console.log(projectDisplay);
-
-    setLinkedFeatures(filteredFeatures);
-    setLinkedTasks(filteredTasks);
-  }, [projectDisplay]);
-
-
-  React.useEffect(() => {
-    var i;
-    var count = 0;
-    var trimTasks = [];
-    for(i=0; i<linkedTasks.length; j++) {
-      if(linkedTasks[i] !== "0"){
-        trimTasks[count++] = linkedTasks[j];
-      }
-    }
-    if (count == 0) {
-      trimTasks = rows;
-    }
-    console.log(trimTasks);
-
-    var j;
-    var len = 0;
-    var trimFeatures = [];
-    for(j=0; j<linkedFeatures.length; j++) {
-      if(linkedFeatures[j] !== "0"){
-        trimFeatures[len++] = linkedFeatures[j];
-      }
-    }
-
-    if (len == 0) {
-      trimFeatures = rows;
-    }
-    console.log(trimFeatures);
-
-    setFinalTasks(trimTasks);
-    setFinalFeatures(trimFeatures);
-
-  },[linkedTasks, linkedFeatures])
 
   const {
           TblContainer,
@@ -300,6 +184,7 @@ export default function AP_Table(props) {
           TblPagination,
           recordsAfterPagingAndSorting
       } = UseTable(records, headCells, filterFn);
+
   const handleSearch = e => {
     let target = e.target;
     setFilterFn({
@@ -316,12 +201,6 @@ export default function AP_Table(props) {
       checkedB: true,
     });
 
-
-  const handleExpand = (panel) => (event, newExpanded) => {
-    setExpanded(newExpanded ? panel : false);
-  };
-
-
   const handleChange = (event) => {
     let val = event.target;
     console.log(val.value);
@@ -334,14 +213,18 @@ export default function AP_Table(props) {
                 return items.filter(x => x.companyName.includes(val.value) && x.approved.includes("approved"));
         }
     })
+
   };
   const openInEditPopup = item => {
     setRecordForEdit(item);
     setOpenEditPopup(true);
   }
+
   const openInRegPopup = item => {
+
     setOpenRegPopup(true);
   }
+
   const create = (data, resetForm) => {
     const input = {
       params: {
@@ -361,6 +244,7 @@ export default function AP_Table(props) {
     });
   }
   const edit = (data, resetForm, og_id) => {
+
     const input = {
       params: {
         email: props.auth.user.email,
@@ -369,6 +253,7 @@ export default function AP_Table(props) {
       },
       body: data
     };
+
     if(props.auth.user.role === "admin"){
       props.updateProject(input, props.history);
       resetForm();
@@ -391,6 +276,7 @@ export default function AP_Table(props) {
   };
 
   const changeEnable = (value, og_id) => {
+
     const input = {
       params: {
         email: props.auth.user.email,
@@ -401,6 +287,8 @@ export default function AP_Table(props) {
       enabled: value
       }
     };
+
+
     props.updateProject(input, props.history);
     props.updateAllFeatures(input, props.history);
     props.updateAllTasks(input, props.history);
@@ -416,11 +304,14 @@ export default function AP_Table(props) {
         ...confirmDialog,
         isOpen: false
     })
+
     const input = {
       projectID: project._id,
       email: props.auth.user.email,
       auth: props.auth.isAuthenticated
     };
+
+
     if(props.auth.user.role === "admin"){
       props.deleteProject(input, props.history);
       setNotify({
@@ -428,10 +319,12 @@ export default function AP_Table(props) {
         message: "Deleted Successfully",
         type: 'success'
       });
+
     }
   }
 
   const approvedIcon = (status) => {
+
     if (status === "approved") {
       console.log(status);
       console.log("yes");
@@ -449,10 +342,10 @@ export default function AP_Table(props) {
 
   const dateToString = (date) => {
     var d = date.toString();
+
     d = d.substring(0, d.indexOf('T'));
     return d;
   }
-
 
 
   return (
@@ -505,7 +398,7 @@ export default function AP_Table(props) {
           <TableBody>
             {
               recordsAfterPagingAndSorting().map(row =>
-              (<TableRow key={row._id} onClick={() => setProjectDisplay(row)}>
+              (<TableRow key={row._id}>
                 <TableCell backgroundColor = "primary">{row.projectName}</TableCell>
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
@@ -548,20 +441,6 @@ export default function AP_Table(props) {
         </TableBody>
       </TblContainer>
       <TblPagination />
-    </Paper>
-    <Paper>
-    { (projectDisplay === rows[0])? null:
-      linkedFeatures.map(item => (
-        <Accordion square expanded={expanded === 'panel1'} onChange={handleExpand('panel1')}>
-          <AccordionSummary aria-controls="panel-content" id='panel1'>
-            <Typography>{item.featureName}</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            test tasks
-          </AccordionDetails>
-        </Accordion>
-      ))
-    }
     </Paper>
       <Popup
         title="Edit Project Details"

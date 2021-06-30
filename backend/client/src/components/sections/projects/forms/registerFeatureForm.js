@@ -75,14 +75,14 @@ export default function RegisterForm(props) {
                 <Grid item xs={8}>
                     <Input
                         name="featureName"
-                        label="Feature Name"
+                        label="Milestone Name"
                         value={values.featureName}
                         onChange={handleInputChange}
                         error={errors.featureName}
                     />
                     <Input
                         name="featureDetails"
-                        label="Feature Details"
+                        label="Milestone Details"
                         value={values.featureDetails}
                         onChange={handleInputChange}
                         error={errors.featureDetails}

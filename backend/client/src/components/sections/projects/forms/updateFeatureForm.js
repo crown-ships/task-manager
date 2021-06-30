@@ -59,7 +59,7 @@ export default function UpdateForm(props) {
                 <Grid item xs={7}>
                     <Input
                         name="featureDetails"
-                        label="Feature Details"
+                        label="Milestone Details"
                         value={values.featureDetails}
                         onChange={handleInputChange}
                         error={errors.featureDetails}

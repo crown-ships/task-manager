@@ -87,10 +87,10 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const headCells = [
-    { id: 'featureName', label: 'Feature Name' },
+    { id: 'featureName', label: 'Milestone Name' },
     { id: 'dueDate', label: 'Due Date' },
     { id: 'ownerName', label: 'Owner' },
-    { id: 'featureDetails', label: 'Feature Details'},
+    { id: 'featureDetails', label: 'Milestone Details'},
     { id: 'projectName', label: 'Project Name'},
     { id: 'percentComplete', label: 'Progress'},
     { id: 'update', label: 'Update', disableSorting: true },
@@ -423,7 +423,7 @@ export default function AF_Table(props) {
       <TblPagination />
     </Paper>
       <Popup
-        title="Edit Feature Details"
+        title="Edit Milestone Details"
         openPopup={openEditPopup}
         setOpenPopup={setOpenEditPopup}
       >
@@ -432,7 +432,7 @@ export default function AF_Table(props) {
             edit={edit} />
       </Popup>
       <Popup
-        title="Register New Feature"
+        title="Register New Milestone"
         openPopup={openRegPopup}
         setOpenPopup={setOpenRegPopup}
       >
