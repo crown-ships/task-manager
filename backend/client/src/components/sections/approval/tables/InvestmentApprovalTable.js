@@ -127,7 +127,7 @@ export default function InvestmentApprovalTable(props) {
     for(i=0; i<len; i++) {
       selList[i+1] = {key:i+1, item: trimlist[i]};
     }
-    
+
     setList(selList);
   },[]);
 
@@ -205,7 +205,7 @@ export default function InvestmentApprovalTable(props) {
       if (data.paymentTerms === "monthly")
         divider = 1;
       else if (data.paymentTerms === "quarterly")
-        divider = 4;
+        divider = 3;
       else if (data.paymentTerms === "half-yearly")
         divider = 6;
       else if (data.paymentTerms === "yearly")
@@ -247,8 +247,8 @@ export default function InvestmentApprovalTable(props) {
               investmentName: data.investmentName,
               paymentTerms: data.paymentTerms,
               totalInterestAmt: ((data.profitPercent*data.capitalAmt)/100),
-              returnAmt: ((data.profitPercent*data.capitalAmt)/100)/divider,
-              localDueDate: date1.setMonth(date1.getMonth() + noOfPayments),
+              returnAmt: ((data.profitPercent*data.capitalAmt)/100)/noOfPayments,
+              localDueDate: date1.setMonth(date1.getMonth() + divider),
               dueDate: data.dueDate
             }
           }

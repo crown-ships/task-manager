@@ -218,12 +218,12 @@ export default function UF_Table(props) {
       type: 'success'
     });
   }
-  const edit = (data, resetForm, og_email) => {
+  const edit = (data, resetForm, og_id) => {
 
     const input = {
       params: {
         email: props.auth.user.email,
-        emailupdate: og_email,
+        featureID: og_id,
         auth: props.auth.isAuthenticated
       },
       body: data
