@@ -1,6 +1,9 @@
 import React from 'react';
 import Link from '@material-ui/core/Link';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles,m withStyles } from '@material-ui/core/styles';
+import MuiAccordion from '@material-ui/core/Accordion';
+import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
+import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import FormControl from '@material-ui/core/FormControl';
@@ -68,6 +71,49 @@ CircularProgressWithLabel.propTypes = {
    */
   value: PropTypes.number.isRequired,
 };
+
+const Accordion = withStyles({
+  root: {
+    border: '1px solid rgba(0, 0, 0, .125)',
+    boxShadow: 'none',
+    '&:not(:last-child)': {
+      borderBottom: 0,
+    },
+    '&:before': {
+      display: 'none',
+    },
+    '&$expanded': {
+      margin: 'auto',
+    },
+  },
+  expanded: {},
+})(MuiAccordion);
+
+const AccordionSummary = withStyles({
+  root: {
+    backgroundColor: 'rgba(0, 0, 0, .03)',
+    borderBottom: '1px solid rgba(0, 0, 0, .125)',
+    marginBottom: -1,
+    minHeight: 56,
+    '&$expanded': {
+      minHeight: 56,
+    },
+  },
+  content: {
+    '&$expanded': {
+      margin: '12px 0',
+    },
+  },
+  expanded: {},
+})(MuiAccordionSummary);
+
+const AccordionDetails = withStyles((theme) => ({
+  root: {
+    padding: theme.spacing(2),
+  },
+}))(MuiAccordionDetails);
+
+
 const useStyles = makeStyles(theme => ({
     pageContent: {
         margin: theme.spacing(5),
@@ -135,6 +181,8 @@ export default function AP_Table(props) {
   const [projectDisplay, setProjectDisplay] = React.useState(rows[0]);
   const [linkedFeatures, setLinkedFeatures] = React.useState(rows);
   const [linkedTasks, setLinkedTasks] = React.useState(rows);
+  const [expanded, setExpanded] = React.useState('panel1');
+
   const classes = useStyles();
 
   React.useEffect(async () => {
@@ -191,15 +239,15 @@ export default function AP_Table(props) {
       }
     });
 
-    var j;
-    var len = 0;
-    var trimFeatures = [];
-    for(j=0; j<filteredFeatures.length; j++) {
-      if(filteredFeatures[j] !== "0"){
-        trimFeatures[len++] = filteredFeatures[j];
-      }
-    }
-    console.log(trimFeatures);
+    // var j;
+    // var len = 0;
+    // var trimFeatures = [];
+    // for(j=0; j<filteredFeatures.length; j++) {
+    //   if(filteredFeatures[j] !== "0"){
+    //     trimFeatures[len++] = filteredFeatures[j];
+    //   }
+    // }
+    console.log(filteredFeatures);
 
     const fullTasks = await getTasks(props);
     const filteredTasks = fullTasks.data.map(function(item) {
@@ -210,16 +258,16 @@ export default function AP_Table(props) {
         return "0";
       }
     });
-
-    var i;
-    var count = 0;
-    var trimTasks = [];
-    for(i=0; i<filteredTasks.length; j++) {
-      if(filteredTasks[i] !== "0"){
-        trimTasks[count++] = filteredTasks[j];
-      }
-    }
-    console.log(trimTasks);
+    console.log(filteredTasks);
+    // var i;
+    // var count = 0;
+    // var trimTasks = [];
+    // for(i=0; i<filteredTasks.length; j++) {
+    //   if(filteredTasks[i] !== "0"){
+    //     trimTasks[count++] = filteredTasks[j];
+    //   }
+    // }
+    // console.log(trimTasks);
 
     console.log(projectDisplay);
 
@@ -248,6 +296,13 @@ export default function AP_Table(props) {
       checkedA: true,
       checkedB: true,
     });
+
+
+  const handleExpand = (panel) => (event, newExpanded) => {
+    setExpanded(newExpanded ? panel : false);
+  };
+
+
   const handleChange = (event) => {
     let val = event.target;
     console.log(val.value);
@@ -474,6 +529,16 @@ export default function AP_Table(props) {
         </TableBody>
       </TblContainer>
       <TblPagination />
+    </Paper>
+    <Paper>
+      <Accordion square expanded={expanded === 'panel1'} onChange={handleExpand('panel1')}>
+        <AccordionSummary aria-controls="panel-content" id='panel1'>
+          <Typography>test FEature</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          test tasks
+        </AccordionDetails>
+      </Accordion>
     </Paper>
       <Popup
         title="Edit Project Details"
