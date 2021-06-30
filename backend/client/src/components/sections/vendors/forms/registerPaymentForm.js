@@ -79,22 +79,21 @@ export default function RegisterForm(props) {
                         onChange={handleInputChange}
                         error={errors.amtToBePaid}
                     />
-
+                    <Input
+                      id="date"
+                      type="date"
+                      defaultValue="2017-05-24"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      name="dueDate"
+                      label="Due Date"
+                      value={values.dueDate}
+                      onChange={handleInputChange}
+                      error={errors.dueDate}
+                    />
                 </Grid>
                 <Grid item xs={4}>
-                <Input
-                  id="date"
-                  type="date"
-                  defaultValue="2017-05-24"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  name="dueDate"
-                  label="Due Date"
-                  value={values.dueDate}
-                  onChange={handleInputChange}
-                  error={errors.dueDate}
-                />
                     <div>
                         <Button
                             type="submit"

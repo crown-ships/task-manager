@@ -23,7 +23,6 @@ exports.addNew = async (req, res, next) => {
    vendorStartDate: req.body.vendorStartDate,
    vendorEndDate: req.body.vendorEndDate,
    vendorCrtAmt: req.body.vendorCrtAmt,
-   paymentName: req.body.paymentName,
    amtToBePaid: req.body.amtToBePaid,
    dueDate: req.body.dueDate,
    creatorName: req.body.creatorName,
@@ -79,14 +78,6 @@ exports.update = async (req, res, next) => {
    //     return res.status(400).json(errors);
    //   }
    // }
-   if (userBody.paymentName)
-   {
-     const { errors, isValid } = validatePaymentName(userBody);
-     // Check validation
-     if (!isValid) {
-       return res.status(400).json(errors);
-     }
-   }
 
    if (userBody.amtToBePaid)
    {
