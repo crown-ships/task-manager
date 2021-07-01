@@ -138,7 +138,7 @@ export default function AT_Table(props) {
       else
         return "0"
     });
-    console.log(complist);
+
     var j;
     var len = 0;
     var trimlist = [];
@@ -153,7 +153,7 @@ export default function AT_Table(props) {
     for(i=0; i<len; i++) {
       selList[i+1] = {key:i+1, item: trimlist[i]};
     }
-    console.log(selList);
+
     setList(selList);
   },[]);
 
@@ -182,7 +182,7 @@ export default function AT_Table(props) {
           count++;
         }
       }
-      console.log(count);
+
       featureProgress[j] = {featureID:unique[j], percentComplete: (sum[j]/count)};
     }
     var input;
@@ -287,7 +287,7 @@ export default function AT_Table(props) {
 
   const handleChange = (event) => {
     let val = event.target;
-    console.log(val.value);
+
     setFeature(val.value);
     setFilterFn({
         fn: items => {
@@ -317,7 +317,7 @@ export default function AT_Table(props) {
       },
       body: data
     };
-    console.log(input);
+    
     props.registerTask(input, props.history);
     resetForm();
     setOpenRegPopup(false);

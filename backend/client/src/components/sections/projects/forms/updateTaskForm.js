@@ -33,7 +33,7 @@ export default function UpdateForm(props) {
         handleInputChange,
         resetForm
     } = useForm(initialFValues, true, validate);
-    console.log(recordForEdit);
+
     const handleSubmit = e => {
         e.preventDefault()
         if (validate()) {
@@ -44,7 +44,7 @@ export default function UpdateForm(props) {
               percentComplete: parseInt(values.percentComplete),
               ownerName: values.ownerName
           };
-          console.log(input);
+
           props.edit(input, resetForm, recordForEdit._id);
         }
     }

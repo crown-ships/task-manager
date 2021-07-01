@@ -31,7 +31,7 @@ export default function UpdateForm(props) {
         handleInputChange,
         resetForm
     } = useForm(initialFValues, true, validate);
-    console.log(recordForEdit);
+    
     const handleSubmit = e => {
         e.preventDefault()
         if (validate()) {

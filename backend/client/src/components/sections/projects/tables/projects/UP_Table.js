@@ -156,13 +156,13 @@ export default function UP_Table(props) {
     for(i=0; i<len; i++) {
       selList[i+1] = {key:i+1, item: trimlist[i]};
     }
-    console.log(selList);
+
     setList(selList);
   },[]);
 
   React.useEffect(async () => {
     const d = await getData(props);
-        console.log(d.data);
+
     setData(d.data);
     setRecords(d.data);
     setFilterFn({
@@ -200,8 +200,7 @@ export default function UP_Table(props) {
     });
 
   const handleChange = (event) => {
-    let val = event.target;
-    console.log(val.value);
+
     setCompany(val.value);
     setFilterFn({
         fn: items => {
@@ -231,7 +230,7 @@ export default function UP_Table(props) {
       },
       body: data
     };
-    console.log(input);
+
     props.registerProject(input, props.history);
     resetForm();
     setOpenRegPopup(false);
@@ -267,16 +266,16 @@ export default function UP_Table(props) {
   const approvedIcon = (status) => {
 
     if (status === "approved") {
-      console.log(status);
-      console.log("yes");
+
+
       return <CheckCircleIcon fontSize="small" style={{ color: "#00b386" }}/>
     }
     else if (status === "wait") {
-      console.log("what");
+
       return <HelpIcon fontSize="small"  style={{ color: "#ffbf00" }}/>
     }
     else if (status === "rejected") {
-      console.log("what");
+
       return <CancelIcon fontSize="small"  style={{ color: "#DC143C" }}/>
     }
   }

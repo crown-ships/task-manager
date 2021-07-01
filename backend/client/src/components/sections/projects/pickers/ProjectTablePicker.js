@@ -6,13 +6,13 @@ const ProjectTablePicker = (props) => {
   const user = props.auth.user;
 
   if (user.role === "admin"){
-    console.log("admin");
+
     return(
       <AP_Table {...props}/>
     );
   }
   if (user.role === "user"){
-    console.log("user");
+
     return(
       <UP_Table {...props}/>
     );

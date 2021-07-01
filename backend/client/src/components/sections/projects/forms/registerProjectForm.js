@@ -57,7 +57,6 @@ export default function RegisterForm(props) {
               dueDate: values.dueDate,
               approved: approved
             };
-            console.log(props);
             props.create(input, resetForm);
         }
     }

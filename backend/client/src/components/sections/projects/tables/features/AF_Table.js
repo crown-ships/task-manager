@@ -138,7 +138,6 @@ export default function AF_Table(props) {
       else
         return "0"
     });
-    console.log(complist);
     var j;
     var len = 0;
     var trimlist = [];
@@ -153,7 +152,6 @@ export default function AF_Table(props) {
     for(i=0; i<len; i++) {
       selList[i+1] = {key:i+1, item: trimlist[i]};
     }
-    console.log(selList);
     setList(selList);
   },[]);
 
@@ -206,7 +204,7 @@ export default function AF_Table(props) {
     const d = await getData(props);
     setData(d.data);
     setRecords(d.data);
-    console.log(d.data);
+
     setFilterFn({
         fn: items => {
             if (project == "")
@@ -243,7 +241,7 @@ export default function AF_Table(props) {
 
   const handleChange = (event) => {
     let val = event.target;
-    console.log(val.value);
+
     setProject(val.value);
     setFilterFn({
         fn: items => {
@@ -273,7 +271,7 @@ export default function AF_Table(props) {
       },
       body: data
     };
-    console.log(input);
+
     props.registerFeature(input, props.history);
     resetForm();
     setOpenRegPopup(false);

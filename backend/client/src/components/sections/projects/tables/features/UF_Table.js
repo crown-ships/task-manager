@@ -163,7 +163,7 @@ export default function UF_Table(props) {
     for(i=0; i<len; i++) {
       selList[i+1] = {key:i+1, item: complist[i]};
     }
-    console.log(selList);
+
     setList(selList);
   },[]);
 
@@ -207,7 +207,7 @@ export default function UF_Table(props) {
 
   const handleChange = (event) => {
     let val = event.target;
-    console.log(val.value);
+
     setCompany(val.value);
     setFilterFn({
         fn: items => {
@@ -237,7 +237,7 @@ export default function UF_Table(props) {
       },
       body: data
     };
-    console.log(input);
+
     props.registerFeature(input, props.history);
     resetForm();
     setOpenRegPopup(false);
@@ -391,7 +391,7 @@ export default function UF_Table(props) {
         openPopup={openEditPopup}
         setOpenPopup={setOpenEditPopup}
       >
-        <UpdateForm
+        <UpdateForm {...props}
             recordForEdit={recordForEdit}
             edit={edit} />
       </Popup>
