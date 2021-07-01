@@ -188,12 +188,12 @@ export default function CompaniesTable(props) {
     });
   }
 
-  const edit = (data, resetForm, og_email) => {
+  const edit = (data, resetForm, og_id) => {
 
     const input = {
       params: {
         email: props.auth.user.email,
-        emailupdate: og_email,
+        idupdate: og_id,
         auth: props.auth.isAuthenticated
       },
       body: data

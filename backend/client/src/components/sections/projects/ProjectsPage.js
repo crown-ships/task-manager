@@ -28,7 +28,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import { mainListItems, secondaryListItems } from '../listitem';
 import { logoutUser } from "../../../actions/authActions";
-import { getAllCompanies } from "../../../actions/companyActions";
+import { getAllCompanies, updateCompany } from "../../../actions/companyActions";
 import { getAllProjects, deleteProject, updateProject, registerProject } from "../../../actions/projectActions";
 import { getAllTasks, deleteTask, updateTask, registerTask ,updateAllTasks } from "../../../actions/taskActions";
 import { getAllFeatures, deleteFeature, updateFeature, registerFeature, updateAllFeatures } from "../../../actions/featureActions";
@@ -285,5 +285,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { updateAllFeatures,updateAllTasks,logoutUser, getAllProjects, getAllCompanies, deleteProject, updateProject, registerProject,getAllFeatures, deleteFeature, updateFeature, registerFeature,getAllTasks, deleteTask, updateTask, registerTask }
+  { updateAllFeatures,updateAllTasks, updateCompany, logoutUser, getAllProjects, getAllCompanies, deleteProject, updateProject, registerProject,getAllFeatures, deleteFeature, updateFeature, registerFeature,getAllTasks, deleteTask, updateTask, registerTask }
 )(withRouter(ProjectsPage));
