@@ -52,7 +52,7 @@ exports.getProjects = async (req, res, next) => {
 exports.update = async (req, res, next) => {
  try {
    const id_upd = req.query.projectID;
-
+   res.status(400).json("reaches controller")
    const userBody = req.body;
 
    // if (userBody.dueDate)

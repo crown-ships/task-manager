@@ -258,17 +258,16 @@ export default function UF_Table(props) {
       body: data
     };
 
-    if(props.auth.user.role === "admin"){
-      props.updateFeature(input, props.history);
-      resetForm();
-      setRecordForEdit(null);
-      setOpenEditPopup(false);
-      setNotify({
-        isOpen: true,
-        message: "Update Successfully",
-        type: 'success'
-      });
-    }
+    props.updateFeature(input, props.history);
+    resetForm();
+    setRecordForEdit(null);
+    setOpenEditPopup(false);
+    setNotify({
+      isOpen: true,
+      message: "Update Successfully",
+      type: 'success'
+    });
+
   }
 
   const onDelete = company => {
