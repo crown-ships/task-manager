@@ -346,14 +346,6 @@ export default function UF_Table(props) {
         <TblHead />
           <TableBody>
             {
-              { id: 'featureName', label: 'Milestone Name' },
-              { id: 'dueDate', label: 'Due Date' },
-              { id: 'ownerName', label: 'Owner' },
-              { id: 'featureDetails', label: 'Milestone Details'},
-              { id: 'projectName', label: 'Project Name'},
-              { id: 'percentComplete', label: 'Progress'},
-              { id: 'update', label: 'Update', disableSorting: true },
-              { id: 'delete', label: 'Delete', disableSorting: true }
               recordsAfterPagingAndSorting().map(row =>
               (<TableRow key={row._id}>
                 <TableCell>{row.featureName}</TableCell>
