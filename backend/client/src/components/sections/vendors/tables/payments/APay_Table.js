@@ -396,7 +396,6 @@ export default function APay_Table(props) {
                 startIcon={<AddIcon />}
                 className={classes.newButton}
                 onClick={() => { setOpenRegPopup(true); }}
-                disabled = {(vendor==="")}
             />
           </Grid>
         </Grid>

@@ -8,7 +8,8 @@ import { useForm, Form } from '../../useForm';
 
 const initialFValues = {
   amtToBePaid: '',
-  dueDate: ''
+  dueDate: '',
+  vendorName: ''
 }
 
 export default function RegisterForm(props) {
@@ -27,8 +28,31 @@ export default function RegisterForm(props) {
     for(i=0; i< props.allVendors.length; i++) {
       if(props.allVendors[i].vendorName === props.vendor)
         vendorDetails = props.allVendors[i];
-
     }
+
+
+    var complist = allVendors.map(function(item) {
+      if(item.enabled === "true" && item.approved === "approved")
+        return item.vendorName;
+      else
+        return "0"
+    });
+
+    var j;
+    var len = 0;
+    var trimlist = [];
+    for(j=0; j<complist.length; j++) {
+      if(complist[j] !== "0"){
+        trimlist[len++] = complist[j];
+      }
+    }
+    var selList = [];
+    var i;
+    selList[0] = {key:0, item: ""};
+    for(i=0; i<len; i++) {
+      selList[i+1] = {key:i+1, item: trimlist[i]};
+    }
+
     const {
         values,
         setValues,
@@ -43,7 +67,7 @@ export default function RegisterForm(props) {
         if (validate()) {
             const approved = (props.auth.user.role === "admin")?"approved":"wait";
             const input = {
-              vendorName: vendorDetails.vendorName,
+              vendorName: values.vendorName,
               vendorID: vendorDetails._id,
               vendorStartDate: vendorDetails.startDate,
               vendorEndDate: vendorDetails.endDate,
@@ -62,16 +86,30 @@ export default function RegisterForm(props) {
 
 
     useEffect(() => {
-        if (props.recordForEdit != null)
+        if (props.vendor != null)
             setValues({
-                ...props.recordForEdit
+                vendorName: props.vendor
             })
-    }, [props.recordForEdit])
+    }, [props.vendor])
 
     return (
         <Form onSubmit={handleSubmit}>
             <Grid container>
                 <Grid item xs={8}>
+                    <FormControl variant="outlined">
+                      <InputLabel htmlFor="outlined-vendorName-native-simple">Vendor Name</InputLabel>
+                      <Select
+                        native
+                        value={values.vendorName}
+                        onChange={handleInputChange}
+                        label="Vendor Name"
+                        inputProps={{
+                          name: 'vendorName',
+                          id: 'outlined-vendorName-native-simple'
+                        }}
+                      >{selList.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+                      </Select>
+                    </FormControl>
                     <Input
                         name="amtToBePaid"
                         label="Amount to Pay"

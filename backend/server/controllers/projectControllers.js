@@ -52,7 +52,6 @@ exports.getProjects = async (req, res, next) => {
 exports.update = async (req, res, next) => {
  try {
    const id_upd = req.query.projectID;
-   res.status(400).json(id_upd)
    const userBody = req.body;
 
    // if (userBody.dueDate)
@@ -66,7 +65,7 @@ exports.update = async (req, res, next) => {
 
    if (userBody.ownerName)
    {
-     const { errors, isValid } = validateProjectName(userBody);
+     const { errors, isValid } = validateOwnerName(userBody);
      // Check validation
      if (!isValid) {
        return res.status(400).json(errors);
