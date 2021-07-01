@@ -52,7 +52,7 @@ exports.getProjects = async (req, res, next) => {
 exports.update = async (req, res, next) => {
  try {
    const id_upd = req.query.projectID;
-   res.status(400).json("reaches controller")
+   res.status(400).json(req)
    const userBody = req.body;
 
    // if (userBody.dueDate)
@@ -74,10 +74,8 @@ exports.update = async (req, res, next) => {
    }
 
    await Project.findByIdAndUpdate(id_upd, userBody);
-   const user = await Project.findById(id_upd);
 
    res.status(200).json({
-    data: user,
     message: 'Project updated successfully.'
    });
   }
