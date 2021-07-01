@@ -55,14 +55,6 @@ const headCells = [
 ];
 
 const rows = [
-  createData("", "", "", "","",""),
-  createData("", "", "", "","",""),
-  createData("", "", "", "","",""),
-  createData("", "", "", "","",""),
-  createData("", "", "", "","",""),
-  createData("", "", "", "","",""),
-  createData("", "", "", "","",""),
-  createData("", "", "", "","",""),
   createData("", "", "", "","","")
 ];
 

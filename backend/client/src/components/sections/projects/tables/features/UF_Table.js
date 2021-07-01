@@ -39,6 +39,36 @@ function createData(id ,name, app, date, details, createdBy, update,del) {
   return { _id:id, featureName: name, approved: app ,dueDate: date, featureDetails: details, creatorName: createdBy, updated:update,delete:del};
 }
 
+function CircularProgressWithLabel(props) {
+  return (
+    <Box position="relative" display="inline-flex">
+      <CircularProgress variant="determinate" {...props} />
+      <Box
+        top={0}
+        left={0}
+        bottom={0}
+        right={0}
+        position="absolute"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Typography variant="caption" component="div" color="textSecondary">{`${Math.round(
+          props.value,
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
+
+CircularProgressWithLabel.propTypes = {
+  /**
+   * The value of the progress indicator for the determinate and buffer variants.
+   * Value between 0 and 100.
+   */
+  value: PropTypes.number.isRequired,
+};
+
 const theme = createMuiTheme({
   palette: {
     green: {
@@ -75,25 +105,17 @@ const useStyles = makeStyles(theme => ({
 
 const headCells = [
     { id: 'featureName', label: 'Milestone Name' },
-    { id: 'approvedIcon', label: 'Approved',disableSorting: true  },
     { id: 'dueDate', label: 'Due Date' },
-    { id: 'creatorName', label: 'Creator' },
+    { id: 'ownerName', label: 'Owner' },
     { id: 'featureDetails', label: 'Milestone Details'},
-    { id: 'companyName', label: 'Company Name'},
+    { id: 'projectName', label: 'Project Name'},
+    { id: 'percentComplete', label: 'Progress'},
     { id: 'update', label: 'Update', disableSorting: true },
     { id: 'delete', label: 'Delete', disableSorting: true }
 ];
 
 const rows = [
-  createData("", "","", "", "","","",""),
-  createData("", "", "","", "","","",""),
-  createData("", "", "","", "","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","",""),
-  createData("", "", "", "","","","","")
+  createData("", "","", "", "","","","")
 ];
 
 function preventDefault(event) {
@@ -274,23 +296,6 @@ export default function UF_Table(props) {
     return d;
   }
 
-  const approvedIcon = (status) => {
-
-    if (status === "approved") {
-      console.log(status);
-      console.log("yes");
-      return <CheckCircleIcon fontSize="small" style={{ color: "#00b386" }}/>
-    }
-    else if (status === "wait") {
-      console.log("what");
-      return <HelpIcon fontSize="small"  style={{ color: "#ffbf00" }}/>
-    }
-    else if (status === "rejected") {
-      console.log("what");
-      return <CancelIcon fontSize="small"  style={{ color: "#DC143C" }}/>
-    }
-  }
-
 
   return (
     <React.Fragment>
@@ -341,14 +346,23 @@ export default function UF_Table(props) {
         <TblHead />
           <TableBody>
             {
+              { id: 'featureName', label: 'Milestone Name' },
+              { id: 'dueDate', label: 'Due Date' },
+              { id: 'ownerName', label: 'Owner' },
+              { id: 'featureDetails', label: 'Milestone Details'},
+              { id: 'projectName', label: 'Project Name'},
+              { id: 'percentComplete', label: 'Progress'},
+              { id: 'update', label: 'Update', disableSorting: true },
+              { id: 'delete', label: 'Delete', disableSorting: true }
               recordsAfterPagingAndSorting().map(row =>
               (<TableRow key={row._id}>
                 <TableCell>{row.featureName}</TableCell>
-                <TableCell align='center'>{approvedIcon(row.approved)}</TableCell>
+
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
-                <TableCell>{row.creatorName}</TableCell>
+                <TableCell>{row.ownerName}</TableCell>
                 <TableCell>{row.featureDetails}</TableCell>
-                <TableCell>{row.companyName}</TableCell>
+                <TableCell>{row.projectName}</TableCell>
+                <TableCell>  <CircularProgressWithLabel value={row.percentComplete} /></TableCell>
                 <TableCell>
                   <ActionButton
                     color="light"
