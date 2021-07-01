@@ -63,14 +63,7 @@ exports.update = async (req, res, next) => {
    //     return res.status(400).json(errors);
    //   }
    // }
-   if (userBody.projectName)
-   {
-     const { errors, isValid } = validateProjectName(userBody);
-     // Check validation
-     if (!isValid) {
-       return res.status(400).json(errors);
-     }
-   }
+
    if (userBody.ownerName)
    {
      const { errors, isValid } = validateProjectName(userBody);
