@@ -17,7 +17,8 @@ const initialFValues = {
     capitalAmt: '',
     capitalPaid: '',
     investmentType: '',
-    paymentTerms: 'none'
+    paymentTerms: 'none',
+    investorName: ''
 }
 
 const invtype = [
@@ -87,18 +88,42 @@ export default function RegisterForm(props) {
         resetForm
     } = useForm(initialFValues, true, validate);
 
-    var i;
-    var investorDetails =  {};
-    for(i=0; i< props.allInvestors.length; i++) {
-      if(props.allInvestors[i].investorName === props.investor)
-        investorDetails = props.allInvestors[i];
+    var complist = props.allInvestors.map(function(item) {
+      if (item.approved === "approved")
+        return item.investorName;
+      else
+        return "0"
+    });
+
+    var j;
+    var len = 0;
+    var trimlist = [];
+    for(j=0; j<complist.length; j++) {
+      if(complist[j] !== "0"){
+        trimlist[len++] = complist[j];
+      }
     }
+    var selList = [];
+    var i;
+    selList[0] = {key:0, item: ""};
+    for(i=0; i<len; i++) {
+      selList[i+1] = {key:i+1, item: trimlist[i]};
+    }
+
 
 
     const handleSubmit = e => {
         e.preventDefault()
         if (validate()) {
             const approved = (props.auth.user.role === "admin")?"approved":"wait";
+
+            var i;
+            var investorDetails =  {};
+            for(i=0; i< props.allInvestors.length; i++) {
+              if(props.allInvestors[i].investorName === values.investorName)
+                investorDetails = props.allInvestors[i];
+            }
+
             const input = {
               investorName: investorDetails.investorName,
               investorID: investorDetails._id,
@@ -117,11 +142,29 @@ export default function RegisterForm(props) {
         }
     }
 
+    useEffect(() => {
+        if (props.investor != null)
+            setValues({investorName: props.investor})
+    }, [props.investor])
     return (
       <React.Fragment>
         <Form onSubmit={handleSubmit}>
             <Grid container>
                 <Grid item xs={4}>
+                    <FormControl variant="outlined">
+                      <InputLabel htmlFor="outlined-investorName-native-simple">Investor Name</InputLabel>
+                      <Select
+                        native
+                        value={values.investorName}
+                        onChange={handleInputChange}
+                        label="Investor Name"
+                        inputProps={{
+                          name: 'investorName',
+                          id: 'outlined-investorName-native-simple'
+                        }}
+                      >{selList.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+                      </Select>
+                    </FormControl>
                     <Input
                         name="investmentName"
                         label="Investment Name"
@@ -129,13 +172,7 @@ export default function RegisterForm(props) {
                         onChange={handleInputChange}
                         error={errors.investmentName}
                     />
-                    <Input
-                        name="profitPercent"
-                        label="Rate"
-                        value={values.profitPercent}
-                        onChange={handleInputChange}
-                        error={errors.profitPercent}
-                    />
+
                     <Input
                         name="capitalAmt"
                         label="Capital Amount"
@@ -152,6 +189,13 @@ export default function RegisterForm(props) {
                     />
                 </Grid>
                 <Grid item xs={4}>
+                    <Input
+                        name="profitPercent"
+                        label="Rate"
+                        value={values.profitPercent}
+                        onChange={handleInputChange}
+                        error={errors.profitPercent}
+                    />
                     <FormControl variant="outlined">
                       <InputLabel htmlFor="outlined-investmentType-native-simple">Investment Type</InputLabel>
                       <Select

@@ -26,12 +26,7 @@ export default function RegisterForm(props) {
         if (fieldValues === values)
             return Object.values(temp).every(x => x == "")
     }
-    var i;
-    var vendorDetails = {};
-    for(i=0; i< props.allVendors.length; i++) {
-      if(props.allVendors[i].vendorName === props.vendor)
-        vendorDetails = props.allVendors[i];
-    }
+
 
 
     var complist = props.allVendors.map(function(item) {
@@ -49,8 +44,8 @@ export default function RegisterForm(props) {
         trimlist[len++] = complist[j];
       }
     }
-    var selList = [];
     var i;
+    var selList = [];
     selList[0] = {key:0, item: ""};
     for(i=0; i<len; i++) {
       selList[i+1] = {key:i+1, item: trimlist[i]};
@@ -69,8 +64,16 @@ export default function RegisterForm(props) {
         e.preventDefault()
         if (validate()) {
             const approved = (props.auth.user.role === "admin")?"approved":"wait";
+
+            var i;
+            var vendorDetails = {};
+            for(i=0; i< props.allVendors.length; i++) {
+              if(props.allVendors[i].vendorName === values.vendorName)
+                vendorDetails = props.allVendors[i];
+            }
+
             const input = {
-              vendorName: values.vendorName,
+              vendorName: vendorDetails.vendorName,
               vendorID: vendorDetails._id,
               vendorStartDate: vendorDetails.startDate,
               vendorEndDate: vendorDetails.endDate,
@@ -90,9 +93,7 @@ export default function RegisterForm(props) {
 
     useEffect(() => {
         if (props.vendor != null)
-            setValues({
-                vendorName: props.vendor
-            })
+            setValues({vendorName: props.vendor})
     }, [props.vendor])
 
     return (

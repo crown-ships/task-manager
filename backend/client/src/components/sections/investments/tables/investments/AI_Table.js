@@ -411,7 +411,6 @@ export default function AI_Table(props) {
                 startIcon={<AddIcon />}
                 className={classes.newButton}
                 onClick={() => { setOpenRegPopup(true); }}
-                disabled = {(investor==="")}
             />
           </Grid>
         </Grid>
