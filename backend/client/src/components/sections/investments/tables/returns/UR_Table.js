@@ -62,8 +62,7 @@ const headCells = [
     { id: 'returnAmt', label: 'Next Payment Amount'},
     { id: 'totalInterestAmt', label: 'Total Interest'},
     { id: 'paymentTerms', label: 'Payment Terms'},
-    { id: 'isPaid', label: 'Paid', disableSorting: true },
-    { id: 'delete', label: 'Delete', disableSorting: true }
+    { id: 'isPaid', label: 'Paid', disableSorting: true }
 ];
 
 const rows = [

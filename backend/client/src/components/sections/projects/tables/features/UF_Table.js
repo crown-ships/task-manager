@@ -125,7 +125,10 @@ export default function UF_Table(props) {
   React.useEffect(async () => {
     const d = await getDropdownList(props);
     var complist = d.data.map(function(item) {
-      return item.projectName;
+      if(item.enabled === "true")
+        return item.projectName;
+      else
+        return "0"
     });
     const len = complist.length;
     var selList = [];

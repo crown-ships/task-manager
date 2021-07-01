@@ -270,17 +270,17 @@ export default function AP_Table(props) {
   const handleSwitch = (val, row) => {
     console.log(val);
       if(val== true)
-        changeEnable("true",row._id);
+        changeEnable("true",row);
       if(val == false)
-        changeEnable("false",row._id);
+        changeEnable("false",row);
   };
 
-  const changeEnable = (value, og_id) => {
+  const changeEnable = (value, og) => {
 
     const input = {
       params: {
         email: props.auth.user.email,
-        projectID: og_id,
+        projectID: og._id,
         auth: props.auth.isAuthenticated
       },
       body: {
@@ -288,7 +288,20 @@ export default function AP_Table(props) {
       }
     };
 
+    const c_input = {
+      params: {
+        email: props.auth.user.email,
+        idupdate: og.companyID,
+        auth: props.auth.isAuthenticated
+      },
+      body: {
+      enabled: value
+      }
+    };
 
+    if(value === "true"){
+      props.updateCompany(c_input, props.history);
+    }
     props.updateProject(input, props.history);
     props.updateAllFeatures(input, props.history);
     props.updateAllTasks(input, props.history);
