@@ -317,7 +317,7 @@ export default function AT_Table(props) {
       },
       body: data
     };
-    
+
     props.registerTask(input, props.history);
     resetForm();
     setOpenRegPopup(false);
@@ -422,7 +422,6 @@ export default function AT_Table(props) {
                 startIcon={<AddIcon />}
                 className={classes.newButton}
                 onClick={() => { setOpenRegPopup(true); }}
-                disabled = {(feature==="")}
             />
           </Grid>
         </Grid>

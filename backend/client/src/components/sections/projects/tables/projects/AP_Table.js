@@ -400,7 +400,6 @@ export default function AP_Table(props) {
                 startIcon={<AddIcon />}
                 className={classes.newButton}
                 onClick={() => { setOpenRegPopup(true); }}
-                disabled = {(company==="")}
             />
           </Grid>
         </Grid>

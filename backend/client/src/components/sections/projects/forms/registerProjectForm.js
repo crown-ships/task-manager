@@ -10,7 +10,8 @@ const initialFValues = {
     projectName: '',
     projectDetails: '',
     dueDate: '',
-    ownerName: ''
+    ownerName: '',
+    companyName:''
 }
 
 export default function RegisterForm(props) {
@@ -26,13 +27,6 @@ export default function RegisterForm(props) {
             return Object.values(temp).every(x => x == "")
     }
 
-    var i;
-    var companyDetails = {};
-    for(i=0; i< props.allCompanies.length; i++) {
-      if(props.allCompanies[i].companyName === props.company)
-        companyDetails = props.allCompanies[i];
-    }
-
     const {
         values,
         setValues,
@@ -42,9 +36,37 @@ export default function RegisterForm(props) {
         resetForm
     } = useForm(initialFValues, true, validate);
 
+    var complist = props.allCompanies.map(function(item) {
+      if(item.enabled === "true")
+        return item.companyName;
+      else
+        return "0"
+    });
+
+    var j;
+    var len = 0;
+    var trimlist = [];
+    for(j=0; j<complist.length; j++) {
+      if(complist[j] !== "0"){
+        trimlist[len++] = complist[j];
+      }
+    }
+    var selList = [];
+    var i;
+    selList[0] = {key:0, item: ""};
+    for(i=0; i<len; i++) {
+      selList[i+1] = {key:i+1, item: trimlist[i]};
+    }
+
     const handleSubmit = e => {
         e.preventDefault()
         if (validate()) {
+            var i;
+            var companyDetails = {};
+            for(i=0; i< props.allCompanies.length; i++) {
+              if(props.allCompanies[i].companyName === values.companyName)
+                companyDetails = props.allCompanies[i];
+            }
             const approved = (props.auth.user.role === "admin")?"approved":"wait";
             const input = {
               companyName: companyDetails.companyName,
@@ -62,16 +84,27 @@ export default function RegisterForm(props) {
     }
 
     useEffect(() => {
-        if (recordForEdit != null)
-            setValues({
-                ...recordForEdit
-            })
-    }, [recordForEdit])
-
+        if (props.company != null)
+            setValues({companyName: props.company})
+    }, [props.company])
     return (
         <Form onSubmit={handleSubmit}>
             <Grid container>
                 <Grid item xs={8}>
+                    <FormControl variant="outlined">
+                      <InputLabel htmlFor="outlined-companyName-native-simple">Company Name</InputLabel>
+                      <Select
+                        native
+                        value={values.companyName}
+                        onChange={handleInputChange}
+                        label="Company Name"
+                        inputProps={{
+                          name: 'companyName',
+                          id: 'outlined-companyName-native-simple'
+                        }}
+                      >{selList.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+                      </Select>
+                    </FormControl>
                     <Input
                         name="projectName"
                         label="Project Name"
@@ -86,6 +119,8 @@ export default function RegisterForm(props) {
                         onChange={handleInputChange}
                         error={errors.projectDetails}
                     />
+                </Grid>
+                <Grid item xs={4}>
                     <Input
                         name="ownerName"
                         label="Owner Name"
@@ -93,22 +128,19 @@ export default function RegisterForm(props) {
                         onChange={handleInputChange}
                         error={errors.ownerName}
                     />
-
-                </Grid>
-                <Grid item xs={4}>
-                <Input
-                  id="date"
-                  type="date"
-                  defaultValue="2017-05-24"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  name="dueDate"
-                  label="Due Date"
-                  value={values.dueDate}
-                  onChange={handleInputChange}
-                  error={errors.dueDate}
-                />
+                    <Input
+                      id="date"
+                      type="date"
+                      defaultValue="2017-05-24"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      name="dueDate"
+                      label="Due Date"
+                      value={values.dueDate}
+                      onChange={handleInputChange}
+                      error={errors.dueDate}
+                    />
                     <div>
                         <Button
                             type="submit"

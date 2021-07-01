@@ -376,7 +376,6 @@ export default function AF_Table(props) {
                 startIcon={<AddIcon />}
                 className={classes.newButton}
                 onClick={() => { setOpenRegPopup(true); }}
-                disabled = {(project==="")}
             />
           </Grid>
         </Grid>

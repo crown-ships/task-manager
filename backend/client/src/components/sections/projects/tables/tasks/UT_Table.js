@@ -418,7 +418,6 @@ export default function UT_Table(props) {
                 startIcon={<AddIcon />}
                 className={classes.newButton}
                 onClick={() => { setOpenRegPopup(true); }}
-                disabled = {(feature==="")}
             />
           </Grid>
         </Grid>

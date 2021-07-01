@@ -328,7 +328,6 @@ export default function UP_Table(props) {
                 startIcon={<AddIcon />}
                 className={classes.newButton}
                 onClick={() => { setOpenRegPopup(true); }}
-                disabled = {(company==="")}
             />
           </Grid>
         </Grid>

@@ -141,7 +141,8 @@ export default function UF_Table(props) {
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
   const [list, setList] = React.useState([]);
-  const [company, setCompany] = React.useState("");
+  const [project, setProject] = React.useState("");
+  const [allProjects, setAllProjects] = React.useState([]);
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
@@ -150,6 +151,7 @@ export default function UF_Table(props) {
 
   React.useEffect(async () => {
     const d = await getDropdownList(props);
+    setAllProjects(d.data);
     var complist = d.data.map(function(item) {
       if(item.enabled === "true")
         return item.projectName;
@@ -173,10 +175,10 @@ export default function UF_Table(props) {
     setRecords(d.data);
     setFilterFn({
         fn: items => {
-            if (company == "")
+            if (project == "")
                 return items;
             else
-                return items.filter(x => x.projectName.includes(company))
+                return items.filter(x => x.projectName.includes(project))
         }
     })
   },[notify, list]);
@@ -208,7 +210,7 @@ export default function UF_Table(props) {
   const handleChange = (event) => {
     let val = event.target;
 
-    setCompany(val.value);
+    setProject(val.value);
     setFilterFn({
         fn: items => {
             if (val.value == "")
@@ -270,14 +272,14 @@ export default function UF_Table(props) {
 
   }
 
-  const onDelete = company => {
+  const onDelete = feature => {
     setConfirmDialog({
         ...confirmDialog,
         isOpen: false
     })
 
     const input = {
-      emailDelete: company.email,
+      featureID: feature._id,
       email: props.auth.user.email,
       auth: props.auth.isAuthenticated
     };
@@ -340,7 +342,6 @@ export default function UF_Table(props) {
                 startIcon={<AddIcon />}
                 className={classes.newButton}
                 onClick={() => { setOpenRegPopup(true); }}
-                disabled = {(company==="")}
             />
           </Grid>
         </Grid>
@@ -399,7 +400,7 @@ export default function UF_Table(props) {
         openPopup={openRegPopup}
         setOpenPopup={setOpenRegPopup}
       >
-        <RegisterForm {...props} create={create} company={company}/>
+        <RegisterForm {...props} create={create} project={project} allProjects = {allProjects}/>
       </Popup>
       <Notification
                notify={notify}
