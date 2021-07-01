@@ -200,7 +200,7 @@ export default function UP_Table(props) {
     });
 
   const handleChange = (event) => {
-
+    let val = event.target;
     setCompany(val.value);
     setFilterFn({
         fn: items => {
