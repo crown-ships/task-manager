@@ -372,7 +372,7 @@ export default function UT_Table(props) {
 
   }
   const dateToString = (date) => {
-    if (date !== null) {
+    if (date != undefined) {
       var d = date.toString();
       d = d.substring(0, d.indexOf('T'));
       return d;
