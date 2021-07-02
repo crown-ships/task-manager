@@ -48,7 +48,7 @@ export default function RegisterForm(props) {
     } = useForm(initialFValues, true, validate);
 
     var complist = props.allProjects.map(function(item) {
-      if(item.enabled === "true")
+      if(item.enabled === "true" && item.approved === "approved")
         return item.projectName;
       else
         return "0"

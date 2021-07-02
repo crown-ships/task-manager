@@ -153,7 +153,7 @@ export default function UF_Table(props) {
     const d = await getDropdownList(props);
     setAllProjects(d.data);
     var complist = d.data.map(function(item) {
-      if(item.enabled === "true")
+      if(item.enabled === "true" && item.approved === "approved")
         return item.projectName;
       else
         return "0"
