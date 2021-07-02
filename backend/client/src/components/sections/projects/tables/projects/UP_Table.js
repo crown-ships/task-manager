@@ -282,7 +282,7 @@ export default function UP_Table(props) {
   }
 
   const dateToString = (date) => {
-    if (date != undefined {
+    if (date != undefined) {
       var d = date.toString();
       d = d.substring(0, d.indexOf('T'));
       return d;
