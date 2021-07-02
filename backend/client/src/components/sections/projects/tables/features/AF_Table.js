@@ -88,6 +88,7 @@ const useStyles = makeStyles(theme => ({
 
 const headCells = [
     { id: 'featureName', label: 'Milestone Name' },
+    { id: 'startDate', label: 'Start Date' },
     { id: 'dueDate', label: 'Due Date' },
     { id: 'ownerName', label: 'Owner' },
     { id: 'featureDetails', label: 'Milestone Details'},
@@ -329,10 +330,14 @@ export default function AF_Table(props) {
     }
   }
   const dateToString = (date) => {
-    var d = date.toString();
-
-    d = d.substring(0, d.indexOf('T'));
-    return d;
+    if (date !== null) {
+      var d = date.toString();
+      d = d.substring(0, d.indexOf('T'));
+      return d;
+    }
+    else {
+      return "";
+    }
   }
 
 
@@ -387,6 +392,7 @@ export default function AF_Table(props) {
               recordsAfterPagingAndSorting().map(row =>
               (<TableRow key={row._id}>
                 <TableCell backgroundColor = "primary">{row.featureName}</TableCell>
+                <TableCell>{dateToString(row.startDate)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
                 <TableCell>{row.ownerName}</TableCell>
                 <TableCell>{row.featureDetails}</TableCell>

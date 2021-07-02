@@ -93,6 +93,7 @@ const useStyles = makeStyles(theme => ({
 const headCells = [
     { id: 'projectName', label: 'Project Name' },
     { id: 'approved', label: 'Approved' },
+    { id: 'startDate', label: 'Start Date' },
     { id: 'dueDate', label: 'Due Date' },
     { id: 'projectDetails', label: 'Project Details'},
     { id: 'companyName', label: 'Company Name'},
@@ -281,10 +282,14 @@ export default function UP_Table(props) {
   }
 
   const dateToString = (date) => {
-    var d = date.toString();
-
-    d = d.substring(0, d.indexOf('T'));
-    return d;
+    if (date !== null) {
+      var d = date.toString();
+      d = d.substring(0, d.indexOf('T'));
+      return d;
+    }
+    else {
+      return "";
+    }
   }
 
 
@@ -340,6 +345,7 @@ export default function UP_Table(props) {
               (<TableRow key={row._id}>
                 <TableCell backgroundColor = "primary">{row.projectName}</TableCell>
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
+                <TableCell>{dateToString(row.startDate)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
                 <TableCell>{row.projectDetails}</TableCell>
                 <TableCell>{row.companyName}</TableCell>
