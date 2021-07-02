@@ -41,7 +41,7 @@ export default function UpdateForm(props) {
               websiteURL: values.websiteURL
             };
             console.log(input);
-            props.edit(input, resetForm, recordForEdit.id);
+            props.edit(input, resetForm, recordForEdit._id);
         }
     }
 
