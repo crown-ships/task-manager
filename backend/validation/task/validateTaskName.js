@@ -4,7 +4,7 @@ const isEmpty = require("is-empty");
 
 module.exports = function validateTaskName(data) {
   let errors = {};
-  var letters = /^[A-Za-z0-9 " "]+$/;
+  var letters = /^[A-Za-z0-9 " " "%" "&" "(" ")" "-"]+$/;
 
   if (Validator.isEmpty(data.taskName)) {
     errors.taskName = "Name field is required.";

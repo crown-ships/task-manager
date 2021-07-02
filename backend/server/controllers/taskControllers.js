@@ -31,6 +31,7 @@ exports.addNew = async (req, res, next) => {
    companyID: req.body.companyID,
    taskDetails: req.body.taskDetails,
    dueDate: req.body.dueDate,
+   startDate: req.body.startDate,
    ownerName: req.body.ownerName,
    creatorName: req.body.creatorName,
    creatorID:req.body.creatorID

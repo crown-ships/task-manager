@@ -6,8 +6,11 @@ const taskModel = new mongoose.Schema({
     required: true
   },
   dueDate: {
+    type: Date
+  },
+  startDate: {
     type: Date,
-    required: true,
+    required: true
   },
   taskDetails: {
     type: String,

@@ -13,6 +13,7 @@ const initialFValues = {
     projectName: '',
     projectDetails: '',
     dueDate: '',
+    startDate: '',
     ownerName: '',
     companyName:''
 }
@@ -80,6 +81,7 @@ export default function RegisterForm(props) {
               projectDetails: values.projectDetails,
               ownerName: values.ownerName,
               dueDate: values.dueDate,
+              startDate: values.startDate,
               approved: approved
             };
             props.create(input, resetForm);
@@ -134,9 +136,20 @@ export default function RegisterForm(props) {
                         error={errors.ownerName}
                     />
                     <Input
-                      id="date"
+                      id="startDate"
                       type="date"
-                      defaultValue="2017-05-24"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      name="startDate"
+                      label="Start Date"
+                      value={values.startDate}
+                      onChange={handleInputChange}
+                      error={errors.startDate}
+                    />
+                    <Input
+                      id="dueDate"
+                      type="date"
                       InputLabelProps={{
                         shrink: true,
                       }}

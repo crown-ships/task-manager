@@ -10,7 +10,7 @@ module.exports = function validatePaymentInput(data) {
   data.dueDate = !isEmpty(data.dueDate) ? data.dueDate : "";
 
 
-  var letters = /^[A-Za-z0-9 " "]+$/;
+  var letters = /^[A-Za-z0-9 " " "%" "&" "(" ")" "-"]+$/;
   var numbers = /^[0-9 ]+$/;
 
 

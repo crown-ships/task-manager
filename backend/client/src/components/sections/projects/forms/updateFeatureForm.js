@@ -7,6 +7,7 @@ import { useForm, Form } from '../../useForm';
 const initialFValues = {
     featureDetails: '',
     dueDate: '',
+    startDate: '',
     ownerName: ''
 }
 
@@ -39,6 +40,7 @@ export default function UpdateForm(props) {
             const input = {
               featureDetails: values.featureDetails,
               dueDate: values.dueDate,
+              startDate: values.startDate,
               ownerName: values.ownerName,
               approved: approved
           };
@@ -76,9 +78,20 @@ export default function UpdateForm(props) {
                         error={errors.ownerName}
                     />
                     <Input
-                      id="date"
+                      id="startDate"
                       type="date"
-                      defaultValue="2017-05-24"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      name="startDate"
+                      label="Start Date"
+                      value={values.startDate}
+                      onChange={handleInputChange}
+                      error={errors.startDate}
+                    />
+                    <Input
+                      id="dueDate"
+                      type="date"
                       InputLabelProps={{
                         shrink: true,
                       }}

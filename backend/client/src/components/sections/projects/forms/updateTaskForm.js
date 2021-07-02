@@ -8,6 +8,7 @@ const initialFValues = {
     taskName: '',
     taskDetails: '',
     dueDate: '',
+    startDate: '',
     ownerName:'',
     percentComplete:0
 }
@@ -41,6 +42,7 @@ export default function UpdateForm(props) {
               taskName: values.taskName,
               taskDetails: values.taskDetails,
               dueDate: values.dueDate,
+              startDate: values.startDate,
               percentComplete: parseInt(values.percentComplete),
               ownerName: values.ownerName
           };
@@ -69,7 +71,7 @@ export default function UpdateForm(props) {
                     />
                     <Input
                         name="percentComplete"
-                        label="Progress"
+                        label="Progress %"
                         value={values.percentComplete}
                         onChange={handleInputChange}
                         error={errors.percentComplete}
@@ -93,9 +95,20 @@ export default function UpdateForm(props) {
                         onChange={handleInputChange}
                         error={errors.ownerName}
                     />
-
                     <Input
-                      id="date"
+                      id="startDate"
+                      type="date"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      name="startDate"
+                      label="Start Date"
+                      value={values.startDate}
+                      onChange={handleInputChange}
+                      error={errors.startDate}
+                    />
+                    <Input
+                      id="dueDate"
                       type="date"
                       InputLabelProps={{
                         shrink: true,

@@ -12,7 +12,7 @@ module.exports = function validateCompanyInput(data) {
   data.contactNo = !isEmpty(data.contactNo) ? data.contactNo : "";
 
   const email = data.email;
-  var letters = /^[A-Za-z0-9 " "]+$/;
+  var letters = /^[A-Za-z0-9 " " "%" "&" "(" ")" "-"]+$/;
   var numbers = /^[0-9 "+"]+$/;
 
 

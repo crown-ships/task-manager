@@ -7,10 +7,10 @@ module.exports = function validateFeatureInput(data) {
 
 // Convert empty fields to an empty string so we can use validator functions
   data.featureName = !isEmpty(data.featureName) ? data.featureName : "";
-  data.dueDate = !isEmpty(data.dueDate) ? data.dueDate : "";
+  data.startDate = !isEmpty(data.startDate) ? data.startDate : "";
   data.featureDetails = !isEmpty(data.featureDetails) ? data.featureDetails : "";
 
-  var letters = /^[A-Za-z0-9 " "]+$/;
+  var letters = /^[A-Za-z0-9 " " "%" "&" "(" ")" "-"]+$/;
   var numbers = /^[0-9 "+"]+$/;
 
 
@@ -31,11 +31,11 @@ module.exports = function validateFeatureInput(data) {
   }
 
 // Date checks
-  if(Validator.isEmpty(data.dueDate)){
-    errors.dueDate = "Date field is required";
+  if(Validator.isEmpty(data.startDate)){
+    errors.startDate = "Date field is required";
   }
-  else if(!Validator.isDate(data.dueDate)){
-    errors.dueDate = "Date field is invalid";
+  else if(!Validator.isDate(data.startDate)){
+    errors.startDate = "Date field is invalid";
   }
 
 return {

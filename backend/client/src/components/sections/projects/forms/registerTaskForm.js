@@ -12,6 +12,7 @@ const initialFValues = {
     taskName: '',
     taskDetails: '',
     dueDate: '',
+    startDate: '',
     ownerName: '',
     featureName: ''
 }
@@ -72,6 +73,7 @@ export default function RegisterForm(props) {
               taskName: values.taskName,
               taskDetails: values.taskDetails,
               dueDate: values.dueDate,
+              startDate: values.startDate,
               ownerName: values.ownerName,
               creatorName: props.auth.user.name,
               creatorID: props.auth.user.id,
@@ -137,9 +139,20 @@ export default function RegisterForm(props) {
                         error={errors.ownerName}
                     />
                     <Input
-                      id="date"
+                      id="startDate"
                       type="date"
-                      defaultValue="2017-05-24"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      name="startDate"
+                      label="Start Date"
+                      value={values.startDate}
+                      onChange={handleInputChange}
+                      error={errors.startDate}
+                    />
+                    <Input
+                      id="dueDate"
+                      type="date"
                       InputLabelProps={{
                         shrink: true,
                       }}

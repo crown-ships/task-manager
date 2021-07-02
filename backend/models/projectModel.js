@@ -6,9 +6,11 @@ const projectModel = new mongoose.Schema({
     required: true
   },
   dueDate: {
+    type: Date
+  },
+  startDate: {
     type: Date,
-    required: true,
-
+    required: true
   },
   projectDetails: {
     type: String,

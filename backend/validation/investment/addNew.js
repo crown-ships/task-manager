@@ -15,7 +15,7 @@ module.exports = function validateInvestmentInput(data) {
   data.investmentType = !isEmpty(data.investmentType) ? data.investmentType : "";
   data.paymentTerms = !isEmpty(data.paymentTerms) ? data.paymentTerms : "";
 
-  var letters = /^[A-Za-z0-9 " "]+$/;
+  var letters = /^[A-Za-z0-9 " " "%" "&" "(" ")" "-"]+$/;
   var numbers = /^[0-9 "+"]+$/;
 
 

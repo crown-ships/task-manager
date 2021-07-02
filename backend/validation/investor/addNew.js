@@ -11,7 +11,7 @@ module.exports = function validateInvestorInput(data) {
   data.contactNo = !isEmpty(data.contactNo) ? data.contactNo : "";
   data.investorEmail = !isEmpty(data.investorEmail) ? data.investorEmail : "";
 
-  var letters = /^[A-Za-z0-9 " "]+$/;
+  var letters = /^[A-Za-z0-9 " " "%" "&" "(" ")" "-"]+$/;
   var numbers = /^[0-9 "+"]+$/;
 
 

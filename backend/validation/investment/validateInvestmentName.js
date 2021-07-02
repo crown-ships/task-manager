@@ -4,8 +4,7 @@ const isEmpty = require("is-empty");
 
 module.exports = function validateInvestmentName(data) {
   let errors = {};
-  var letters = /^[A-Za-z0-9 " "]+$/;
-
+  var letters = /^[A-Za-z0-9 " " "%" "&" "(" ")" "-"]+$/;
   if (Validator.isEmpty(data.investmentName)) {
     errors.investmentName = "Name field is required.";
   }

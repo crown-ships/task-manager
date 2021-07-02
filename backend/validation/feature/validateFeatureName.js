@@ -4,7 +4,7 @@ const isEmpty = require("is-empty");
 
 module.exports = function validateFeatureName(data) {
   let errors = {};
-  var letters = /^[A-Za-z0-9 " "]+$/;
+  var letters = /^[A-Za-z0-9 " " "%" "&" "(" ")" "-"]+$/;
 
   if (Validator.isEmpty(data.featureName)) {
     errors.featureName = "Name field is required.";

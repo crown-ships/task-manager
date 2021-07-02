@@ -7,10 +7,10 @@ module.exports = function validateTaskInput(data) {
 
 // Convert empty fields to an empty string so we can use validator functions
   data.taskName = !isEmpty(data.taskName) ? data.taskName : "";
-  data.dueDate = !isEmpty(data.dueDate) ? data.dueDate : "";
+  data.startDate = !isEmpty(data.startDate) ? data.startDate : "";
   data.taskDetails = !isEmpty(data.taskDetails) ? data.taskDetails : "";
 
-  var letters = /^[A-Za-z0-9 " "]+$/;
+  var letters = /^[A-Za-z0-9 " " "%" "&" "(" ")" "-"]+$/;
   var numbers = /^[0-9 "+"]+$/;
 
 
@@ -31,11 +31,11 @@ module.exports = function validateTaskInput(data) {
   }
 
 // Date checks
-  if(Validator.isEmpty(data.dueDate)){
-    errors.dueDate = "Date field is required";
+  if(Validator.isEmpty(data.startDate)){
+    errors.startDate = "Date field is required";
   }
-  else if(!Validator.isDate(data.dueDate)){
-    errors.dueDate = "Date field is invalid";
+  else if(!Validator.isDate(data.startDate)){
+    errors.startDate = "Date field is invalid";
   }
 
 return {

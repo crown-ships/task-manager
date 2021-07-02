@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Paper from '@material-ui/core/Paper';
-import { Chart, Series } from 'devextreme-react/chart';
+import { Chart, Series, ValueAxis } from 'devextreme-react/chart';
 
 
 const data = [
@@ -42,6 +42,7 @@ export default function Graphs(props) {
           name="Projects"
           type="bar"
           color="#ffaa66" />
+          <ValueAxis defaultVisualRange={{ startValue: 0, endValue: 100 }} />
       </Chart>
     </Paper>
 
