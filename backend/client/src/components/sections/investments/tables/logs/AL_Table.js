@@ -172,14 +172,14 @@ export default function AL_Table(props) {
 
 
 
-  const onDelete = investment => {
+  const onDelete = return => {
     setConfirmDialog({
         ...confirmDialog,
         isOpen: false
     })
 
     const input = {
-      investmentName: investment.investmentName,
+      returnID: return._id,
       email: props.auth.user.email,
       auth: props.auth.isAuthenticated
     }

@@ -239,7 +239,7 @@ export default function AV_Table(props) {
     })
 
     const input = {
-      vendorID: vendor.vendorID,
+      vendorID: vendor._id,
       email: props.auth.user.email,
       auth: props.auth.isAuthenticated
     };
