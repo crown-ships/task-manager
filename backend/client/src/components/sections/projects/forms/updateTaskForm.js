@@ -68,12 +68,24 @@ export default function UpdateForm(props) {
                         error={errors.taskName}
                     />
                     <Input
+                        name="percentComplete"
+                        label="Progress"
+                        value={values.percentComplete}
+                        onChange={handleInputChange}
+                        error={errors.percentComplete}
+                    />
+                    <Input
                         name="taskDetails"
                         label="Project Details"
                         value={values.taskDetails}
                         onChange={handleInputChange}
+                        multiline  = {true}
+                        rows = {5}
                         error={errors.taskDetails}
                     />
+
+                </Grid>
+                <Grid item xs={5}>
                     <Input
                         name="ownerName"
                         label="Owner Name"
@@ -81,13 +93,7 @@ export default function UpdateForm(props) {
                         onChange={handleInputChange}
                         error={errors.ownerName}
                     />
-                    <Input
-                        name="percentComplete"
-                        label="Progress"
-                        value={values.percentComplete}
-                        onChange={handleInputChange}
-                        error={errors.percentComplete}
-                    />
+
                     <Input
                       id="date"
                       type="date"
@@ -100,8 +106,6 @@ export default function UpdateForm(props) {
                       onChange={handleInputChange}
                       error={errors.dueDate}
                     />
-                </Grid>
-                <Grid item xs={5}>
                     <div>
                         <Button
                             type="submit"

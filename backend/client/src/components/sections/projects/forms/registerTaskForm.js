@@ -121,6 +121,8 @@ export default function RegisterForm(props) {
                         name="taskDetails"
                         label="Task Details"
                         value={values.taskDetails}
+                        multiline  = {true}
+                        rows = {5}
                         onChange={handleInputChange}
                         error={errors.taskDetails}
                     />

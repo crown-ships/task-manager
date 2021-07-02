@@ -131,6 +131,8 @@ export default function RegisterForm(props) {
                         label="Milestone Details"
                         value={values.featureDetails}
                         onChange={handleInputChange}
+                        multiline  = {true}
+                        rows = {5}
                         error={errors.featureDetails}
                     />
                 </Grid>

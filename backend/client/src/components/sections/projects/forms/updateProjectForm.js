@@ -59,9 +59,14 @@ export default function UpdateForm(props) {
                         name="projectDetails"
                         label="Project Details"
                         value={values.projectDetails}
+                        multiline  = {true}
+                        rows = {5}
                         onChange={handleInputChange}
                         error={errors.projectDetails}
                     />
+
+                </Grid>
+                <Grid item xs={5}>
                     <Input
                         name="ownerName"
                         label="Owner Name"
@@ -82,8 +87,6 @@ export default function UpdateForm(props) {
                       onChange={handleInputChange}
                       error={errors.dueDate}
                     />
-                </Grid>
-                <Grid item xs={5}>
                     <div>
                         <Button
                             type="submit"

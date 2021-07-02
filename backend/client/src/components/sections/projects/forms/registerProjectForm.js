@@ -119,6 +119,8 @@ export default function RegisterForm(props) {
                         name="projectDetails"
                         label="Project Details"
                         value={values.projectDetails}
+                        multiline  = {true}
+                        rows = {5}
                         onChange={handleInputChange}
                         error={errors.projectDetails}
                     />

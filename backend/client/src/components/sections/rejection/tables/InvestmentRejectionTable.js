@@ -84,7 +84,7 @@ const getDropdownList = (prop) => {
 }
 
 
-export default function InvestmentApprovalTable(props) {
+export default function InvestmentRejectionTable(props) {
 
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })

@@ -81,7 +81,7 @@ const getDropdownList = (prop) => {
 }
 
 
-export default function ProjectApprovalTable(props) {
+export default function ProjectRejectionTable(props) {
 
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })

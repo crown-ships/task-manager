@@ -401,7 +401,7 @@ export default function InvestmentApprovalTable(props) {
       </TblContainer>
       <TblPagination />
     <Popup
-      title="Reject Investor"
+      title="Reject Investment"
       openPopup={openRejectPopup}
       setOpenPopup={setOpenRejectPopup}
     >

@@ -74,7 +74,7 @@ const getData = (prop) => {
   return prop.getAllInvestors({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
-export default function InvestorApprovalTable(props) {
+export default function InvestorRejectionTable(props) {
 
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })

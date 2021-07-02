@@ -52,6 +52,8 @@ export default function RejectForm(props) {
                         name="rejectReason"
                         label="Reason for Rejection"
                         value={values.rejectReason}
+                        multiline  = {true}
+                        rows = {5}
                         onChange={handleInputChange}
                         error={errors.rejectReason}
                     />

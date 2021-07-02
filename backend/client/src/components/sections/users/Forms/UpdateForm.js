@@ -14,7 +14,7 @@ const roleItems = [
 
 const initialFValues = {
     name: '',
-    role: 'staff-member',
+    role: 'user',
     email: ''
 }
 

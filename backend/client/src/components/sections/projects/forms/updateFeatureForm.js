@@ -31,7 +31,7 @@ export default function UpdateForm(props) {
         handleInputChange,
         resetForm
     } = useForm(initialFValues, true, validate);
-    
+
     const handleSubmit = e => {
         e.preventDefault()
         if (validate()) {
@@ -61,9 +61,13 @@ export default function UpdateForm(props) {
                         name="featureDetails"
                         label="Milestone Details"
                         value={values.featureDetails}
+                        multiline  = {true}
+                        rows = {5}
                         onChange={handleInputChange}
                         error={errors.featureDetails}
                     />
+                </Grid>
+                <Grid item xs={5}>
                     <Input
                         name="ownerName"
                         label="Owner Name"
@@ -84,8 +88,6 @@ export default function UpdateForm(props) {
                       onChange={handleInputChange}
                       error={errors.dueDate}
                     />
-                </Grid>
-                <Grid item xs={5}>
                     <div>
                         <Button
                             type="submit"

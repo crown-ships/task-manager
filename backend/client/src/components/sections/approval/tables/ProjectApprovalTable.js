@@ -299,7 +299,7 @@ export default function ProjectApprovalTable(props) {
                 <TableCell>
                   <ActionButton
                     color="light"
-                    onClick={() => {onReject(row)}}>
+                    onClick={() => {openInRejectPopup(row)}}>
                     <CloseIcon fontSize="small" />
                   </ActionButton>
                 </TableCell>

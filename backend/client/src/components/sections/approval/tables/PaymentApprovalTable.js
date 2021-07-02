@@ -321,7 +321,7 @@ export default function PaymentApprovalTable(props) {
       <TblPagination />
     </Paper>
     <Popup
-      title="Reject Investor"
+      title="Reject Payment"
       openPopup={openRejectPopup}
       setOpenPopup={setOpenRejectPopup}
     >
