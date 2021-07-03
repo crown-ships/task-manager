@@ -415,7 +415,7 @@ export default function AP_Table(props) {
   }
 
   const openFeature = row => {
-    setOpenF(!open);
+    setOpenF(!openF);
     setOpenProj(row);
   }
 
