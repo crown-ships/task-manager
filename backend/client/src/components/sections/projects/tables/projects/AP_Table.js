@@ -95,6 +95,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const headCells = [
+    { id: 'openDetails', label: '' },
     { id: 'projectName', label: 'Project Name' },
     { id: 'approved', label: 'Approved' },
     { id: 'startDate', label: 'Start Date' },
@@ -421,7 +422,6 @@ export default function AP_Table(props) {
 
   return (
     <React.Fragment>
-    <Paper className={classes.pageContent}>
       <Toolbar>
         <Grid container>
           <Grid item xs={7}>
@@ -468,7 +468,9 @@ export default function AP_Table(props) {
           <TableBody>
             {
               recordsAfterPagingAndSorting().map(row =>
-              (<TableRow key={row._id}>
+
+              ( <>
+                <TableRow key={row._id}>
                 <TableCell>
                   <IconButton aria-label="expand row" size="small" onClick={() => openFeature(row)}>
                     {openF ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -513,37 +515,38 @@ export default function AP_Table(props) {
                   </ActionButton>
                 </TableCell>
               </TableRow>
+              <TableRow>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={10}>
+                  <Collapse in={openF} timeout="auto" unmountOnExit>
+                    <Box margin={1}>
+                      <Table size="small" aria-label="purchases">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Feature</TableCell>
+                            <TableCell>Progress</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {linkedFeatures.map((feature) => (
+                            <TableRow key={feature._id}>
+                              <TableCell component="th" scope="row">
+                                {(feature.featureName != undefined)? feature.featureName: "empty"}
+                              </TableCell>
+                              <TableCell><CircularProgressWithLabel value={(feature.percentComplete != undefined)? feature.percentComplete: 0} /></TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </Box>
+                  </Collapse>
+                </TableCell>
+              </TableRow>
+              </>
           ))}
-          <TableRow>
-            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-              <Collapse in={openF} timeout="auto" unmountOnExit>
-                <Box margin={1}>
-                  <Table size="small" aria-label="purchases">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Feature</TableCell>
-                        <TableCell>Progress</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {linkedFeatures.map((feature) => (
-                        <TableRow key={feature._id}>
-                          <TableCell component="th" scope="row">
-                            {(feature.featureName != undefined)? feature.featureName: "empty"}
-                          </TableCell>
-                          <TableCell><CircularProgressWithLabel value={(feature.percentComplete != undefined)? feature.percentComplete: 0} /></TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </Box>
-              </Collapse>
-            </TableCell>
-          </TableRow>
+
         </TableBody>
       </TblContainer>
       <TblPagination />
-    </Paper>
       <Popup
         title="Edit Project Details"
         openPopup={openEditPopup}
