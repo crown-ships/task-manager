@@ -92,6 +92,11 @@ const useStyles = makeStyles(theme => ({
     formControl: {
     minWidth: 210,
   },
+  root: {
+    "& > *": {
+      borderBottom: "unset"
+    }
+  }
 }))
 
 const headCells = [
@@ -100,7 +105,7 @@ const headCells = [
     { id: 'approved', label: 'Approved' },
     { id: 'startDate', label: 'Start Date' },
     { id: 'dueDate', label: 'Due Date' },
-    { id: 'projectDetails', label: 'Project Details'},
+    // { id: 'projectDetails', label: 'Project Details'},
     { id: 'companyName', label: 'Company Name'},
     { id: 'percentComplete', label: 'Progress'},
     { id: 'ownerName', label: 'Owner'},
@@ -194,14 +199,19 @@ export default function AP_Table(props) {
                 return items.filter(x => x.companyName.includes(company) && x.approved.includes("approved"));
         }
     })
+
+    const fullFeatures = await getFeatures(props);
+    setFinalFeatures(fullFeatures);
+
+    const fullTasks = await getTasks(props);
+    setFinalTasks(fullTasks);
   },[notify, list]);
 
 
   React.useEffect(async () => {
-    const fullFeatures = await getFeatures(props);
 
-    console.log(fullFeatures);
-    const filteredFeatures = fullFeatures.data.map(function(item) {
+
+    const filteredFeatures = finalFeatures.data.map(function(item) {
       if(item.projectID === openProj._id) {
         return item;
       }
@@ -213,8 +223,8 @@ export default function AP_Table(props) {
 
     console.log(filteredFeatures);
 
-    const fullTasks = await getTasks(props);
-    const filteredTasks = fullTasks.data.map(function(item) {
+
+    const filteredTasks = finalTasks.data.map(function(item) {
       if(item.projectID === openProj._id) {
         return item;
       }
@@ -470,7 +480,7 @@ export default function AP_Table(props) {
               recordsAfterPagingAndSorting().map(row =>
 
               ( <>
-                <TableRow key={row._id}>
+                <TableRow key={row._id} className={classes.root}>
                 <TableCell>
                   <IconButton aria-label="expand row" size="small" onClick={() => openFeature(row)}>
                     {openF ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -480,7 +490,6 @@ export default function AP_Table(props) {
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
                 <TableCell>{dateToString(row.startDate)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
-                <TableCell>{row.projectDetails}</TableCell>
                 <TableCell>{row.companyName}</TableCell>
                 <TableCell>  <CircularProgressWithLabel value={row.percentComplete} /></TableCell>
                 <TableCell>{row.ownerName}</TableCell>
