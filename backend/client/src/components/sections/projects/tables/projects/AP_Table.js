@@ -226,7 +226,7 @@ export default function AP_Table(props) {
 
     setLinkedFeatures(filteredFeatures);
     setLinkedTasks(filteredTasks);
-  }, [projectDisplay]);
+  }, [openProj]);
 
 
   const {
