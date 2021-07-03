@@ -152,6 +152,7 @@ export default function AP_Table(props) {
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
   const [records, setRecords] = React.useState(data);
+  const [emptyFeatureCount, setEmptyFeatureCount] = React.useState(0);
   const [linkedFeatures, setLinkedFeatures] = React.useState(rows);
   const [linkedTasks, setLinkedTasks] = React.useState(rows);
   const [finalFeatures, setFinalFeatures] = React.useState(rows);
@@ -210,7 +211,7 @@ export default function AP_Table(props) {
 
   React.useEffect(async () => {
 
-
+    setEmptyFeatureCount(0);
     const filteredFeatures = finalFeatures.data.map(function(item) {
       if(item.projectID === openProj._id) {
         return item;
@@ -220,7 +221,14 @@ export default function AP_Table(props) {
       }
     });
 
+    var i;
 
+    for (i=0; i<filteredFeatures.length; i++)
+    {
+      if(filteredFeatures[i] != "0") {
+        setEmptyFeatureCount(emptyFeatureCount+1)
+      }
+    }
     console.log(filteredFeatures);
 
 
@@ -524,7 +532,7 @@ export default function AP_Table(props) {
                   </ActionButton>
                 </TableCell>
               </TableRow>
-              <TableRow>
+              {(emptyFeatureCount == 0)? null: <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={10}>
                   <Collapse in={openF} timeout="auto" unmountOnExit>
                     <Box margin={1}>
@@ -549,7 +557,7 @@ export default function AP_Table(props) {
                     </Box>
                   </Collapse>
                 </TableCell>
-              </TableRow>
+              </TableRow>}
               </>
           ))}
 
