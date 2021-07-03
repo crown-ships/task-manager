@@ -536,14 +536,14 @@ export default function AP_Table(props) {
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {linkedFeatures.map((feature) => {(feature.featureName == undefined)? null:
+                          {linkedFeatures.map((feature) => ((feature.featureName == undefined)? null:
                             <TableRow key={feature._id}>
                               <TableCell component="th" scope="row">
                                 {(feature.featureName != undefined)? feature.featureName: "empty"}
                               </TableCell>
                               <TableCell><CircularProgressWithLabel value={(feature.percentComplete != undefined)? feature.percentComplete: 0} /></TableCell>
-                            </TableRow>}
-                          )}
+                            </TableRow>
+                          ))}
                         </TableBody>
                       </Table>
                     </Box>
