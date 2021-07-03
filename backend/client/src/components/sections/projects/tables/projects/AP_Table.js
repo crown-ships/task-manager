@@ -25,6 +25,10 @@ import Popup from "../../../../elements/Popup"
 import UpdateForm from "../../forms/updateProjectForm"
 import UseTable from "../../../useTable"
 import RegisterForm from "../../forms/registerProjectForm"
+import Collapse from '@material-ui/core/Collapse';
+import IconButton from '@material-ui/core/IconButton';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -37,7 +41,7 @@ import HelpIcon from '@material-ui/icons/Help';
 import CancelIcon from '@material-ui/icons/Cancel';
 // Generate Order Data
 function createData(id ,name, date, details, createdBy, update,del) {
-  return { _id:id, projectName: name, dueDate: date, projectDetails: details, companyName: createdBy, percentComplete:0, ownerName:name, enabled: "true", updated:update,delete:del};
+  return { _id:id, projectName: name, dueDate: date, projectDetails: details, companyName: createdBy, featureName: name, percentComplete:0, ownerName:name, enabled: "true", updated:update,delete:del};
 }
 
 function CircularProgressWithLabel(props) {
@@ -112,6 +116,12 @@ function preventDefault(event) {
   event.preventDefault();
 }
 
+const getFeatures = (prop) => {
+  return prop.getAllFeatures({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+}
+const getTasks = (prop) => {
+  return prop.getAllTasks({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+}
 const getData = (prop) => {
   return prop.getAllProjects({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
@@ -128,11 +138,18 @@ export default function AP_Table(props) {
   const [data, setData] = React.useState(rows);
   const [list, setList] = React.useState([]);
   const [company, setCompany] = React.useState("");
+  const [openProj, setOpenProj] = React.useState(rows[0]);
+  const [openF, setOpenF] = React.useState(false);
+  const [openT, setOpenT] = React.useState(false);
   const [allCompanies, setAllCompanies] = React.useState([]);
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
   const [records, setRecords] = React.useState(data);
+  const [linkedFeatures, setLinkedFeatures] = React.useState(rows);
+  const [linkedTasks, setLinkedTasks] = React.useState(rows);
+  const [finalFeatures, setFinalFeatures] = React.useState(rows);
+  const [finalTasks, setFinalTasks] = React.useState(rows);
   const classes = useStyles();
 
   React.useEffect(async () => {
@@ -177,6 +194,39 @@ export default function AP_Table(props) {
         }
     })
   },[notify, list]);
+
+
+  React.useEffect(async () => {
+    const fullFeatures = await getFeatures(props);
+
+    console.log(fullFeatures);
+    const filteredFeatures = fullFeatures.data.map(function(item) {
+      if(item.projectID === openProj._id) {
+        return item;
+      }
+      else {
+        return "0";
+      }
+    });
+
+
+    console.log(filteredFeatures);
+
+    const fullTasks = await getTasks(props);
+    const filteredTasks = fullTasks.data.map(function(item) {
+      if(item.projectID === openProj._id) {
+        return item;
+      }
+      else {
+        return "0";
+      }
+    });
+    console.log(filteredTasks);
+    console.log(openProj);
+
+    setLinkedFeatures(filteredFeatures);
+    setLinkedTasks(filteredTasks);
+  }, [projectDisplay]);
 
 
   const {
@@ -364,6 +414,10 @@ export default function AP_Table(props) {
     }
   }
 
+  const openFeature = row => {
+    setOpenF(!open);
+    setOpenProj(row);
+  }
 
   return (
     <React.Fragment>
@@ -415,7 +469,12 @@ export default function AP_Table(props) {
             {
               recordsAfterPagingAndSorting().map(row =>
               (<TableRow key={row._id}>
-                <TableCell backgroundColor = "primary">{row.projectName}</TableCell>
+                <TableCell>
+                  <IconButton aria-label="expand row" size="small" onClick={() => openFeature(row)}>
+                    {openF ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                  </IconButton>
+                </TableCell>
+                <TableCell >{row.projectName}</TableCell>
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
                 <TableCell>{dateToString(row.startDate)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
@@ -455,6 +514,32 @@ export default function AP_Table(props) {
                 </TableCell>
               </TableRow>
           ))}
+          <TableRow>
+            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+              <Collapse in={openF} timeout="auto" unmountOnExit>
+                <Box margin={1}>
+                  <Table size="small" aria-label="purchases">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Feature</TableCell>
+                        <TableCell>Progress</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {linkedFeatures.map((feature) => (
+                        <TableRow key={feature._id}>
+                          <TableCell component="th" scope="row">
+                            {(feature.featureName != undefined)? feature.featureName: "empty"}
+                          </TableCell>
+                          <TableCell><CircularProgressWithLabel value={(feature.percentComplete != undefined)? feature.percentComplete: 0} /></TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Box>
+              </Collapse>
+            </TableCell>
+          </TableRow>
         </TableBody>
       </TblContainer>
       <TblPagination />
