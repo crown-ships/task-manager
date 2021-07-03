@@ -543,7 +543,7 @@ export default function AP_Table(props) {
                               </TableCell>
                               <TableCell><CircularProgressWithLabel value={(feature.percentComplete != undefined)? feature.percentComplete: 0} /></TableCell>
                             </TableRow>}
-                          ))}
+                          )}
                         </TableBody>
                       </Table>
                     </Box>
