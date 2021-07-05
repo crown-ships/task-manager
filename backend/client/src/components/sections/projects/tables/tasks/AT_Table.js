@@ -212,7 +212,7 @@ export default function AT_Table(props) {
             if (feature == "")
                 return items.filter(x => x.enabled.includes("true"));
             else
-                return items.filter(x => (x.featureName === feature) )
+                return items.filter(x => (x.featureName === feature) && x.enabled.includes("true"))
         }
     })
   },[notify, list]);
@@ -277,7 +277,7 @@ export default function AT_Table(props) {
             if (target.value == "")
                 return items.filter(x => x.enabled.includes("true"));
             else
-                return items.filter(x => x.taskName.toLowerCase().includes(target.value.toLowerCase()))
+                return items.filter(x => x.taskName.toLowerCase().includes(target.value.toLowerCase()) && x.enabled.includes("true"))
         }
     })
   }
@@ -295,7 +295,7 @@ export default function AT_Table(props) {
             if (val.value == "")
                 return items.filter(x => x.enabled.includes("true"));
             else
-                return items.filter(x => (x.featureName === val.value) )
+                return items.filter(x => (x.featureName === val.value) && x.enabled.includes("true"))
         }
     })
 

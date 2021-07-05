@@ -134,6 +134,9 @@ const getDropdownList = (prop) => {
   return prop.getAllProjects({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
+const getCompanyList = (prop) => {
+  return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+}
 
 export default function UF_Table(props) {
 
@@ -141,9 +144,12 @@ export default function UF_Table(props) {
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
+  const [cList, setCList] = React.useState([]);
   const [list, setList] = React.useState([]);
   const [project, setProject] = React.useState("");
+  const [company, setCompany] = React.useState("");
   const [allProjects, setAllProjects] = React.useState([]);
+  const [allCompanies, setAllCompanies] = React.useState([]);
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
@@ -151,38 +157,85 @@ export default function UF_Table(props) {
   const classes = useStyles();
 
   React.useEffect(async () => {
-    const d = await getDropdownList(props);
-    setAllProjects(d.data);
-    var complist = d.data.map(function(item) {
-      if(item.enabled === "true" && item.approved === "approved")
-        return item.projectName;
+    const d = await getData(props);
+    setData(d.data);
+    setRecords(d.data);
+
+    const comp = await getCompanyList(props);
+    setAllCompanies(comp.data);
+
+    const proj = await getDropdownList(props);
+    setAllProjects(proj.data);
+
+    setFilterFn({
+        fn: items => {
+            if (project == "")
+                return items.filter(x.enabled.includes("true"));
+            else
+                return items.filter(x => (x.projectName === project) && x.enabled.includes("true"))
+        }
+    })
+  },[notify]);
+
+  React.useEffect( () => {
+
+    var complist = allCompanies.map(function(item) {
+      if(item.enabled === "true")
+        return item.companyName;
       else
         return "0"
     });
-    const len = complist.length;
+    var j;
+    var len = 0;
+    var trimlist = [];
+    for(j=0; j<complist.length; j++) {
+      if(complist[j] !== "0"){
+        trimlist[len++] = complist[j];
+      }
+    }
     var selList = [];
     var i;
     selList[0] = {key:0, item: ""};
     for(i=0; i<len; i++) {
-      selList[i+1] = {key:i+1, item: complist[i]};
+      selList[i+1] = {key:i+1, item: trimlist[i]};
     }
+    setCList(selList);
+  },[allCompanies]);
 
+  React.useEffect(() => {
+    var complist = allProjects.map(function(item) {
+      if (company === "") {
+        if(item.enabled === "true" && item.approved === "approved")
+          return item.projectName;
+        else
+          return "0"
+      }
+      else {
+        if(item.enabled === "true" && item.approved === "approved" && item.companyName === company)
+          return item.projectName;
+        else
+          return "0"
+      }
+
+    });
+    var j;
+    var len = 0;
+    var trimlist = [];
+    for(j=0; j<complist.length; j++) {
+      if(complist[j] !== "0"){
+        trimlist[len++] = complist[j];
+      }
+    }
+    var selList = [];
+    var i;
+    selList[0] = {key:0, item: ""};
+    for(i=0; i<len; i++) {
+      selList[i+1] = {key:i+1, item: trimlist[i]};
+    }
     setList(selList);
-  },[]);
+  },[allProjects, company]);
 
-  React.useEffect(async () => {
-    const d = await getData(props);
-    setData(d.data);
-    setRecords(d.data);
-    setFilterFn({
-        fn: items => {
-            if (project == "")
-                return items;
-            else
-                return items.filter(x => x.projectName.includes(project))
-        }
-    })
-  },[notify, list]);
+
 
 
   const {
@@ -197,9 +250,9 @@ export default function UF_Table(props) {
     setFilterFn({
         fn: items => {
             if (target.value == "")
-                return items;
+                return items.filter(x.enabled.includes("true"));
             else
-                return items.filter(x => x.featureName.toLowerCase().includes(target.value))
+                return items.filter(x => x.featureName.toLowerCase().includes(target.value) && x.enabled.includes("true"));
         }
     })
   }
@@ -208,19 +261,32 @@ export default function UF_Table(props) {
       checkedB: true,
     });
 
-  const handleChange = (event) => {
+  const handleProjectChange = (event) => {
     let val = event.target;
 
     setProject(val.value);
     setFilterFn({
         fn: items => {
             if (val.value == "")
-                return items;
+                return items.filter(x => x.enabled.includes("true"));
             else
-                return items.filter(x => x.projectName.includes(val.value))
+                return items.filter(x => (x.projectName === val.value) && x.enabled.includes("true"))
         }
     })
+  };
 
+  const handleCompanyChange = (event) => {
+    let val = event.target;
+
+    setCompany(val.value);
+    setFilterFn({
+        fn: items => {
+            if (val.value == "")
+                return items.filter(x => x.enabled.includes("true"));
+            else
+                return items.filter(x => (x.companyName === val.value) && x.enabled.includes("true"))
+        }
+    })
   };
   const openInEditPopup = item => {
     setRecordForEdit(item);
@@ -312,7 +378,7 @@ export default function UF_Table(props) {
     <Paper className={classes.pageContent}>
       <Toolbar>
         <Grid container>
-          <Grid item xs={7}>
+          <Grid item xs={4}>
             <Input
                 label="Search Features"
                 className={classes.searchInput}
@@ -326,11 +392,27 @@ export default function UF_Table(props) {
           </Grid>
           <Grid item xs={3}>
             <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
+              <Select
+                native
+                value={state.age}
+                onChange={handleCompanyChange}
+                label="Company"
+                inputProps={{
+                  name: 'company',
+                  id: 'outlined-company-native-simple',
+                }}
+              >{cList.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={3}>
+            <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel htmlFor="outlined-project-native-simple">Project</InputLabel>
               <Select
                 native
                 value={state.age}
-                onChange={handleChange}
+                onChange={handleProjectChange}
                 label="Project"
                 inputProps={{
                   name: 'project',

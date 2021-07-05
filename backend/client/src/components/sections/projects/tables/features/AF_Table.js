@@ -152,14 +152,14 @@ export default function AF_Table(props) {
             if (project == "")
                 return items.filter(x => x.enabled.includes("true"));
             else
-                return items.filter(x => x.projectName.includes(project))
+                return items.filter(x => (x.projectName === project) && x.enabled.includes("true"))
         }
     })
   },[notify]);
 
 
 
-  React.useEffect(async () => {
+  React.useEffect( () => {
 
     var complist = allCompanies.map(function(item) {
       if(item.enabled === "true")
@@ -184,7 +184,7 @@ export default function AF_Table(props) {
     setCList(selList);
   },[allCompanies]);
 
-  React.useEffect(async () => {
+  React.useEffect( () => {
     var complist = allProjects.map(function(item) {
       if (company === "") {
         if(item.enabled === "true" && item.approved === "approved")
@@ -217,52 +217,6 @@ export default function AF_Table(props) {
     setList(selList);
   },[allProjects, company]);
 
-  React.useEffect(async () => {
-    var features = data.map(function(item) {
-      return ({pID: item.projectID, progress:item.percentComplete});
-    });
-    var i;
-    var j;
-    var k;
-    var sum = [];
-    var labels = [];
-    for (i=0; i<features.length; i++) {
-      labels[i] = features[i].pID;
-    }
-    var unique = labels.filter((v, i, a) => a.indexOf(v) === i);
-    var projectProgress = [];
-    var count = 0;
-    for (j=0; j<unique.length; j++) {
-      sum[j] = 0;
-      count = 0;
-      for(k=0; k<features.length; k++){
-        if (features[k].pID.includes(unique[j])){
-          sum[j] = sum[j] + features[k].progress;
-          count++;
-        }
-      }
-      projectProgress[j] = {projectID:unique[j], percentComplete: (sum[j]/count)};
-    }
-    var input;
-
-    for(i=0; i<projectProgress.length; i++){
-      input = {
-        params: {
-          email: props.auth.user.email,
-          projectID: projectProgress[i].projectID,
-          auth: props.auth.isAuthenticated
-        },
-        body: {
-          percentComplete: projectProgress[i].percentComplete
-        }
-      };
-      props.updateProject(input, props.history);
-    }
-
-  },[notify, data]);
-
-
-
   const {
           TblContainer,
           TblHead,
@@ -277,7 +231,7 @@ export default function AF_Table(props) {
             if (target.value == "")
                 return items.filter(x => x.enabled.includes("true"));
             else
-                return items.filter(x => x.featureName.toLowerCase().includes(target.value.toLowerCase()))
+                return items.filter(x => x.featureName.toLowerCase().includes(target.value.toLowerCase()) && x.enabled.includes("true"))
         }
     })
   }
@@ -295,7 +249,7 @@ export default function AF_Table(props) {
             if (val.value == "")
                 return items.filter(x => x.enabled.includes("true"));
             else
-                return items.filter(x => (x.projectName === val.value))
+                return items.filter(x => (x.projectName === val.value) && x.enabled.includes("true"))
         }
     })
 
@@ -310,7 +264,7 @@ export default function AF_Table(props) {
             if (val.value == "")
                 return items.filter(x => x.enabled.includes("true"));
             else
-                return items.filter(x => (x.companyName === val.value))
+                return items.filter(x => (x.companyName === val.value) && x.enabled.includes("true"))
         }
     })
 
@@ -407,7 +361,7 @@ export default function AF_Table(props) {
     <Paper className={classes.pageContent}>
       <Toolbar>
         <Grid container>
-          <Grid item xs={7}>
+          <Grid item xs={4}>
             <Input
                 label="Search Features"
                 className={classes.searchInput}
@@ -434,6 +388,8 @@ export default function AF_Table(props) {
             >{cList.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
             </Select>
           </FormControl>
+          </Grid>
+          <Grid item xs={3}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel htmlFor="outlined-project-native-simple">Project</InputLabel>
               <Select
