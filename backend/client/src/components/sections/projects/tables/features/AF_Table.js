@@ -358,10 +358,9 @@ export default function AF_Table(props) {
 
   return (
     <React.Fragment>
-    <Paper className={classes.pageContent}>
       <Toolbar>
         <Grid container>
-          <Grid item xs={5}>
+          <Grid item xs={4}>
             <Input
                 label="Search Features"
                 className={classes.searchInput}
@@ -373,7 +372,7 @@ export default function AF_Table(props) {
                 onChange={handleSearch}
             />
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
           <FormControl variant="outlined" className={classes.formControl}>
             <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
             <Select
@@ -389,8 +388,7 @@ export default function AF_Table(props) {
             </Select>
           </FormControl>
           </Grid>
-          <Grid item xs={1}></Grid>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel htmlFor="outlined-project-native-simple">Project</InputLabel>
               <Select
@@ -456,7 +454,6 @@ export default function AF_Table(props) {
         </TableBody>
       </TblContainer>
       <TblPagination />
-    </Paper>
       <Popup
         title="Edit Milestone Details"
         openPopup={openEditPopup}
