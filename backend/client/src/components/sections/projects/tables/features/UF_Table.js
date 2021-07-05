@@ -170,7 +170,7 @@ export default function UF_Table(props) {
     setFilterFn({
         fn: items => {
             if (project == "")
-                return items.filter(x.enabled.includes("true"));
+                return items.filter(x => x.enabled.includes("true"));
             else
                 return items.filter(x => (x.projectName === project) && x.enabled.includes("true"))
         }
@@ -250,7 +250,7 @@ export default function UF_Table(props) {
     setFilterFn({
         fn: items => {
             if (target.value == "")
-                return items.filter(x.enabled.includes("true"));
+                return items.filter(x => x.enabled.includes("true"));
             else
                 return items.filter(x => x.featureName.toLowerCase().includes(target.value) && x.enabled.includes("true"));
         }
