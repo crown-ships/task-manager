@@ -63,14 +63,10 @@ export default function UpdateForm(props) {
     useEffect(() => {
         if (recordForEdit != null)
             setValues({
-                ...recordForEdit
+                ...recordForEdit,
+                startDate: dateToString(values.startDate),
+                dueDate: dateToString(values.dueDate),
             })
-        setValues({
-          featureDetails: values.featureDetails,
-          startDate: dateToString(values.startDate),
-          dueDate: dateToString(values.dueDate),
-          ownerName: values.ownerName
-        })
     }, [recordForEdit])
 
 
