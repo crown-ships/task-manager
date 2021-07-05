@@ -64,8 +64,8 @@ export default function UpdateForm(props) {
         if (recordForEdit != null)
             setValues({
                 ...recordForEdit,
-                startDate: dateToString(values.startDate),
-                dueDate: dateToString(values.dueDate),
+                startDate: dateToString(recordForEdit.startDate),
+                dueDate: dateToString(recordForEdit.dueDate),
             })
     }, [recordForEdit])
 

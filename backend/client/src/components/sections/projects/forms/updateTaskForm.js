@@ -64,7 +64,7 @@ export default function UpdateForm(props) {
                 <Grid item xs={7}>
                     <Input
                         name="taskName"
-                        label="Project Name"
+                        label="Task Name"
                         value={values.taskName}
                         onChange={handleInputChange}
                         error={errors.taskName}

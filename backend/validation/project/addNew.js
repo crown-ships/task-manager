@@ -31,8 +31,8 @@ module.exports = function validateProjectInput(data) {
   else if(!data.ownerName.match(letters)){
       errors.ownerName = "Name can only contain alphanumeric characters."
     }
-  if (!Validator.isLength(data.ownerName, { min: 0, max: 50 })) {
-      errors.ownerName = "Name cannot exceed length of 50 characters.";
+  if (!Validator.isLength(data.ownerName, { min: 0, max: 300 })) {
+      errors.ownerName = "Name cannot exceed length of 300 characters.";
     }
 
 // Details checks
