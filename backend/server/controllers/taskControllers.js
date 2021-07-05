@@ -17,10 +17,6 @@ exports.addNew = async (req, res, next) => {
      return res.status(400).json(errors);
    }
 
-   const taskName = req.body.taskName;
-   const user = await Task.findOne({ taskName });
-   if (user) return res.status(400).json({data: "Task already exists."});
-
   const signedupTask = new Task({
    taskName: req.body.taskName,
    featureName: req.body.featureName,

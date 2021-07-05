@@ -16,10 +16,6 @@ exports.addNew = async (req, res, next) => {
      return res.status(400).json(errors);
    }
 
-   const featureName = req.body.featureName;
-   const user = await Feature.findOne({ featureName });
-   if (user) return res.status(400).json({data: "Feature already exists."});
-
   const signedupFeature = new Feature({
    featureName: req.body.featureName,
    projectName: req.body.projectName,

@@ -48,12 +48,31 @@ export default function UpdateForm(props) {
         }
     }
 
+    const dateToString = (date) => {
+      if (date != undefined) {
+        var d = date.toString();
+        d = d.substring(0, d.indexOf('T'));
+        return d;
+      }
+      else {
+        return "";
+      }
+    }
+
+
     useEffect(() => {
         if (recordForEdit != null)
             setValues({
                 ...recordForEdit
             })
+        setValues({
+          featureDetails: values.featureDetails,
+          startDate: dateToString(values.startDate),
+          dueDate: dateToString(values.dueDate),
+          ownerName: values.ownerName
+        })
     }, [recordForEdit])
+
 
     return (
         <Form onSubmit={handleSubmit}>

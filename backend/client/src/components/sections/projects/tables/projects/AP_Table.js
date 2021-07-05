@@ -25,10 +25,6 @@ import Popup from "../../../../elements/Popup"
 import UpdateForm from "../../forms/updateProjectForm"
 import UseTable from "../../../useTable"
 import RegisterForm from "../../forms/registerProjectForm"
-import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -41,9 +37,8 @@ import HelpIcon from '@material-ui/icons/Help';
 import CancelIcon from '@material-ui/icons/Cancel';
 // Generate Order Data
 function createData(id ,name, date, details, createdBy, update,del) {
-  return { _id:id, projectName: name, dueDate: date, projectDetails: details, companyName: createdBy, featureName: name, percentComplete:0, ownerName:name, enabled: "true", updated:update,delete:del};
+  return { _id:id, projectName: name, dueDate: date, projectDetails: details, companyName: createdBy, percentComplete:0, ownerName:name, enabled: "true", updated:update,delete:del};
 }
-
 function CircularProgressWithLabel(props) {
   return (
     <Box position="relative" display="inline-flex">
@@ -65,7 +60,6 @@ function CircularProgressWithLabel(props) {
     </Box>
   );
 }
-
 CircularProgressWithLabel.propTypes = {
   /**
    * The value of the progress indicator for the determinate and buffer variants.
@@ -73,7 +67,6 @@ CircularProgressWithLabel.propTypes = {
    */
   value: PropTypes.number.isRequired,
 };
-
 const useStyles = makeStyles(theme => ({
     pageContent: {
         margin: theme.spacing(5),
@@ -92,20 +85,13 @@ const useStyles = makeStyles(theme => ({
     formControl: {
     minWidth: 210,
   },
-  root: {
-    "& > *": {
-      borderBottom: "unset"
-    }
-  }
 }))
-
 const headCells = [
-    { id: 'openDetails', label: '' },
     { id: 'projectName', label: 'Project Name' },
     { id: 'approved', label: 'Approved' },
     { id: 'startDate', label: 'Start Date' },
     { id: 'dueDate', label: 'Due Date' },
-    // { id: 'projectDetails', label: 'Project Details'},
+    { id: 'projectDetails', label: 'Project Details'},
     { id: 'companyName', label: 'Company Name'},
     { id: 'percentComplete', label: 'Progress'},
     { id: 'ownerName', label: 'Owner'},
@@ -113,20 +99,11 @@ const headCells = [
     { id: 'update', label: 'Update', disableSorting: true },
     { id: 'delete', label: 'Delete', disableSorting: true }
 ];
-
 const rows = [
   createData("", "", "", "","","","")
 ];
-
 function preventDefault(event) {
   event.preventDefault();
-}
-
-const getFeatures = (prop) => {
-  return prop.getAllFeatures({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
-}
-const getTasks = (prop) => {
-  return prop.getAllTasks({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 const getData = (prop) => {
   return prop.getAllProjects({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
@@ -134,31 +111,19 @@ const getData = (prop) => {
 const getDropdownList = (prop) => {
   return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
-
-
 export default function AP_Table(props) {
-
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
   const [list, setList] = React.useState([]);
   const [company, setCompany] = React.useState("");
-  const [openProj, setOpenProj] = React.useState(rows[0]);
-  const [openF, setOpenF] = React.useState(false);
-  const [openT, setOpenT] = React.useState(false);
   const [allCompanies, setAllCompanies] = React.useState([]);
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
   const [records, setRecords] = React.useState(data);
-  const [emptyFeatureCount, setEmptyFeatureCount] = React.useState(0);
-  const [linkedFeatures, setLinkedFeatures] = React.useState(rows);
-  const [linkedTasks, setLinkedTasks] = React.useState(rows);
-  const [finalFeatures, setFinalFeatures] = React.useState(rows);
-  const [finalTasks, setFinalTasks] = React.useState(rows);
   const classes = useStyles();
-
   React.useEffect(async () => {
     const d = await getDropdownList(props);
     setAllCompanies(d.data);
@@ -168,7 +133,6 @@ export default function AP_Table(props) {
       else
         return "0"
     });
-
     var j;
     var len = 0;
     var trimlist = [];
@@ -183,13 +147,10 @@ export default function AP_Table(props) {
     for(i=0; i<len; i++) {
       selList[i+1] = {key:i+1, item: trimlist[i]};
     }
-
     setList(selList);
   },[]);
-
   React.useEffect(async () => {
     const d = await getData(props);
-
     setData(d.data);
     setRecords(d.data);
     setFilterFn({
@@ -200,61 +161,13 @@ export default function AP_Table(props) {
                 return items.filter(x => x.companyName.includes(company) && x.approved.includes("approved"));
         }
     })
-
-    const fullFeatures = await getFeatures(props);
-    setFinalFeatures(fullFeatures);
-
-    const fullTasks = await getTasks(props);
-    setFinalTasks(fullTasks);
   },[notify, list]);
-
-
-  React.useEffect(async () => {
-
-    setEmptyFeatureCount(0);
-    const filteredFeatures = finalFeatures.data.map(function(item) {
-      if(item.projectID === openProj._id) {
-        return item;
-      }
-      else {
-        return "0";
-      }
-    });
-
-    var i;
-
-    for (i=0; i<filteredFeatures.length; i++)
-    {
-      if(filteredFeatures[i] != "0") {
-        setEmptyFeatureCount(emptyFeatureCount+1)
-      }
-    }
-    console.log(filteredFeatures);
-
-
-    const filteredTasks = finalTasks.data.map(function(item) {
-      if(item.projectID === openProj._id) {
-        return item;
-      }
-      else {
-        return "0";
-      }
-    });
-    console.log(filteredTasks);
-    console.log(openProj);
-
-    setLinkedFeatures(filteredFeatures);
-    setLinkedTasks(filteredTasks);
-  }, [openProj]);
-
-
   const {
           TblContainer,
           TblHead,
           TblPagination,
           recordsAfterPagingAndSorting
       } = UseTable(records, headCells, filterFn);
-
   const handleSearch = e => {
     let target = e.target;
     setFilterFn({
@@ -270,10 +183,8 @@ export default function AP_Table(props) {
       checkedA: true,
       checkedB: true,
     });
-
   const handleChange = (event) => {
     let val = event.target;
-
     setCompany(val.value);
     setFilterFn({
         fn: items => {
@@ -283,18 +194,14 @@ export default function AP_Table(props) {
                 return items.filter(x => x.companyName.includes(val.value) && x.approved.includes("approved"));
         }
     })
-
   };
   const openInEditPopup = item => {
     setRecordForEdit(item);
     setOpenEditPopup(true);
   }
-
   const openInRegPopup = item => {
-
     setOpenRegPopup(true);
   }
-
   const create = (data, resetForm) => {
     const input = {
       params: {
@@ -303,7 +210,6 @@ export default function AP_Table(props) {
       },
       body: data
     };
-
     props.registerProject(input, props.history);
     resetForm();
     setOpenRegPopup(false);
@@ -314,7 +220,6 @@ export default function AP_Table(props) {
     });
   }
   const edit = (data, resetForm, og_id) => {
-
     const input = {
       params: {
         email: props.auth.user.email,
@@ -323,7 +228,6 @@ export default function AP_Table(props) {
       },
       body: data
     };
-
     if(props.auth.user.role === "admin"){
       props.updateProject(input, props.history);
       resetForm();
@@ -336,17 +240,13 @@ export default function AP_Table(props) {
       });
     }
   }
-
   const handleSwitch = (val, row) => {
-
       if(val== true)
         changeEnable("true",row);
       if(val == false)
         changeEnable("false",row);
   };
-
   const changeEnable = (value, og) => {
-
     const input = {
       params: {
         email: props.auth.user.email,
@@ -357,7 +257,6 @@ export default function AP_Table(props) {
       enabled: value
       }
     };
-
     const c_input = {
       params: {
         email: props.auth.user.email,
@@ -368,7 +267,6 @@ export default function AP_Table(props) {
       enabled: value
       }
     };
-
     if(value === "true"){
       props.updateCompany(c_input, props.history);
     }
@@ -381,20 +279,16 @@ export default function AP_Table(props) {
       type: 'success'
     });
   }
-
   const onDelete = project => {
     setConfirmDialog({
         ...confirmDialog,
         isOpen: false
     })
-
     const input = {
       projectID: project._id,
       email: props.auth.user.email,
       auth: props.auth.isAuthenticated
     };
-
-
     if(props.auth.user.role === "admin"){
       props.deleteProject(input, props.history);
       setNotify({
@@ -402,22 +296,16 @@ export default function AP_Table(props) {
         message: "Deleted Successfully",
         type: 'success'
       });
-
     }
   }
-
   const approvedIcon = (status) => {
-
     if (status === "approved") {
-
       return <CheckCircleIcon fontSize="small" style={{ color: "#00b386" }}/>
     }
     else if (status === "wait") {
-
       return <HelpIcon fontSize="small"  style={{ color: "#ffbf00" }}/>
     }
     else if (status === "rejected") {
-
       return <CancelIcon fontSize="small"  style={{ color: "#DC143C" }}/>
     }
   }
@@ -432,14 +320,9 @@ export default function AP_Table(props) {
       return "";
     }
   }
-
-  const openFeature = row => {
-    setOpenF(!openF);
-    setOpenProj(row);
-  }
-
   return (
     <React.Fragment>
+    <Paper className={classes.pageContent}>
       <Toolbar>
         <Grid container>
           <Grid item xs={7}>
@@ -486,18 +369,12 @@ export default function AP_Table(props) {
           <TableBody>
             {
               recordsAfterPagingAndSorting().map(row =>
-
-              ( <>
-                <TableRow key={row._id} className={classes.root}>
-                <TableCell>
-                  <IconButton aria-label="expand row" size="small" onClick={() => openFeature(row)}>
-                    {openF ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                  </IconButton>
-                </TableCell>
-                <TableCell >{row.projectName}</TableCell>
+              (<TableRow key={row._id}>
+                <TableCell backgroundColor = "primary">{row.projectName}</TableCell>
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
                 <TableCell>{dateToString(row.startDate)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
+                <TableCell>{row.projectDetails}</TableCell>
                 <TableCell>{row.companyName}</TableCell>
                 <TableCell>  <CircularProgressWithLabel value={row.percentComplete} /></TableCell>
                 <TableCell>{row.ownerName}</TableCell>
@@ -532,38 +409,11 @@ export default function AP_Table(props) {
                   </ActionButton>
                 </TableCell>
               </TableRow>
-              {(emptyFeatureCount == 0)? null: <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={10}>
-                  <Collapse in={openF} timeout="auto" unmountOnExit>
-                    <Box margin={1}>
-                      <Table size="small" aria-label="purchases">
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Feature</TableCell>
-                            <TableCell>Progress</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {linkedFeatures.map((feature) => ((feature.featureName == undefined)? null:
-                            <TableRow key={feature._id}>
-                              <TableCell component="th" scope="row">
-                                {(feature.featureName != undefined)? feature.featureName: "empty"}
-                              </TableCell>
-                              <TableCell><CircularProgressWithLabel value={(feature.percentComplete != undefined)? feature.percentComplete: 0} /></TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </Box>
-                  </Collapse>
-                </TableCell>
-              </TableRow>}
-              </>
           ))}
-
         </TableBody>
       </TblContainer>
       <TblPagination />
+    </Paper>
       <Popup
         title="Edit Project Details"
         openPopup={openEditPopup}
