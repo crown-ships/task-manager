@@ -155,7 +155,7 @@ export default function AF_Table(props) {
                 return items.filter(x => x.projectName.includes(project))
         }
     })
-  },[notify, list]);
+  },[notify, list, cList]);
 
 
 
@@ -182,7 +182,7 @@ export default function AF_Table(props) {
       selList[i+1] = {key:i+1, item: trimlist[i]};
     }
     setCList(selList);
-  },[]);
+  },[allCompanies]);
 
   React.useEffect(async () => {
     var complist = allProjects.map(function(item) {
@@ -215,7 +215,7 @@ export default function AF_Table(props) {
       selList[i+1] = {key:i+1, item: trimlist[i]};
     }
     setList(selList);
-  },[]);
+  },[allProjects]);
 
   React.useEffect(async () => {
     var features = data.map(function(item) {
@@ -259,7 +259,7 @@ export default function AF_Table(props) {
       props.updateProject(input, props.history);
     }
 
-  },[notify]);
+  },[notify, data]);
 
 
 
