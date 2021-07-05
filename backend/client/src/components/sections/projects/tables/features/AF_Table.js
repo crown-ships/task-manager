@@ -155,7 +155,7 @@ export default function AF_Table(props) {
                 return items.filter(x => x.projectName.includes(project))
         }
     })
-  },[notify, list, cList]);
+  },[notify]);
 
 
 
@@ -215,7 +215,7 @@ export default function AF_Table(props) {
       selList[i+1] = {key:i+1, item: trimlist[i]};
     }
     setList(selList);
-  },[allProjects]);
+  },[allProjects, company]);
 
   React.useEffect(async () => {
     var features = data.map(function(item) {

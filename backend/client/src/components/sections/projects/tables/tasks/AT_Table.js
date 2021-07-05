@@ -212,7 +212,7 @@ export default function AT_Table(props) {
             if (feature == "")
                 return items.filter(x => x.enabled.includes("true"));
             else
-                return items.filter(x => x.featureName.includes(feature) )
+                return items.filter(x => (x.featureName === feature) )
         }
     })
   },[notify, list]);
@@ -295,7 +295,7 @@ export default function AT_Table(props) {
             if (val.value == "")
                 return items.filter(x => x.enabled.includes("true"));
             else
-                return items.filter(x => x.featureName.includes(val.value) )
+                return items.filter(x => (x.featureName === val.value) )
         }
     })
 
