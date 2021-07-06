@@ -3,11 +3,11 @@ import {Link} from "react-router-dom"
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { logoutUser } from "../../../actions/authActions";
-import { getAllCompanies, updateCompany } from "../../../actions/companyActions";
-import { getAllProjects, deleteProject, updateProject, registerProject } from "../../../actions/projectActions";
-import { getAllTasks, deleteTask, updateTask, registerTask ,updateAllTasks } from "../../../actions/taskActions";
-import { getAllFeatures, deleteFeature, updateFeature, registerFeature, updateAllFeatures } from "../../../actions/featureActions";
+import { logoutUser } from "../../../../../../actions/authActions";
+import { getAllCompanies, updateCompany } from "../../../../../actions/companyActions";
+import { getAllProjects, deleteProject, updateProject, registerProject } from "../../../../../actions/projectActions";
+import { getAllTasks, deleteTask, updateTask, registerTask ,updateAllTasks } from "../../../../../actions/taskActions";
+import { getAllFeatures, deleteFeature, updateFeature, registerFeature, updateAllFeatures } from "../../../../../actions/featureActions";
 
 const ProjectDetails = (props) => {
  console.log(props.location.props.projectID);
