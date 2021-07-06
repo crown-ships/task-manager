@@ -260,7 +260,8 @@ export default function UT_Table(props) {
   },[allFeatures, project]);
 
   React.useEffect(() => {
-    var tasks = data.map(function(item) {
+    const d = await getData(props);
+    var tasks = d.data.map(function(item) {
       return ({fID: item.featureID, progress:item.percentComplete});
     });
     var i;
@@ -302,11 +303,12 @@ export default function UT_Table(props) {
       props.updateFeature(input, props.history);
     }
 
-  },[notify, data]);
+  },[notify]);
 
 
-  React.useEffect(() => {
-    var features = allFeatures.map(function(item) {
+  React.useEffect(async () => {
+    const d = await getDropdownList(props);
+    var features = d.data.map(function(item) {
       return ({pID: item.projectID, progress:item.percentComplete});
     });
     var i;
@@ -347,7 +349,7 @@ export default function UT_Table(props) {
       props.updateProject(input, props.history);
     }
 
-  },[notify, allFeatures]);
+  },[notify]);
 
 
   const {

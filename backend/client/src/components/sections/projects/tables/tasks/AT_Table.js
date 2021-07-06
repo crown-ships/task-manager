@@ -262,8 +262,9 @@ export default function AT_Table(props) {
     setList(selList);
   },[allFeatures, project]);
 
-  React.useEffect( () => {
-    var tasks = data.map(function(item) {
+  React.useEffect(async () => {
+    const d = await getData(props);
+    var tasks = d.data.map(function(item) {
       return ({fID: item.featureID, progress:item.percentComplete});
     });
     var i;
@@ -308,7 +309,8 @@ export default function AT_Table(props) {
   },[notify, data]);
 
   React.useEffect( () => {
-    var features = allFeatures.map(function(item) {
+    const d = await getDropdownList(props);
+    var features = d.data.map(function(item) {
       return ({pID: item.projectID, progress:item.percentComplete});
     });
     var i;
