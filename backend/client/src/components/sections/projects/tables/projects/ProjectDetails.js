@@ -234,12 +234,12 @@ const ProjectDetails =  (props) => {
         <Container maxWidth="lg" className={classes.container}>
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-              <Typoggraphy>PROJECT NAME: {props.location.props.project.projectName}</Typography>
-              <Typoggraphy>COMPANY NAME: {props.location.props.project.companyName}</Typography>
-              <Typoggraphy>START DATE: {props.location.props.project.startDate}</Typography>
-              <Typoggraphy>DUE DATE: {props.location.props.project.dueDate}</Typography>
-              <Typoggraphy>PROJECT DETAILS: {props.location.props.project.projectDetails}</Typography>
-              <Typoggraphy>OWNER NAME: {props.location.props.project.ownerName}</Typography>
+              <Typography>PROJECT NAME: {props.location.props.project.projectName}</Typography>
+              <Typography>COMPANY NAME: {props.location.props.project.companyName}</Typography>
+              <Typography>START DATE: {props.location.props.project.startDate}</Typography>
+              <Typography>DUE DATE: {props.location.props.project.dueDate}</Typography>
+              <Typography>PROJECT DETAILS: {props.location.props.project.projectDetails}</Typography>
+              <Typography>OWNER NAME: {props.location.props.project.ownerName}</Typography>
 
               </Paper>
             </Grid>
