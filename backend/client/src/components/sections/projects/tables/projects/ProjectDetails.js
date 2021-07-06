@@ -10,9 +10,9 @@ import { getAllTasks, deleteTask, updateTask, registerTask ,updateAllTasks } fro
 import { getAllFeatures, deleteFeature, updateFeature, registerFeature, updateAllFeatures } from "../../../../../actions/featureActions";
 
 const ProjectDetails = (props) => {
- console.log(props.location);
+ console.log("about", props.location);
  return (
-   <Button component={Link} to={{pathname: "/projects"}}>back</Button>
+   <Button>back</Button>
  );
 
 }
