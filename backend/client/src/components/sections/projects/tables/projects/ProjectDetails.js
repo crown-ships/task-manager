@@ -25,15 +25,15 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import ExitToApp from '@material-ui/icons/ExitToApp';
-import { mainListItems, secondaryListItems } from '../listitem';
-import { logoutUser } from "../../../actions/authActions";
-import { getAllCompanies, updateCompany } from "../../../actions/companyActions";
-import { getAllProjects, deleteProject, updateProject, registerProject } from "../../../actions/projectActions";
-import { getAllTasks, deleteTask, updateTask, registerTask ,updateAllTasks } from "../../../actions/taskActions";
-import { getAllFeatures, deleteFeature, updateFeature, registerFeature, updateAllFeatures } from "../../../actions/featureActions";
-import ProjectTablePicker from "./pickers/ProjectTablePicker"
-import FeatureTablePicker from "./pickers/FeatureTablePicker"
-import TaskTablePicker from "./pickers/TaskTablePicker"
+import { mainListItems, secondaryListItems } from '../../../listitem';
+import { logoutUser } from "../../../../../actions/authActions";
+import { getAllCompanies, updateCompany } from "../../../../../actions/companyActions";
+import { getAllProjects, deleteProject, updateProject, registerProject } from "../../../../../actions/projectActions";
+import { getAllTasks, deleteTask, updateTask, registerTask ,updateAllTasks } from "../../../../../actions/taskActions";
+import { getAllFeatures, deleteFeature, updateFeature, registerFeature, updateAllFeatures } from "../../../../../actions/featureActions";
+import ProjectTablePicker from "../..//pickers/ProjectTablePicker"
+import FeatureTablePicker from "../..//pickers/FeatureTablePicker"
+import TaskTablePicker from "../..//pickers/TaskTablePicker"
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
