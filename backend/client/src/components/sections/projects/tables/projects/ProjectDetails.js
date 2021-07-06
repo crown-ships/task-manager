@@ -17,7 +17,7 @@ const ProjectDetails = (props) => {
 
 }
 
-ProjectsPage.propTypes = {
+ProjectDetails.propTypes = {
   logoutUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
@@ -27,4 +27,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { updateAllFeatures,updateAllTasks, updateCompany, logoutUser, getAllProjects, getAllCompanies, deleteProject, updateProject, registerProject,getAllFeatures, deleteFeature, updateFeature, registerFeature,getAllTasks, deleteTask, updateTask, registerTask }
-)(withRouter(ProjectsPage));
+)(withRouter(ProjectDetails));
