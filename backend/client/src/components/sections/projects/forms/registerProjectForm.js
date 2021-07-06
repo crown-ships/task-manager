@@ -97,7 +97,7 @@ export default function RegisterForm(props) {
             <Grid container>
                 <Grid item xs={8}>
                     <FormControl variant="outlined">
-                      <InputLabel htmlFor="outlined-companyName-native-simple">Company Name</InputLabel>
+                      <InputLabel htmlFor="outlined-companyName-native-simple">Company Name *</InputLabel>
                       <Select
                         native
                         value={values.companyName}
@@ -112,14 +112,14 @@ export default function RegisterForm(props) {
                     </FormControl>
                     <Input
                         name="projectName"
-                        label="Project Name"
+                        label="Project Name *"
                         value={values.projectName}
                         onChange={handleInputChange}
                         error={errors.projectName}
                     />
                     <Input
                         name="projectDetails"
-                        label="Project Details"
+                        label="Project Details *"
                         value={values.projectDetails}
                         multiline  = {true}
                         rows = {5}
@@ -130,7 +130,7 @@ export default function RegisterForm(props) {
                 <Grid item xs={4}>
                     <Input
                         name="ownerName"
-                        label="Owner Name"
+                        label="Owner Name *"
                         value={values.ownerName}
                         onChange={handleInputChange}
                         error={errors.ownerName}
@@ -142,7 +142,7 @@ export default function RegisterForm(props) {
                         shrink: true,
                       }}
                       name="startDate"
-                      label="Start Date"
+                      label="Start Date *"
                       value={values.startDate}
                       onChange={handleInputChange}
                       error={errors.startDate}

@@ -108,7 +108,7 @@ export default function RegisterForm(props) {
             <Grid container>
                 <Grid item xs={8}>
                     <FormControl variant="outlined">
-                      <InputLabel htmlFor="outlined-projectName-native-simple">Project Name</InputLabel>
+                      <InputLabel htmlFor="outlined-projectName-native-simple">Project Name *</InputLabel>
                       <Select
                         native
                         value={values.projectName}
@@ -123,14 +123,14 @@ export default function RegisterForm(props) {
                     </FormControl>
                     <Input
                         name="featureName"
-                        label="Milestone Name"
+                        label="Milestone Name *"
                         value={values.featureName}
                         onChange={handleInputChange}
                         error={errors.featureName}
                     />
                     <Input
                         name="featureDetails"
-                        label="Milestone Details"
+                        label="Milestone Details *"
                         value={values.featureDetails}
                         onChange={handleInputChange}
                         multiline  = {true}
@@ -141,7 +141,7 @@ export default function RegisterForm(props) {
                 <Grid item xs={4}>
                     <Input
                         name="ownerName"
-                        label="Owner Name"
+                        label="Owner Name *"
                         value={values.ownerName}
                         onChange={handleInputChange}
                         error={errors.ownerName}
@@ -153,7 +153,7 @@ export default function RegisterForm(props) {
                         shrink: true,
                       }}
                       name="startDate"
-                      label="Start Date"
+                      label="Start Date *"
                       value={values.startDate}
                       onChange={handleInputChange}
                       error={errors.startDate}

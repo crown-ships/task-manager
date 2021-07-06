@@ -99,12 +99,12 @@ export default function RegisterForm(props) {
             <Grid container>
                 <Grid item xs={8}>
                     <FormControl variant="outlined">
-                      <InputLabel htmlFor="outlined-featureName-native-simple">Feature Name</InputLabel>
+                      <InputLabel htmlFor="outlined-featureName-native-simple">Milestone Name *</InputLabel>
                       <Select
                         native
                         value={values.featureName}
                         onChange={handleInputChange}
-                        label="Feature Name"
+                        label="Milestone Name"
                         inputProps={{
                           name: 'featureName',
                           id: 'outlined-featureName-native-simple'
@@ -114,14 +114,14 @@ export default function RegisterForm(props) {
                     </FormControl>
                     <Input
                         name="taskName"
-                        label="Task Name"
+                        label="Task Name *"
                         value={values.taskName}
                         onChange={handleInputChange}
                         error={errors.taskName}
                     />
                     <Input
                         name="taskDetails"
-                        label="Task Details"
+                        label="Task Details *"
                         value={values.taskDetails}
                         multiline  = {true}
                         rows = {5}
@@ -133,7 +133,7 @@ export default function RegisterForm(props) {
                 <Grid item xs={4}>
                     <Input
                         name="ownerName"
-                        label="Owner Name"
+                        label="Owner Name *"
                         value={values.ownerName}
                         onChange={handleInputChange}
                         error={errors.ownerName}
@@ -145,7 +145,7 @@ export default function RegisterForm(props) {
                         shrink: true,
                       }}
                       name="startDate"
-                      label="Start Date"
+                      label="Start Date *"
                       value={values.startDate}
                       onChange={handleInputChange}
                       error={errors.startDate}

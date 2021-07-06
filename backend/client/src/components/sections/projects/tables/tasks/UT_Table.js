@@ -502,8 +502,6 @@ export default function UT_Table(props) {
   return (
     <React.Fragment>
       <Toolbar>
-      <Grid container>
-        <Grid item xs={12}>
           <Input
               label="Search Tasks"
               className={classes.searchInput}
@@ -514,8 +512,6 @@ export default function UT_Table(props) {
               }}
               onChange={handleSearch}
               />
-          </Grid>
-        </Grid>
         <Grid container>
           <Grid item xs={3}>
             <FormControl variant="outlined" className={classes.formControl}>
