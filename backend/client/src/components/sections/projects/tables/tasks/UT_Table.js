@@ -512,6 +512,8 @@ export default function UT_Table(props) {
               }}
               onChange={handleSearch}
               />
+        </Toolbar>
+        <Toolbar>
         <Grid container>
           <Grid item xs={3}>
             <FormControl variant="outlined" className={classes.formControl}>
