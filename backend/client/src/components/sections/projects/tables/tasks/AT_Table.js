@@ -308,7 +308,7 @@ export default function AT_Table(props) {
 
   },[notify, data]);
 
-  React.useEffect( () => {
+  React.useEffect(async () => {
     const d = await getDropdownList(props);
     var features = d.data.map(function(item) {
       return ({pID: item.projectID, progress:item.percentComplete});

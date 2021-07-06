@@ -259,7 +259,7 @@ export default function UT_Table(props) {
     setList(selList);
   },[allFeatures, project]);
 
-  React.useEffect(() => {
+  React.useEffect(async () => {
     const d = await getData(props);
     var tasks = d.data.map(function(item) {
       return ({fID: item.featureID, progress:item.percentComplete});
