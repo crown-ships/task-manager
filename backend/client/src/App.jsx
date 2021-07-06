@@ -17,7 +17,7 @@ import Approval from "./components/sections/approval/ApprovalPage";
 import Rejection from "./components/sections/rejection/RejectionPage";
 import PrivateRoute from "./privateRoute/PrivateRoute";
 import Dashboard from "./components/sections/dashboard/DashboardPage";
-
+import ProjectDetails from "./components/sections/projects/tables/projects/ProjectDetails";
 
 if (localStorage.jwtToken) {
   // Set auth token header auth
@@ -55,6 +55,7 @@ class App extends Component {
               <PrivateRoute exact path="/users" component={Users} />
               <PrivateRoute exact path="/approval" component={Approval} />
               <PrivateRoute exact path="/rejection" component={Rejection} />
+              <PrivateRoute exact path="/project/details" component={ProjectDetails} />
             </Switch>
           </div>
         </Router>

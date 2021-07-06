@@ -369,7 +369,11 @@ export default function AP_Table(props) {
           <TableBody>
             {
               recordsAfterPagingAndSorting().map(row =>
-              (<TableRow key={row._id} component={Link} to="/projects/details">
+              (<TableRow key={row._id} hover={true} component={Link} to={{
+                pathname: "/projects/details",
+                props: {
+                  projectID: row._id
+                }}}>
                 <TableCell backgroundColor = "primary">{row.projectName}</TableCell>
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
                 <TableCell>{dateToString(row.startDate)}</TableCell>
