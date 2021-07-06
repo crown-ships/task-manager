@@ -55,7 +55,7 @@ class App extends Component {
               <PrivateRoute exact path="/users" component={Users} />
               <PrivateRoute exact path="/approval" component={Approval} />
               <PrivateRoute exact path="/rejection" component={Rejection} />
-              <PrivateRoute exact path="/project/details" component={ProjectDetails} />
+              <PrivateRoute exact path="/projects/details" component={ProjectDetails} />
             </Switch>
           </div>
         </Router>
