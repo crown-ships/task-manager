@@ -89,10 +89,7 @@ const useStyles = makeStyles(theme => ({
 const headCells = [
     { id: 'projectName', label: 'Project Name' },
     { id: 'approved', label: 'Approved' },
-    { id: 'startDate', label: 'Start Date' },
     { id: 'dueDate', label: 'Due Date' },
-    { id: 'projectDetails', label: 'Project Details'},
-    { id: 'companyName', label: 'Company Name'},
     { id: 'percentComplete', label: 'Progress'},
     { id: 'ownerName', label: 'Owner'},
     { id: 'enabled', label: 'Enable', disableSorting: true },
@@ -372,14 +369,11 @@ export default function AP_Table(props) {
               (<TableRow key={row._id} hover={true} component={Link} to={{
                 pathname: "/projects/details",
                 props: {
-                  projectID: row._id
+                  project: row
                 }}}>
                 <TableCell backgroundColor = "primary">{row.projectName}</TableCell>
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
-                <TableCell>{dateToString(row.startDate)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
-                <TableCell>{row.projectDetails}</TableCell>
-                <TableCell>{row.companyName}</TableCell>
                 <TableCell>  <CircularProgressWithLabel value={row.percentComplete} /></TableCell>
                 <TableCell>{row.ownerName}</TableCell>
                 <TableCell>
