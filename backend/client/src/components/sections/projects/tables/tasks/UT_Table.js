@@ -222,19 +222,19 @@ export default function UT_Table(props) {
     for(i=0; i<len; i++) {
       selList[i+1] = {key:i+1, item: trimlist[i]};
     }
-    setList(selList);
+    setPList(selList);
   },[allProjects, company]);
 
   React.useEffect(async () => {
     var complist = allFeatures.map(function(item) {
       if (project === "") {
-        if(item.enabled === "true" && item.approved === "approved")
+        if(item.enabled === "true")
           return item.featureName;
         else
           return "0"
       }
       else {
-        if(item.enabled === "true" && item.approved === "approved" && item.projectName === project)
+        if(item.enabled === "true" && item.projectName === project)
           return item.featureName;
         else
           return "0"
@@ -501,22 +501,23 @@ export default function UT_Table(props) {
 
   return (
     <React.Fragment>
-    <Paper className={classes.pageContent}>
       <Toolbar>
-        <Grid container>
-          <Grid item xs={4}>
-            <Input
-                label="Search Tasks"
-                className={classes.searchInput}
-                InputProps={{
-                    startAdornment: (<InputAdornment position="start">
-                        <Search />
-                    </InputAdornment>)
-                }}
-                onChange={handleSearch}
-            />
+      <Grid container>
+        <Grid item xs={12}>
+          <Input
+              label="Search Tasks"
+              className={classes.searchInput}
+              InputProps={{
+                  startAdornment: (<InputAdornment position="start">
+                      <Search />
+                  </InputAdornment>)
+              }}
+              onChange={handleSearch}
+              />
           </Grid>
-          <Grid item xs={2}>
+        </Grid>
+        <Grid container>
+          <Grid item xs={3}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
               <Select
@@ -532,7 +533,7 @@ export default function UT_Table(props) {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel htmlFor="outlined-project-native-simple">Project</InputLabel>
               <Select
@@ -548,7 +549,7 @@ export default function UT_Table(props) {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel htmlFor="outlined-feature-native-simple">Milestone</InputLabel>
               <Select
@@ -564,7 +565,7 @@ export default function UT_Table(props) {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <Button
                 text="Add New"
                 variant="outlined"
@@ -614,7 +615,6 @@ export default function UT_Table(props) {
         </TableBody>
       </TblContainer>
       <TblPagination />
-    </Paper>
       <Popup
         title="Edit Task Details"
         openPopup={openEditPopup}
