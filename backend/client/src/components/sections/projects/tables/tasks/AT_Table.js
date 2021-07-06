@@ -115,7 +115,7 @@ const getDropdownList = (prop) => {
 }
 
 const getProjectList = (prop) => {
-  return prop.getAlllProjects({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  return prop.getAllProjects({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
 const getCompanyList = (prop) => {
