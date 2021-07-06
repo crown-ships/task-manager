@@ -154,7 +154,7 @@ export default function AT_Table(props) {
     const proj = await getProjectList(props);
     setAllProjects(proj.data);
 
-    const feats = await getDropdownList(props);
+    const feat = await getDropdownList(props);
     setAllFeatures(feat.data);
 
     setFilterFn({

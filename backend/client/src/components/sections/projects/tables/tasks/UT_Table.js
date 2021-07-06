@@ -154,7 +154,7 @@ export default function UT_Table(props) {
     const proj = await getProjectList(props);
     setAllProjects(proj.data);
 
-    const feats = await getDropdownList(props);
+    const feat = await getDropdownList(props);
     setAllFeatures(feat.data);
 
     setFilterFn({
@@ -552,7 +552,7 @@ export default function UT_Table(props) {
               <Select
                 native
                 value={state.age}
-                onChange={handleChange}
+                onChange={handleFeatureChange}
                 label="Milestone"
                 inputProps={{
                   name: 'feature',
