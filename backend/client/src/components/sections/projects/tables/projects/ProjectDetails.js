@@ -3,7 +3,7 @@ import {Link} from "react-router-dom"
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { logoutUser } from "../../../../../../actions/authActions";
+import { logoutUser } from "../../../../../actions/authActions";
 import { getAllCompanies, updateCompany } from "../../../../../actions/companyActions";
 import { getAllProjects, deleteProject, updateProject, registerProject } from "../../../../../actions/projectActions";
 import { getAllTasks, deleteTask, updateTask, registerTask ,updateAllTasks } from "../../../../../actions/taskActions";
