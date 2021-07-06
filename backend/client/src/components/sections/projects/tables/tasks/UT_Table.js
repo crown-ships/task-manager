@@ -115,6 +115,13 @@ const getDropdownList = (prop) => {
 }
 
 
+const getProjectList = (prop) => {
+  return prop.getAlllProjects({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+}
+
+const getCompanyList = (prop) => {
+  return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+}
 export default function UT_Table(props) {
 
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
@@ -122,8 +129,14 @@ export default function UT_Table(props) {
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
   const [list, setList] = React.useState([]);
+  const [pList, setPList] = React.useState([]);
+  const [cList, setCList] = React.useState([]);
   const [allFeatures, setAllFeatures] = React.useState([]);
+  const [allProjects, setAllProjects] = React.useState([]);
+  const [allCompanies, setAllCompanies] = React.useState([]);
   const [feature, setFeature] = React.useState("");
+  const [project, setProject] = React.useState("");
+  const [company, setCompany] = React.useState("");
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
@@ -131,13 +144,101 @@ export default function UT_Table(props) {
   const classes = useStyles();
 
   React.useEffect(async () => {
-    const d = await getDropdownList(props);
-    setAllFeatures(d.data);
-    var complist = d.data.map(function(item) {
+    const tasks = await getData(props);
+    setData(tasks.data);
+    setRecords(tasks.data);
+
+    const comp = await getCompanyList(props);
+    setAllCompanies(comp.data);
+
+    const proj = await getProjectList(props);
+    setAllProjects(proj.data);
+
+    const feats = await getDropdownList(props);
+    setAllFeatures(feat.data);
+
+    setFilterFn({
+        fn: items => {
+            if (feature == "")
+                return items.filter(x => x.enabled.includes("true"));
+            else
+                return items.filter(x => (x.featureName === feature) && x.enabled.includes("true"))
+        }
+    })
+  },[notify]);
+
+  React.useEffect( () => {
+
+    var complist = allCompanies.map(function(item) {
       if(item.enabled === "true")
-        return item.featureName;
+        return item.companyName;
       else
         return "0"
+    });
+    var j;
+    var len = 0;
+    var trimlist = [];
+    for(j=0; j<complist.length; j++) {
+      if(complist[j] !== "0"){
+        trimlist[len++] = complist[j];
+      }
+    }
+    var selList = [];
+    var i;
+    selList[0] = {key:0, item: ""};
+    for(i=0; i<len; i++) {
+      selList[i+1] = {key:i+1, item: trimlist[i]};
+    }
+    setCList(selList);
+  },[allCompanies]);
+
+  React.useEffect( () => {
+    var complist = allProjects.map(function(item) {
+      if (company === "") {
+        if(item.enabled === "true" && item.approved === "approved")
+          return item.projectName;
+        else
+          return "0"
+      }
+      else {
+        if(item.enabled === "true" && item.approved === "approved" && item.companyName === company)
+          return item.projectName;
+        else
+          return "0"
+      }
+
+    });
+    var j;
+    var len = 0;
+    var trimlist = [];
+    for(j=0; j<complist.length; j++) {
+      if(complist[j] !== "0"){
+        trimlist[len++] = complist[j];
+      }
+    }
+    var selList = [];
+    var i;
+    selList[0] = {key:0, item: ""};
+    for(i=0; i<len; i++) {
+      selList[i+1] = {key:i+1, item: trimlist[i]};
+    }
+    setList(selList);
+  },[allProjects, company]);
+
+  React.useEffect(async () => {
+    var complist = allFeatures.map(function(item) {
+      if (project === "") {
+        if(item.enabled === "true" && item.approved === "approved")
+          return item.featureName;
+        else
+          return "0"
+      }
+      else {
+        if(item.enabled === "true" && item.approved === "approved" && item.projectName === project)
+          return item.featureName;
+        else
+          return "0"
+      }
     });
 
     var j;
@@ -156,11 +257,10 @@ export default function UT_Table(props) {
     }
 
     setList(selList);
-  },[]);
+  },[allFeatures, project]);
 
-  React.useEffect(async () => {
-    const d = await getData(props);
-    var tasks = d.data.map(function(item) {
+  React.useEffect(() => {
+    var tasks = data.map(function(item) {
       return ({fID: item.featureID, progress:item.percentComplete});
     });
     var i;
@@ -202,24 +302,11 @@ export default function UT_Table(props) {
       props.updateFeature(input, props.history);
     }
 
-  },[notify]);
-  React.useEffect(async () => {
-    const d = await getData(props);
-    setData(d.data);
-    setRecords(d.data);
-    setFilterFn({
-        fn: items => {
-            if (feature == "")
-                return items.filter(x => x.enabled.includes("true"));
-            else
-                return items.filter(x => (x.featureName === feature) && x.enabled.includes("true"))
-        }
-    })
-  },[notify, list]);
+  },[notify, data]);
 
-  React.useEffect(async () => {
-    const d = await getDropdownList(props);
-    var features = d.data.map(function(item) {
+
+  React.useEffect(() => {
+    var features = allFeatures.map(function(item) {
       return ({pID: item.projectID, progress:item.percentComplete});
     });
     var i;
@@ -260,7 +347,7 @@ export default function UT_Table(props) {
       props.updateProject(input, props.history);
     }
 
-  },[notify]);
+  },[notify, allFeatures]);
 
 
   const {
@@ -286,7 +373,7 @@ export default function UT_Table(props) {
       checkedB: true,
     });
 
-  const handleChange = (event) => {
+  const handleFeatureChange = (event) => {
     let val = event.target;
 
     setFeature(val.value);
@@ -298,8 +385,35 @@ export default function UT_Table(props) {
                 return items.filter(x => (x.featureName === val.value) && x.enabled.includes("true") )
         }
     })
-
   };
+
+  const handleProjectChange = (event) => {
+    let val = event.target;
+
+    setProject(val.value);
+    setFilterFn({
+        fn: items => {
+            if (val.value == "")
+                return items.filter(x => x.enabled.includes("true"));
+            else
+                return items.filter(x => (x.projectName === val.value) && x.enabled.includes("true") )
+        }
+    })
+  };
+  const handleCompanyChange = (event) => {
+    let val = event.target;
+
+    setCompany(val.value);
+    setFilterFn({
+        fn: items => {
+            if (val.value == "")
+                return items.filter(x => x.enabled.includes("true"));
+            else
+                return items.filter(x => (x.companyName === val.value) && x.enabled.includes("true") )
+        }
+    })
+  };
+
   const openInEditPopup = item => {
     setRecordForEdit(item);
     setOpenEditPopup(true);
@@ -388,7 +502,7 @@ export default function UT_Table(props) {
     <Paper className={classes.pageContent}>
       <Toolbar>
         <Grid container>
-          <Grid item xs={7}>
+          <Grid item xs={4}>
             <Input
                 label="Search Tasks"
                 className={classes.searchInput}
@@ -400,7 +514,39 @@ export default function UT_Table(props) {
                 onChange={handleSearch}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={2}>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
+              <Select
+                native
+                value={state.age}
+                onChange={handleCompanyChange}
+                label="Company"
+                inputProps={{
+                  name: 'company',
+                  id: 'outlined-company-native-simple',
+                }}
+              >{cList.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={2}>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel htmlFor="outlined-project-native-simple">Project</InputLabel>
+              <Select
+                native
+                value={state.age}
+                onChange={handleProjectChange}
+                label="Project"
+                inputProps={{
+                  name: 'project',
+                  id: 'outlined-project-native-simple',
+                }}
+              >{pList.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={2}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel htmlFor="outlined-feature-native-simple">Milestone</InputLabel>
               <Select
