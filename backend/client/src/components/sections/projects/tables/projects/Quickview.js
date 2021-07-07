@@ -246,7 +246,7 @@ export default function Quickview(props) {
           <TableBody>
             {
               recordsAfterPagingAndSorting().map(row =>
-              ( (emptyFeatureCount == 0)?null:<>
+              ( (row === "0")?null:<>
                 <TableRow key={row._id} className={classes.root}>
                   <TableCell>
                     <IconButton aria-label="expand row" size="small" onClick={() => openTask(row)}>
