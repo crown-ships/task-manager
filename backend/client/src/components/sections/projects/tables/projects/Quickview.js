@@ -202,7 +202,7 @@ export default function Quickview(props) {
     });
 
     var j;
-    for (j=0; j<filteredTasks.length; i++)
+    for (j=0; j<filteredTasks.length; j++)
     {
       if(filteredTasks[j] != "0") {
         setEmptyTaskCount(emptyTaskCount+1)
