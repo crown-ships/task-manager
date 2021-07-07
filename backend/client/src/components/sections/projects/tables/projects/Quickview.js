@@ -142,7 +142,14 @@ export default function Quickview(props) {
     console.log(props);
     const fullFeatures = await getFeatures(props);
     setFinalFeatures(fullFeatures.data);
+    console.log(finalFeatures);
+    const fullTasks = await getTasks(props);
+    setFinalTasks(fullTasks.data);
+    console.log(finalTasks);
+  },[]);
 
+
+  React.useEffect( () => {
     setEmptyFeatureCount(0);
     const filteredFeatures = finalFeatures.map(function(item) {
       if(item.projectID === props.projectID) {
@@ -163,11 +170,7 @@ export default function Quickview(props) {
     }
     console.log(filteredFeatures);
     setLinkedFeatures(filteredFeatures);
-
-    const fullTasks = await getTasks(props);
-    setFinalTasks(fullTasks.data);
-  },[]);
-
+  }, [finalFeatures]);
 
   React.useEffect( () => {
     setEmptyTaskCount(0);
@@ -187,6 +190,7 @@ export default function Quickview(props) {
         setEmptyTaskCount(emptyTaskCount+1)
       }
     }
+    console.log(filteredTasks);
     setLinkedTasks(filteredTasks);
   }, [finalTasks, openFeatureID]);
 
