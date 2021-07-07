@@ -160,6 +160,7 @@ export default function Quickview(props) {
         setEmptyFeatureCount(emptyFeatureCount+1)
       }
     }
+    console.log(filteredFeatures);
     setLinkedFeatures(filteredFeatures);
 
     const fullTasks = await getTasks(props);
