@@ -134,6 +134,7 @@ export default function Quickview(props) {
   const [linkedTasks, setLinkedTasks] = React.useState(rows);
   const [finalFeatures, setFinalFeatures] = React.useState(rows);
   const [finalTasks, setFinalTasks] = React.useState(rows);
+  const [openFeatureID, setOpenFeatureID] = React.useState("");
   const classes = useStyles();
 
 
@@ -201,9 +202,9 @@ export default function Quickview(props) {
     });
 
     var j;
-    for (j=0; i<filteredTasks.length; i++)
+    for (j=0; j<filteredTasks.length; i++)
     {
-      if(filteredTasks[i] != "0") {
+      if(filteredTasks[j] != "0") {
         setEmptyTaskCount(emptyTaskCount+1)
       }
     }
