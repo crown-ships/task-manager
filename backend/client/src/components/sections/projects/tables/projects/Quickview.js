@@ -150,7 +150,7 @@ export default function Quickview(props) {
   React.useEffect( () => {
     setEmptyFeatureCount(0);
     const filteredFeatures = finalFeatures.data.map(function(item) {
-      if(item.projectID === props.projectID {
+      if(item.projectID === props.projectID) {
         return item;
       }
       else {
