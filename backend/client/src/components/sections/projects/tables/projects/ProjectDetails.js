@@ -34,6 +34,7 @@ import { getAllFeatures, deleteFeature, updateFeature, registerFeature, updateAl
 import ProjectTablePicker from "../..//pickers/ProjectTablePicker"
 import FeatureTablePicker from "../..//pickers/FeatureTablePicker"
 import TaskTablePicker from "../..//pickers/TaskTablePicker"
+import Quickview from "./Quickview"
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -243,7 +244,9 @@ const ProjectDetails =  (props) => {
 
               </Paper>
             </Grid>
-
+            <Paper className={classes.paper}>
+            <Quickview {...props} projectID={props.location.props.project._id} />
+            </Paper>
         </Container>
 
       </main>
