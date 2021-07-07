@@ -139,6 +139,7 @@ export default function Quickview(props) {
 
 
   React.useEffect(async () => {
+    console.log(props);
     const fullFeatures = await getFeatures(props);
     setFinalFeatures(fullFeatures);
 
