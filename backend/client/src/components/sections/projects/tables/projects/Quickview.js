@@ -161,7 +161,7 @@ export default function Quickview(props) {
     });
 
     var i;
-    var bool_vals;
+    var bool_vals = [];
     for (i=0; i<filteredFeatures.length; i++)
     {
       bool_vals[i] = false;
