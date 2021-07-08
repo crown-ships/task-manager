@@ -235,9 +235,6 @@ const ProjectDetails =  (props) => {
         <Button className={classes.btnstyle} component={Link} to={{pathname: "/projects"}}>Back</Button>
         <Container maxWidth="lg" className={classes.container}>
             <Grid item xs={12}>
-            InputProps={{
-            readOnly: true,
-          }}
               <Paper className={classes.paper}>
               <Grid container>
                 <Grid item xs={6}>
