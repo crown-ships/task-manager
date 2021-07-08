@@ -128,21 +128,27 @@ export default function Quickview(props) {
   const [records, setRecords] = React.useState([]);
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [openT, setOpenT] = React.useState([]);
+  const [currentProj, setCurrentProj] = React.useState("");
   const [emptyFeatureCount, setEmptyFeatureCount] = React.useState(0);
   const [emptyTaskCount, setEmptyTaskCount] = React.useState(0);
+
   const [linkedFeatures, setLinkedFeatures] = React.useState(rows);
   const [linkedTasks, setLinkedTasks] = React.useState(rows);
+
   const [finalFeatures, setFinalFeatures] = React.useState(rows);
   const [finalTasks, setFinalTasks] = React.useState(rows);
+
   const [openFeatureID, setOpenFeatureID] = React.useState("");
   const classes = useStyles();
 
 
   React.useEffect(async () => {
     console.log(props);
+    setCurrentProj(props.projectID);
     const fullFeatures = await getFeatures(props);
     setFinalFeatures(fullFeatures.data);
     console.log(finalFeatures);
+
     const fullTasks = await getTasks(props);
     setFinalTasks(fullTasks.data);
     console.log(finalTasks);
@@ -177,7 +183,7 @@ export default function Quickview(props) {
     setLinkedFeatures(trimFeats);
     trimFeats = [];
     setOpenT(bool_vals);
-  }, [finalFeatures]);
+  }, [finalFeatures, currentProj]);
 
   React.useEffect( () => {
     setEmptyTaskCount(0);

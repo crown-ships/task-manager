@@ -233,7 +233,7 @@ const ProjectDetails =  (props) => {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Button className={classes.btnstyle} component={Link} to={{pathname: "/projects"}}>Back</Button>
-        <Container maxWidth="lg" className={classes.container}>
+        <Container maxWidth="lg" height="100%" className={classes.container}>
             <Grid item xs={12}>
               <Paper className={classes.paper}>
               <Grid container>
@@ -285,7 +285,7 @@ const ProjectDetails =  (props) => {
                         label="Project Details"
                         value={props.location.props.project.projectDetails}
                         multiline  = {true}
-                        rows = {3}
+                        rows = {5}
                         InputProps={{
                           readOnly: true,
                         }}
@@ -294,6 +294,7 @@ const ProjectDetails =  (props) => {
               </Grid>
               </Paper>
             </Grid>
+            <div></div>
             <Paper className={classes.paper}>
             <Quickview {...props} projectID={props.location.props.project._id} />
             </Paper>
