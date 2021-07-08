@@ -127,7 +127,7 @@ export default function Quickview(props) {
 
   const [records, setRecords] = React.useState([]);
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
-  const [openT, setOpenT] = React.useState(false);
+  const [openT, setOpenT] = React.useState([]);
   const [emptyFeatureCount, setEmptyFeatureCount] = React.useState(0);
   const [emptyTaskCount, setEmptyTaskCount] = React.useState(0);
   const [linkedFeatures, setLinkedFeatures] = React.useState(rows);
@@ -161,15 +161,17 @@ export default function Quickview(props) {
     });
 
     var i;
-
+    var bool_vals;
     for (i=0; i<filteredFeatures.length; i++)
     {
+      bool_vals[i] = false;
       if(filteredFeatures[i] != "0") {
         setEmptyFeatureCount(emptyFeatureCount+1)
       }
     }
     console.log(filteredFeatures);
     setLinkedFeatures(filteredFeatures);
+    setOpenT(bool_vals);
   }, [finalFeatures]);
 
   React.useEffect( () => {
@@ -234,8 +236,16 @@ export default function Quickview(props) {
     }
   }
 
-  const openTask = row => {
-    setOpenT(!openT);
+  const openTask = (row, ind) => {
+    var i;
+    var bool_change = openT;
+
+    for (i=0; i<openT.length; i++) {
+      if(ind == i) {
+        bool_change[i] = !bool_change[i];
+      }
+    }
+    setOpenT(bool_change);
     setOpenFeatureID(row._id);
   }
 
@@ -245,12 +255,12 @@ export default function Quickview(props) {
         <TblHead />
           <TableBody>
             {
-              recordsAfterPagingAndSorting().map(row =>
+              recordsAfterPagingAndSorting().map((row, index) =>
               ( (row === "0")?null:<>
                 <TableRow key={row._id} className={classes.root}>
                   <TableCell>
-                    <IconButton aria-label="expand row" size="small" onClick={() => openTask(row)}>
-                      {openT ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                    <IconButton aria-label="expand row" size="small" onClick={() => openTask(row, index)}>
+                      {openT[index] ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
                   </TableCell>
                   <TableCell >{row.featureName}</TableCell>
@@ -260,7 +270,7 @@ export default function Quickview(props) {
                 </TableRow>
                 {(emptyTaskCount == 0)? null: <TableRow>
                   <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
-                    <Collapse in={openT} timeout="auto" unmountOnExit>
+                    <Collapse in={openT[index]} timeout="auto" unmountOnExit>
                       <Box margin={1}>
                         <Table size="small" aria-label="tasks">
                           <TableHead>
