@@ -366,12 +366,12 @@ export default function AP_Table(props) {
           <TableBody>
             {
               recordsAfterPagingAndSorting().map(row =>
-              (<TableRow key={row._id} hover={true} component={Link} to={{
-                pathname: "/projects/details",
-                props: {
-                  project: row
-                }}}>
-                <TableCell backgroundColor = "primary">{row.projectName}</TableCell>
+              (<TableRow key={row._id}>
+                <TableCell hover={true} component={Link} to={{
+                  pathname: "/projects/details",
+                  props: {
+                    project: row
+                  }}}>{row.projectName}</TableCell>
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
                 <TableCell>  <CircularProgressWithLabel value={row.percentComplete} /></TableCell>
