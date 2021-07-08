@@ -175,6 +175,7 @@ export default function Quickview(props) {
     console.log(count);
     console.log(filteredFeatures);
     setLinkedFeatures(trimFeats);
+    trimFeats = [];
     setOpenT(bool_vals);
   }, [finalFeatures]);
 
