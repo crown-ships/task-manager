@@ -245,6 +245,9 @@ export default function Quickview(props) {
       if(ind == i) {
         bool_change[i] = !(bool_change[i]);
       }
+      else {
+        bool_change[i] = false;
+      }
     }
     setOpenT(bool_change);
     setOpenFeatureID(row._id);
