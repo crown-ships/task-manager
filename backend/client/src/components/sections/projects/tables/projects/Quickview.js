@@ -173,7 +173,7 @@ export default function Quickview(props) {
       }
     }
     console.log(count);
-    console.log(filteredFeatures);
+    console.log(trimFeats);
     setLinkedFeatures(trimFeats);
     trimFeats = [];
     setOpenT(bool_vals);
@@ -245,18 +245,16 @@ export default function Quickview(props) {
     var i;
     var bool_change = openT;
     console.log(ind);
-    console.log(openT[ind]);
+    console.log(openT);
     for (i=0; i<openT.length; i++) {
-      if(ind == i) {
-        bool_change[i] = !(bool_change[i]);
-      }
-      else {
         bool_change[i] = false;
-      }
+    }
+    if (openT[ind] == false) {
+      bool_change[ind] = true;
     }
     setOpenT(bool_change);
     setOpenFeatureID(row._id);
-    console.log(openT[ind]);
+    console.log(openT);
   }
 
   return (
@@ -266,7 +264,7 @@ export default function Quickview(props) {
           <TableBody>
             {
               recordsAfterPagingAndSorting().map((row, index) =>
-              ( (row === "0")?null:<>
+              ( (row === "0" && index < emptyFeatureCount)?null:<>
                 <TableRow key={row._id} className={classes.root}>
                   <TableCell>
                     <IconButton aria-label="expand row" size="small" onClick={() => openTask(row, index)}>
