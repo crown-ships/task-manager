@@ -234,14 +234,66 @@ const ProjectDetails =  (props) => {
         <Button className={classes.btnstyle} component={Link} to={{pathname: "/projects"}}>Back</Button>
         <Container maxWidth="lg" className={classes.container}>
             <Grid item xs={12}>
+            InputProps={{
+            readOnly: true,
+          }}
               <Paper className={classes.paper}>
-              <Typography>PROJECT NAME: {props.location.props.project.projectName}</Typography>
-              <Typography>COMPANY NAME: {props.location.props.project.companyName}</Typography>
-              <Typography>START DATE: {props.location.props.project.startDate}</Typography>
-              <Typography>DUE DATE: {props.location.props.project.dueDate}</Typography>
-              <Typography>PROJECT DETAILS: {props.location.props.project.projectDetails}</Typography>
-              <Typography>OWNER NAME: {props.location.props.project.ownerName}</Typography>
-
+              <Grid container>
+                <Grid item xs={6}>
+                    <Input
+                        name="projectName"
+                        label="Project Name"
+                        defaultValue={props.location.props.project.projectName}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                    />
+                    <Input
+                        name="companyName"
+                        label="Company Name"
+                        defaultValue={props.location.props.project.companyName}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                    />
+                    <Input
+                        name="startDate"
+                        label="Start Date"
+                        defaultValue={props.location.props.project.startDate}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                    />
+                    <Input
+                        name="dueDate"
+                        label="Due Date"
+                        defaultValue={props.location.props.project.dueDate}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <Input
+                        name="ownerName"
+                        label="Owner Name"
+                        defaultValue={props.location.props.project.ownerName}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                    />
+                    <Input
+                        name="projectDetails"
+                        label="Project Details"
+                        value={props.location.props.project.projectDetails}
+                        multiline  = {true}
+                        rows = {3}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                    />
+                </Grid>
+              </Grid>
               </Paper>
             </Grid>
             <Paper className={classes.paper}>
