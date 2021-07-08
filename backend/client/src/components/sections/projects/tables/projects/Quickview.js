@@ -161,16 +161,18 @@ export default function Quickview(props) {
     });
 
     var i;
+    var trimFeats = rows;
     var bool_vals = [];
     for (i=0; i<filteredFeatures.length; i++)
     {
-      bool_vals[i] = false;
       if(filteredFeatures[i] != "0") {
+        trimFeats[emptyFeatureCount] = filteredFeatures[i];
+        bool_vals[emptyFeatureCount] = false;
         setEmptyFeatureCount(emptyFeatureCount+1)
       }
     }
     console.log(filteredFeatures);
-    setLinkedFeatures(filteredFeatures);
+    setLinkedFeatures(trimFeats);
     setOpenT(bool_vals);
   }, [finalFeatures]);
 
