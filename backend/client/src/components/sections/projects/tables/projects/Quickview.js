@@ -163,14 +163,16 @@ export default function Quickview(props) {
     var i;
     var trimFeats = rows;
     var bool_vals = [];
+    var count = 0;
     for (i=0; i<filteredFeatures.length; i++)
     {
       if(filteredFeatures[i] != "0") {
-        trimFeats[emptyFeatureCount] = filteredFeatures[i];
-        bool_vals[emptyFeatureCount] = false;
+        trimFeats[count] = filteredFeatures[i];
+        bool_vals[count++] = false;
         setEmptyFeatureCount(emptyFeatureCount+1)
       }
     }
+    console.log(count);
     console.log(filteredFeatures);
     setLinkedFeatures(trimFeats);
     setOpenT(bool_vals);
