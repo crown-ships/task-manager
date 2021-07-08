@@ -239,14 +239,16 @@ export default function Quickview(props) {
   const openTask = (row, ind) => {
     var i;
     var bool_change = openT;
-
+    console.log(ind);
+    console.log(openT[ind]);
     for (i=0; i<openT.length; i++) {
       if(ind == i) {
-        bool_change[i] = !bool_change[i];
+        bool_change[i] = !(bool_change[i]);
       }
     }
     setOpenT(bool_change);
     setOpenFeatureID(row._id);
+    console.log(openT[ind]);
   }
 
   return (
