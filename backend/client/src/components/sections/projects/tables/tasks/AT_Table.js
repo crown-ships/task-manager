@@ -108,7 +108,26 @@ function preventDefault(event) {
 }
 
 const getData = (prop) => {
-  return prop.getAllTasks({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  const input = {
+    taskName: '',
+    taskDetails: '',
+    featureName: '',
+    featureID: '',
+    dueDate: '',
+    startDate: '',
+    projectName: '',
+    projectID: '',
+    companyName: '',
+    companyID: '',
+    creatorName: '',
+    creatorID: '',
+    enabled: '',
+    ownerName: prop.auth.user.name,
+    assignee: '',
+    email:prop.auth.user.email,
+    auth:prop.auth.isAuthenticated
+  };
+  return prop.getFilteredTasks({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 const getDropdownList = (prop) => {
   const input = {

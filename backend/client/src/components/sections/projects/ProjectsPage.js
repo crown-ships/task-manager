@@ -288,5 +288,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { updateAllFeatures,getFilteredFeatures, updateAllTasks, updateCompany, logoutUser, getAllProjects, getAllCompanies, deleteProject,getFilteredProjects, updateProject, registerProject,getAllFeatures, deleteFeature, updateFeature, registerFeature,getAllTasks, deleteTask, updateTask, registerTask }
+  { updateAllFeatures, getFilteredTasks, getFilteredFeatures, updateAllTasks, updateCompany, logoutUser, getAllProjects, getAllCompanies, deleteProject,getFilteredProjects, updateProject, registerProject,getAllFeatures, deleteFeature, updateFeature, registerFeature,getAllTasks, deleteTask, updateTask, registerTask }
 )(withRouter(ProjectsPage));
