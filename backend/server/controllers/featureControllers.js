@@ -94,16 +94,16 @@ exports.getFilteredFeatures = async (req, res, next) => {
 
      }
    });
-  var projects;
+  var features;
   if(conditions.length == 0){
-     projects = await Feature.find({});
+     features = await Feature.find({});
   }
   else {
-     projects = await Feature.find({$and: conditions});
+     features = await Feature.find({$and: conditions});
   }
 
   res.status(200).json({
-    data: projects
+    data: features
   });
 }
 
