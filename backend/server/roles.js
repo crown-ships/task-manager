@@ -2,7 +2,7 @@ const AccessControl = require("accesscontrol");
 const ac = new AccessControl();
 
 exports.roles = (function() {
-ac.grant("user")
+ac.grant("supervisor")
  .readOwn("profile")
  .updateOwn("profile")
  .readAny("company")
@@ -33,9 +33,9 @@ ac.grant("user")
  .deleteAny("feature")
  .deleteAny("task")
 
- 
+
 ac.grant("admin")
- .extend("user")
+ .extend("supervisor")
  .readAny("profile")
  .updateAny("profile")
  .deleteAny("profile")
@@ -48,6 +48,9 @@ ac.grant("admin")
  .deleteAny("vendor")
  .deleteAny("payment")
  .deleteAny("return")
-  .deleteAny("investor")
+ .deleteAny("investor")
+
+ac.grant("super-admin")
+ .extend("admin")
 return ac;
 })();
