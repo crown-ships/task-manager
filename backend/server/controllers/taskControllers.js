@@ -49,7 +49,7 @@ exports.getTasks = async (req, res, next) => {
   });
 }
 
-exports.getFilteredFeatures = async (req, res, next) => {
+exports.getFilteredTasks = async (req, res, next) => {
   const search = {
     taskName: req.query.taskName,
     taskDetails: req.query.taskDetails,
