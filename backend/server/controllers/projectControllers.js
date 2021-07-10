@@ -56,7 +56,6 @@ exports.getFilteredProjects = async (req, res, next) => {
     dueDate: req.query.dueDate,
     startDate: req.query.startDate,
     projectDetails: req.query.projectDetails,
-    productCategory: req.query.productCategory,
     companyName: req.query.companyName,
     companyID: req.query.companyID,
     creatorName: req.query.creatorName,

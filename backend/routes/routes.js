@@ -59,6 +59,8 @@ router.delete('/delFeature', userController.allowIfLoggedin, userController.gran
 
 router.get('/getFeatures', userController.allowIfLoggedin, userController.grantAccess('readAny', 'feature'),  featureController.getFeatures);
 
+router.get('/getFilteredFeatures', userController.allowIfLoggedin, userController.grantAccess('readAny', 'feature'),  featureController.getFilteredFeatures);
+
 
 //------------------TASKS
 router.post('/newTask', userController.allowIfLoggedin, userController.grantAccess('create', 'task'),taskController.addNew);
@@ -70,6 +72,8 @@ router.post('/updAllTasks',  userController.allowIfLoggedin, userController.gran
 router.delete('/delTask', userController.allowIfLoggedin, userController.grantAccess('deleteAny', 'task'),  taskController.delete);
 
 router.get('/getTasks', userController.allowIfLoggedin, userController.grantAccess('readAny', 'task'),  taskController.getTasks);
+
+router.get('/getFilteredTasks', userController.allowIfLoggedin, userController.grantAccess('readAny', 'task'),  taskController.getFilteredTasks);
 
 
 //------------------INVESTMENTS

@@ -55,6 +55,22 @@ export const getAllTasks = (userData, history) => {
   }
 };
 
+export const getFilteredTasks = (userData, history) => {
+  return function (dispatch) {
+    return axios
+    .get("/api/getFilteredTasks", {params:userData})
+    .then(res => {
+      return res.data;
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+  }
+};
+
 export const updateAllTasks = (userData, history) => dispatch => {
   axios
     .post("/api/updAllTasks", userData.body, {params:userData.params})

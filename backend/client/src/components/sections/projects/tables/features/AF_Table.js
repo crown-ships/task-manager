@@ -107,10 +107,45 @@ function preventDefault(event) {
 }
 
 const getData = (prop) => {
-  return prop.getAllFeatures({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  const input = {
+    featureName: '',
+    dueDate: '',
+    startDate: '',
+    featureDetails: '',
+    projectName: '',
+    projectID: '',
+    companyName: '',
+    companyID: '',
+    creatorName: '',
+    creatorID: '',
+    approved: '',
+    enabled: '',
+    ownerName: prop.auth.user.name,
+    assignee: '',
+    email:prop.auth.user.email,
+    auth:prop.auth.isAuthenticated
+  };
+  return prop.getFilteredFeatures(input , prop.history);
 }
 const getDropdownList = (prop) => {
-  return prop.getAllProjects({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  const input = {
+    projectName: "",
+    dueDate: "",
+    startDate: "",
+    projectDetails: "",
+    productCategory: "",
+    companyName: "",
+    companyID: "",
+    creatorName: "",
+    creatorID: "",
+    approved: "",
+    enabled: "",
+    ownerName: prop.auth.user.name,
+    assignee: "",
+    email:prop.auth.user.email,
+    auth:prop.auth.isAuthenticated
+  }
+  return prop.getFilteredProjects(input, prop.history);
 }
 
 const getCompanyList = (prop) => {

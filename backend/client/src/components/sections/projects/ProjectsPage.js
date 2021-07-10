@@ -30,8 +30,8 @@ import { mainListItems, secondaryListItems, thirdListItems } from '../listitem';
 import { logoutUser } from "../../../actions/authActions";
 import { getAllCompanies, updateCompany } from "../../../actions/companyActions";
 import { getAllProjects, getFilteredProjects, deleteProject, updateProject, registerProject } from "../../../actions/projectActions";
-import { getAllTasks, deleteTask, updateTask, registerTask ,updateAllTasks } from "../../../actions/taskActions";
-import { getAllFeatures, deleteFeature, updateFeature, registerFeature, updateAllFeatures } from "../../../actions/featureActions";
+import { getAllTasks, getFilteredTasks, deleteTask, updateTask, registerTask ,updateAllTasks } from "../../../actions/taskActions";
+import { getAllFeatures, getFilteredFeatures, deleteFeature, updateFeature, registerFeature, updateAllFeatures } from "../../../actions/featureActions";
 import ProjectTablePicker from "./pickers/ProjectTablePicker"
 import FeatureTablePicker from "./pickers/FeatureTablePicker"
 import TaskTablePicker from "./pickers/TaskTablePicker"
@@ -288,5 +288,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { updateAllFeatures,updateAllTasks, updateCompany, logoutUser, getAllProjects, getAllCompanies, deleteProject,getFilteredProjects, updateProject, registerProject,getAllFeatures, deleteFeature, updateFeature, registerFeature,getAllTasks, deleteTask, updateTask, registerTask }
+  { updateAllFeatures,getFilteredFeatures, updateAllTasks, updateCompany, logoutUser, getAllProjects, getAllCompanies, deleteProject,getFilteredProjects, updateProject, registerProject,getAllFeatures, deleteFeature, updateFeature, registerFeature,getAllTasks, deleteTask, updateTask, registerTask }
 )(withRouter(ProjectsPage));

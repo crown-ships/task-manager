@@ -55,6 +55,22 @@ export const getAllFeatures = (userData, history) => {
   }
 };
 
+export const getFilteredFeatures = (userData, history) => {
+  return function (dispatch) {
+    return axios
+    .get("/api/getFilteredFeatures", {params:userData})
+    .then(res => {
+      return res.data;
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+  }
+};
+
 export const updateAllFeatures = (userData, history) => dispatch => {
   axios
     .post("/api/updAllFeatures", userData.body, {params:userData.params})
