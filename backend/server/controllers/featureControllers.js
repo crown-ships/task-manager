@@ -27,7 +27,8 @@ exports.addNew = async (req, res, next) => {
    companyID: req.body.companyID,
    creatorName: req.body.creatorName,
    creatorID: req.body.creatorID,
-   ownerName:req.body.ownerName
+   ownerName:req.body.ownerName,
+   assignee:req.body.assignee
   });
 
   await signedupFeature.save()

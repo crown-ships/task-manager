@@ -54,6 +54,9 @@ const projectModel = new mongoose.Schema({
   ownerName: {
     type: String
   },
+  assignee: {
+    type: String
+  },
   dateCreated: {
     type: Date,
     default: Date.now

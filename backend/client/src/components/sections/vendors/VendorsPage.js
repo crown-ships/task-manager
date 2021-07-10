@@ -173,10 +173,10 @@ const VendorsPage =  (props) => {
   };
 
   var itemList = "";
-    if (props.auth.user.role === "user") {
+    if (props.auth.user.role === "supervisor") {
       itemList = secondaryListItems;
     }
-    else {
+    else if (props.auth.user.role === "super-admin"){
       itemList = mainListItems;
     }
   const classes = useStyles();

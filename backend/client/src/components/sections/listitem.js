@@ -106,3 +106,20 @@ export const secondaryListItems = (
   </ListItem>
   </div>
 );
+
+export const thirdListItems = (
+  <div>
+  <ListItem button component={Link} to="/dashboard">
+    <ListItemIcon>
+      <DashboardIcon />
+    </ListItemIcon>
+    <ListItemText primary="Dashboard" />
+  </ListItem>
+  <ListItem button component={Link} to="/projects">
+    <ListItemIcon>
+      <AssignmentIcon />
+    </ListItemIcon>
+    <ListItemText primary="Projects" />
+  </ListItem>
+  </div>
+);

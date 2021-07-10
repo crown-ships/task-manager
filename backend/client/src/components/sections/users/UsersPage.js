@@ -24,7 +24,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import ExitToApp from '@material-ui/icons/ExitToApp';
-import { mainListItems  } from '../listitem';
+import { mainListItems, secondaryListItems  } from '../listitem';
 import { logoutUser, registerUser } from "../../../actions/authActions";
 import { getAllUsers, deleteUser, updateUser } from "../../../actions/userActions";
 import UsersTable from "./UsersTable"
@@ -139,7 +139,12 @@ const getData = (prop) => {
 const UsersPage =  (props) => {
 
   var itemList = "";
-  itemList = mainListItems;
+  if (props.auth.user.role === "supervisor") {
+    itemList = secondaryListItems;
+  }
+  else if (props.auth.user.role === "super-admin"){
+    itemList = mainListItems;
+  }
 
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);

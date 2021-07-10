@@ -8,7 +8,9 @@ import { useForm, Form } from '../../useForm';
 
 const roleItems = [
     { id: 'user', title: 'User' },
-    { id: 'admin', title: 'Admin' }
+    { id: 'admin', title: 'Admin' },
+    { id: 'supervisor', title: 'Supervisor' },
+    { id: 'super-admin', title: 'Super Admin' }
 ]
 
 const initialFValues = {
@@ -57,12 +59,6 @@ export default function RegisterForm(props) {
         }
     }
 
-    useEffect(() => {
-        if (recordForEdit != null)
-            setValues({
-                ...recordForEdit
-            })
-    }, [recordForEdit])
 
     return (
         <Form onSubmit={handleSubmit}>

@@ -26,7 +26,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import ExitToApp from '@material-ui/icons/ExitToApp';
-import { mainListItems, secondaryListItems } from '../listitem';
+import { mainListItems, secondaryListItems, thirdListItems } from '../listitem';
 import { logoutUser } from "../../../actions/authActions";
 import { getAllCompanies } from "../../../actions/companyActions";
 import { getAllProjects, deleteProject, updateProject, registerProject } from "../../../actions/projectActions";
@@ -185,10 +185,10 @@ const ApprovalPage =  (props) => {
 
 
   var itemList = "";
-    if (props.auth.user.role === "user") {
-      itemList = secondaryListItems;
+    if (props.auth.user.role === "admin") {
+      itemList = thirdListItems;
     }
-    else {
+    else if (props.auth.user.role === "super-admin"){
       itemList = mainListItems;
     }
   const classes = useStyles();

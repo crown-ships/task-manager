@@ -29,6 +29,7 @@ exports.addNew = async (req, res, next) => {
    dueDate: req.body.dueDate,
    startDate: req.body.startDate,
    ownerName: req.body.ownerName,
+   assignee:req.body.assignee,
    creatorName: req.body.creatorName,
    creatorID:req.body.creatorID
   });
