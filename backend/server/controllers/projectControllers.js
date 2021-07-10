@@ -50,6 +50,49 @@ exports.getProjects = async (req, res, next) => {
   });
 }
 
+exports.getFilteredProjects = async (req, res, next) => {
+  const search = {
+    projectName: req.query.projectName,
+    dueDate: req.query.dueDate,
+    startDate: req.query.startDate,
+    projectDetails: req.query.projectDetails,
+    productCategory: req.query.productCategory,
+    companyName: req.query.companyName,
+    companyID: req.query.companyID,
+    creatorName: req.query.creatorName,
+    creatorID: req.query.creatorID,
+    approved: req.query.approved,
+    enabled: req.query.enabled,
+    ownerName: req.query.ownerName,
+    assignee: req.query.assignee
+  };
+
+   var counter=0;
+   var conditions = [];
+
+
+   Object.entries(search).forEach(([key,value]) => {
+     if(value !== "")
+     {
+       var json = {};
+       json[key]= value;
+       conditions[counter++] = json;
+
+     }
+   });
+  var projects;
+  if(conditions.length == 0){
+     projects = await Project.find({});
+  }
+  else {
+     projects = await Project.find({$and: conditions});
+  }
+
+  res.status(200).json({
+    data: projects
+  });
+}
+
  //validate role
 exports.update = async (req, res, next) => {
  try {

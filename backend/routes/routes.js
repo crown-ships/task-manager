@@ -45,6 +45,9 @@ router.delete('/delProject', userController.allowIfLoggedin, userController.gran
 
 router.get('/getProjects', userController.allowIfLoggedin, userController.grantAccess('readAny', 'project'),  projectController.getProjects);
 
+router.get('/getFilteredProjects', userController.allowIfLoggedin, userController.grantAccess('readAny', 'project'),  projectController.getFilteredProjects);
+
+getFilteredProjects
 
 //------------------FEATURES
 router.post('/newFeature', userController.allowIfLoggedin, userController.grantAccess('create', 'feature'),featureController.addNew);

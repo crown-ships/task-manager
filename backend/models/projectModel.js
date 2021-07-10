@@ -36,9 +36,6 @@ const projectModel = new mongoose.Schema({
     default: "wait",
     enum: ["approved", "rejected", "wait"]
   },
-  rejectReason: {
-    type: String
-  },
   enabled:{
     type: String,
     default: "true",

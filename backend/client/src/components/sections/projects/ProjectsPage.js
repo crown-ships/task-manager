@@ -29,7 +29,7 @@ import ExitToApp from '@material-ui/icons/ExitToApp';
 import { mainListItems, secondaryListItems, thirdListItems } from '../listitem';
 import { logoutUser } from "../../../actions/authActions";
 import { getAllCompanies, updateCompany } from "../../../actions/companyActions";
-import { getAllProjects, deleteProject, updateProject, registerProject } from "../../../actions/projectActions";
+import { getAllProjects, getFilteredProjects, deleteProject, updateProject, registerProject } from "../../../actions/projectActions";
 import { getAllTasks, deleteTask, updateTask, registerTask ,updateAllTasks } from "../../../actions/taskActions";
 import { getAllFeatures, deleteFeature, updateFeature, registerFeature, updateAllFeatures } from "../../../actions/featureActions";
 import ProjectTablePicker from "./pickers/ProjectTablePicker"
@@ -288,5 +288,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { updateAllFeatures,updateAllTasks, updateCompany, logoutUser, getAllProjects, getAllCompanies, deleteProject, updateProject, registerProject,getAllFeatures, deleteFeature, updateFeature, registerFeature,getAllTasks, deleteTask, updateTask, registerTask }
+  { updateAllFeatures,updateAllTasks, updateCompany, logoutUser, getAllProjects, getAllCompanies, deleteProject,getFilteredProjects, updateProject, registerProject,getAllFeatures, deleteFeature, updateFeature, registerFeature,getAllTasks, deleteTask, updateTask, registerTask }
 )(withRouter(ProjectsPage));

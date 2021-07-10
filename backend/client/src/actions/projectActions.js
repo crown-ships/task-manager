@@ -69,6 +69,22 @@ export const getAllProjects = (userData, history) => {
   }
 };
 
+export const getFilteredProjects = (userData, history) => {
+  return function (dispatch) {
+    return axios
+    .get("/api/getFilteredProjects", {params:userData})
+    .then(res => {
+      return res.data;
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+  }
+};
+
 export const registerProject = (userData, history) => dispatch => {
   console.log(userData);
   axios
