@@ -8,8 +8,7 @@ import { useForm, Form } from '../../useForm';
 
 
 const roleItems = [
-    { id: 'user', title: 'User' },
-    { id: 'admin', title: 'Admin' }
+    { id: 'user', title: 'User' }
 ]
 
 const initialFValues = {

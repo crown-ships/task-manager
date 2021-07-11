@@ -6,21 +6,20 @@ import RadioGroup from "../../../controls/RadioGroup";
 import { useForm, Form } from '../../useForm';
 
 
-
 const roleItems = [
-  { id: 'user', title: 'User' },
-  { id: 'admin', title: 'Admin' },
-  { id: 'supervisor', title: 'Supervisor' },
-  { id: 'super-admin', title: 'Super Admin' }
+    { id: 'user', title: 'User' }
 ]
 
 const initialFValues = {
     name: '',
+    email: '',
     role: 'user',
-    email: ''
+    password: '',
+    password2: '',
+    createdByName:''
 }
 
-export default function UpdateForm(props) {
+export default function RegisterForm(props) {
     const { addOrEdit, recordForEdit } = props
 
     const validate = (fieldValues = values) => {
@@ -41,26 +40,22 @@ export default function UpdateForm(props) {
         handleInputChange,
         resetForm
     } = useForm(initialFValues, true, validate);
-    console.log(recordForEdit);
+
     const handleSubmit = e => {
         e.preventDefault()
         if (validate()) {
             const input = {
-              name:values.name,
+              name: values.name,
               email: values.email,
-              role: values.role
+              role: values.role,
+              password: values.password,
+              password2: values.password2,
+              createdByName: props.auth.user.name
             };
-            console.log(input);
-            props.edit(input, resetForm, recordForEdit.role);
+            props.create(input, resetForm);
         }
     }
 
-    useEffect(() => {
-        if (recordForEdit != null)
-            setValues({
-                ...recordForEdit
-            })
-    }, [recordForEdit])
 
     return (
         <Form onSubmit={handleSubmit}>
@@ -73,7 +68,29 @@ export default function UpdateForm(props) {
                         onChange={handleInputChange}
                         error={errors.name}
                     />
-
+                    <Input
+                        name="email"
+                        label="Email Address"
+                        value={values.email}
+                        onChange={handleInputChange}
+                        error={errors.email}
+                    />
+                    <Input
+                        name="password"
+                        label="Password"
+                        type="password"
+                        value={values.password}
+                        onChange={handleInputChange}
+                        error={errors.password}
+                    />
+                    <Input
+                        name="password2"
+                        label="Confirm Password"
+                        type="password"
+                        value={values.password2}
+                        onChange={handleInputChange}
+                        error={errors.password2}
+                    />
                 </Grid>
                 <Grid item xs={3}>
                     <RadioGroup
