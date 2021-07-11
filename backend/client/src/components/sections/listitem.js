@@ -104,6 +104,12 @@ export const secondaryListItems = (
     </ListItemIcon>
     <ListItemText primary="Rejection" />
   </ListItem>
+  <ListItem button component={Link} to="/users">
+    <ListItemIcon>
+      <PeopleIcon />
+    </ListItemIcon>
+    <ListItemText primary="Users" />
+  </ListItem>
   </div>
 );
 
@@ -120,6 +126,36 @@ export const thirdListItems = (
       <AssignmentIcon />
     </ListItemIcon>
     <ListItemText primary="Projects" />
+  </ListItem>
+  <ListItem button component={Link} to="/approval">
+    <ListItemIcon>
+      <CheckCircleOutlineIcon />
+    </ListItemIcon>
+    <ListItemText primary="Approval" />
+  </ListItem>
+  <ListItem button component={Link} to="/rejection">
+    <ListItemIcon>
+      <CancelIcon />
+    </ListItemIcon>
+    <ListItemText primary="Rejection" />
+  </ListItem>
+  <ListItem button component={Link} to="/investments">
+    <ListItemIcon>
+      <MonetizationOnIcon />
+    </ListItemIcon>
+    <ListItemText primary="Investments" />
+  </ListItem>
+  <ListItem button component={Link} to="/vendors">
+    <ListItemIcon>
+      <ContactsIcon />
+    </ListItemIcon>
+    <ListItemText primary="Vendors" />
+  </ListItem>
+  <ListItem button component={Link} to="/users">
+    <ListItemIcon>
+      <PeopleIcon />
+    </ListItemIcon>
+    <ListItemText primary="Users" />
   </ListItem>
   </div>
 );

@@ -25,6 +25,8 @@ router.get('/user', userController.allowIfLoggedin, userController.grantAccess('
 
 router.get('/users', userController.allowIfLoggedin, userController.grantAccess('readAny', 'profile'),  userController.getUsers);
 
+router.get('/filteredUsers', userController.allowIfLoggedin, userController.grantAccess('readAny', 'profile'),  userController.getFilteredUsers);
+
 //------------------COMPANIES
 router.post('/newCompany', userController.allowIfLoggedin, userController.grantAccess('create', 'company'),companyController.addNew);
 

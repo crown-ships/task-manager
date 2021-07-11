@@ -26,8 +26,8 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import { mainListItems, secondaryListItems  } from '../listitem';
 import { logoutUser, registerUser } from "../../../actions/authActions";
-import { getAllUsers, deleteUser, updateUser } from "../../../actions/userActions";
-import UsersTable from "./UsersTable"
+import { getAllUsers,getFilteredUsers, deleteUser, updateUser } from "../../../actions/userActions";
+import UsersTablePicker from "./UsersTablePicker"
 
 function Copyright() {
   return (
@@ -139,12 +139,15 @@ const getData = (prop) => {
 const UsersPage =  (props) => {
 
   var itemList = "";
-  if (props.auth.user.role === "supervisor") {
-    itemList = secondaryListItems;
-  }
-  else if (props.auth.user.role === "super-admin"){
-    itemList = mainListItems;
-  }
+    if (props.auth.user.role === "supervisor") {
+      itemList = secondaryListItems;
+    }
+    else if (props.auth.user.role === "super-admin"){
+      itemList = mainListItems;
+    }
+    else if (props.auth.user.role === "admin"){
+      itemList = thirdListItems;
+    }
 
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
@@ -214,7 +217,7 @@ const UsersPage =  (props) => {
             {/* Recent Orders */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <UsersTable {...props}/>
+                <UsersTablePicker {...props}/>
               </Paper>
             </Grid>
 
@@ -237,5 +240,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { logoutUser, getAllUsers, deleteUser, updateUser, registerUser }
+  { logoutUser, getAllUsers,getFilteredUsers, deleteUser, updateUser, registerUser }
 )(withRouter(UsersPage));

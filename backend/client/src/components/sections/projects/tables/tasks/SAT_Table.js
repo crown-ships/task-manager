@@ -458,7 +458,7 @@ export default function AT_Table(props) {
       body: data
     };
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "super-admin"){
       props.updateTask(input, props.history);
       resetForm();
       setRecordForEdit(null);
@@ -484,7 +484,7 @@ export default function AT_Table(props) {
     };
 
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "super-admin"){
       props.deleteTask(input, props.history);
       setNotify({
         isOpen: true,

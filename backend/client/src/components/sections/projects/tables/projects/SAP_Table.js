@@ -225,7 +225,7 @@ export default function SAP_Table(props) {
       },
       body: data
     };
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "super-admin"){
       props.updateProject(input, props.history);
       resetForm();
       setRecordForEdit(null);
@@ -286,7 +286,7 @@ export default function SAP_Table(props) {
       email: props.auth.user.email,
       auth: props.auth.isAuthenticated
     };
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "super-admin"){
       props.deleteProject(input, props.history);
       setNotify({
         isOpen: true,

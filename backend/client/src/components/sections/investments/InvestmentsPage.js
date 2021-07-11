@@ -176,12 +176,15 @@ const InvestmentsPage =  (props) => {
   };
 
   var itemList = "";
-  if (props.auth.user.role === "supervisor") {
-    itemList = secondaryListItems;
-  }
-  else   if (props.auth.user.role === "super-admin") {
-    itemList = mainListItems;
-  }
+    if (props.auth.user.role === "supervisor") {
+      itemList = secondaryListItems;
+    }
+    else if (props.auth.user.role === "super-admin"){
+      itemList = mainListItems;
+    }
+    else if (props.auth.user.role === "admin"){
+      itemList = thirdListItems;
+    }
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {

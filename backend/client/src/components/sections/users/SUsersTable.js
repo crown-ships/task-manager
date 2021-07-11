@@ -19,9 +19,9 @@ import Input from "../../controls/Input"
 import ConfirmDialog from "../../elements/ConfirmDialog"
 import Notification from "../../elements/Notification"
 import Popup from "../../elements/Popup"
-import UpdateForm from "./Forms/UpdateForm"
+import SUpdateForm from "./Forms/SUpdateForm"
 import UseTable from "../useTable"
-import RegisterForm from "./Forms/RegisterForm"
+import SRegisterForm from "./Forms/SRegisterForm"
 
 function createData() {
   return { _id:"", name: "", email: "", role: "", createdByName: "", dateCreated: "", actions:""};
@@ -62,9 +62,17 @@ function preventDefault(event) {
   event.preventDefault();
 }
 
+
 const getData = (prop) => {
-  return prop.getAllUsers({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  const input = {
+    name: '',
+    role: "user",
+    email:prop.auth.user.email,
+    auth:prop.auth.isAuthenticated
+  }
+  return prop.getFilteredUsers(input, prop.history);
 }
+
 
 export default function UserTable(props) {
 
@@ -242,7 +250,7 @@ export default function UserTable(props) {
         openPopup={openEditPopup}
         setOpenPopup={setOpenEditPopup}
       >
-        <UpdateForm
+        <SUpdateForm
             recordForEdit={recordForEdit}
             edit={edit} />
       </Popup>
@@ -251,7 +259,7 @@ export default function UserTable(props) {
         openPopup={openRegPopup}
         setOpenPopup={setOpenRegPopup}
       >
-        <RegisterForm {...props} create={create}/>
+        <SRegisterForm {...props} create={create}/>
       </Popup>
       <Notification
                notify={notify}

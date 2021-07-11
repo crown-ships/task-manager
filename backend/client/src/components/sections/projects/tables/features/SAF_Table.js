@@ -308,7 +308,7 @@ export default function SAF_Table(props) {
       body: data
     };
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "super-admin"){
       props.updateFeature(input, props.history);
       resetForm();
       setRecordForEdit(null);
@@ -334,7 +334,7 @@ export default function SAF_Table(props) {
     }
 
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "super-admin"){
       props.deleteFeature(input, props.history);
       setNotify({
         isOpen: true,

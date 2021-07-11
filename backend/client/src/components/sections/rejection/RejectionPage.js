@@ -190,6 +190,9 @@ const RejectionPage =  (props) => {
     else if (props.auth.user.role === "super-admin"){
       itemList = mainListItems;
     }
+    else if (props.auth.user.role === "admin"){
+      itemList = thirdListItems;
+    }
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {

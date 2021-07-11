@@ -57,6 +57,22 @@ export const getAllUsers = (userData, history) => {
   }
 };
 
+export const getFilteredUsers = (userData, history) => {
+  return function (dispatch) {
+    return axios
+    .get("/api/filteredUsers", {params:userData})
+    .then(res => {
+      return res.data;
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+  }
+};
+
 export const getUser = (userData, history) => {
   return function (dispatch) {
     console.log(userData);

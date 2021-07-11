@@ -160,6 +160,37 @@ exports.getUsers = async (req, res, next) => {
     data: users
   });
 }
+exports.getFilteredUsers = async (req, res, next) => {
+  const search = {
+    name: req.query.name,
+    role: req.query.role
+  };
+
+   var counter=0;
+   var conditions = [];
+
+
+   Object.entries(search).forEach(([key,value]) => {
+     if(value !== "")
+     {
+       var json = {};
+       json[key]= value;
+       conditions[counter++] = json;
+
+     }
+   });
+  var users;
+  if(conditions.length == 0){
+     users = await User.find({});
+  }
+  else {
+     users = await User.find({$and: conditions});
+  }
+
+  res.status(200).json({
+    data: users
+  });
+}
 
 exports.getUser = async (req, res, next) => {
   try {

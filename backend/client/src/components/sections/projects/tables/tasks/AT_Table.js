@@ -127,7 +127,7 @@ const getData = (prop) => {
     email:prop.auth.user.email,
     auth:prop.auth.isAuthenticated
   };
-  return prop.getFilteredTasks({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  return prop.getFilteredTasks(input, prop.history);
 }
 const getDropdownList = (prop) => {
   const input = {
