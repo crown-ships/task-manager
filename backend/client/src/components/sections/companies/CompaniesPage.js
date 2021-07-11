@@ -23,7 +23,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import ExitToApp from '@material-ui/icons/ExitToApp';
-import { mainListItems} from '../listitem';
+import { mainListItems, secondaryListItems, thirdListItems } from '../listitem';
 import { logoutUser } from "../../../actions/authActions";
 import { updateAllTasks } from "../../../actions/taskActions";
 import { updateAllFeatures } from "../../../actions/featureActions";
