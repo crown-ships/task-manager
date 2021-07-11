@@ -74,7 +74,7 @@ export default function RegisterForm(props) {
               taskDetails: values.taskDetails,
               dueDate: values.dueDate,
               startDate: values.startDate,
-              ownerName: values.ownerName,
+              ownerName: featureDetails.ownerName,
               creatorName: props.auth.user.name,
               creatorID: props.auth.user.id,
               companyName: featureDetails.companyName,

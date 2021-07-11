@@ -76,7 +76,47 @@ function preventDefault(event) {
 }
 
 const getData = (prop) => {
-  return prop.getAllProjects({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  var input;
+
+  if (prop.auth.user.role === "super-admin") {
+    input = {
+      projectName: "",
+      dueDate: "",
+      startDate: "",
+      projectDetails: "",
+      productCategory: "",
+      companyName: "",
+      companyID: "",
+      creatorName: "",
+      creatorID: "",
+      approved: "wait",
+      enabled: "",
+      ownerName: "",
+      assignee: "",
+      email:prop.auth.user.email,
+      auth:prop.auth.isAuthenticated
+    }
+  }
+  else {
+    input = {
+      projectName: "",
+      dueDate: "",
+      startDate: "",
+      projectDetails: "",
+      productCategory: "",
+      companyName: "",
+      companyID: "",
+      creatorName: "",
+      creatorID: "",
+      approved: "wait",
+      enabled: "",
+      ownerName: prop.auth.user.name,
+      assignee: "",
+      email:prop.auth.user.email,
+      auth:prop.auth.isAuthenticated
+    }
+  }
+  return prop.getFilteredProjects(input, prop.history);
 }
 const getDropdownList = (prop) => {
   return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);

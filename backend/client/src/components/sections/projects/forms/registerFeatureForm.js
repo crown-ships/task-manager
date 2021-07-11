@@ -15,6 +15,7 @@ const initialFValues = {
     startDate: '',
     dueDate: '',
     ownerName: '',
+    assignee: '',
     projectName: ''
 }
 
@@ -88,7 +89,8 @@ export default function RegisterForm(props) {
               creatorID: props.auth.user.id,
               companyName: projectDetails.companyName,
               companyID: projectDetails.companyID,
-              ownerName: values.ownerName,
+              ownerName: projectDetails.ownerName,
+              assignee: values.assignee,
               featureName: values.featureName,
               featureDetails: values.featureDetails,
               dueDate: values.dueDate,
