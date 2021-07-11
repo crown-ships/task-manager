@@ -4,6 +4,8 @@ const ac = new AccessControl();
 exports.roles = (function() {
 ac.grant("supervisor")
  .readOwn("profile")
+ .readAny("profile")
+ .updateAny("profile")
  .updateOwn("profile")
  .readAny("company")
  .readAny("project")
@@ -32,14 +34,10 @@ ac.grant("supervisor")
  .create("investor")
  .deleteAny("feature")
  .deleteAny("task")
-
+ .create("profile")
 
 ac.grant("admin")
  .extend("supervisor")
- .readAny("profile")
- .updateAny("profile")
- .deleteAny("profile")
- .create("profile")
  .updateAny("company")
  .deleteAny("company")
  .create("company")
@@ -49,7 +47,7 @@ ac.grant("admin")
  .deleteAny("payment")
  .deleteAny("return")
  .deleteAny("investor")
-
+ .deleteAny("profile")
 ac.grant("super-admin")
  .extend("admin")
 return ac;
