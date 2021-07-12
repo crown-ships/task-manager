@@ -185,6 +185,7 @@ export default function AP_Table(props) {
     setList(selList);
 
     const u = await getUsers(props);
+    console.log(u.data);
     var userList = u.data.map(function(item) {
       return item.name;
     });

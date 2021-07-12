@@ -117,7 +117,24 @@ const getDropdownList = (prop) => {
   return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
-
+const getUsers = (prop) => {
+  const input = {
+    name: '',
+    role: "user",
+    email:prop.auth.user.email,
+    auth:prop.auth.isAuthenticated
+  }
+  return prop.getFilteredUsers(input, prop.history);
+}
+const getAdmins = (prop) => {
+  const input = {
+    name: '',
+    role: "admin",
+    email:prop.auth.user.email,
+    auth:prop.auth.isAuthenticated
+  }
+  return prop.getFilteredUsers(input, prop.history);
+}
 export default function SP_Table(props) {
 
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
@@ -125,6 +142,8 @@ export default function SP_Table(props) {
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
   const [list, setList] = React.useState([]);
+  const [allUsers, setAllUsers] = React.useState([]);
+  const [allAdmins, setAllAdmins] = React.useState([]);
   const [company, setCompany] = React.useState("");
   const [allCompanies, setAllCompanies] = React.useState([]);
   const [recordForEdit, setRecordForEdit] = React.useState(null);
@@ -159,6 +178,34 @@ export default function SP_Table(props) {
     }
 
     setList(selList);
+
+    const u = await getUsers(props);
+    console.log(u.data);
+    var userList = u.data.map(function(item) {
+      return item.name;
+    });
+
+    var users = [];
+    var i;
+    users[0] = {key:0, item: ""};
+    for(i=0; i<len; i++) {
+      users[i+1] = {key:i+1, item: userList[i]};
+    }
+    setAllUsers(users);
+
+
+    const a = await getAdmins(props);
+    var adminsList = a.data.map(function(item) {
+      return item.name;
+    });
+
+    var admins = [];
+    var i;
+    admins[0] = {key:0, item: ""};
+    for(i=0; i<len; i++) {
+      admins[i+1] = {key:i+1, item: adminsList[i]};
+    }
+    setAllAdmins(admins);
   },[]);
 
   React.useEffect(async () => {
@@ -371,14 +418,16 @@ export default function SP_Table(props) {
       >
         <UpdateForm {...props}
             recordForEdit={recordForEdit}
-            edit={edit} />
+            edit={edit}
+            allAdmins={allAdmins}
+            allUsers={allUsers}/>
       </Popup>
       <Popup
         title="Register New Project"
         openPopup={openRegPopup}
         setOpenPopup={setOpenRegPopup}
       >
-        <RegisterForm {...props} create={create} company={company} allCompanies = {allCompanies}/>
+        <RegisterForm {...props} create={create} company={company} allCompanies = {allCompanies} allAdmins={allAdmins} allUsers={allUsers}/>
       </Popup>
       <Notification
                notify={notify}
