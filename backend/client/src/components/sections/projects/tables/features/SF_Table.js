@@ -138,6 +138,17 @@ const getCompanyList = (prop) => {
   return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
+const getUsers = (prop) => {
+  const input = {
+    name: '',
+    role: "user",
+    email:prop.auth.user.email,
+    auth:prop.auth.isAuthenticated
+  }
+  return prop.getFilteredUsers(input, prop.history);
+}
+
+
 export default function SF_Table(props) {
 
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
@@ -146,6 +157,7 @@ export default function SF_Table(props) {
   const [data, setData] = React.useState(rows);
   const [cList, setCList] = React.useState([]);
   const [list, setList] = React.useState([]);
+  const [allUsers, setAllUsers] = React.useState([]);
   const [project, setProject] = React.useState("");
   const [company, setCompany] = React.useState("");
   const [allProjects, setAllProjects] = React.useState([]);
@@ -163,6 +175,20 @@ export default function SF_Table(props) {
 
     const comp = await getCompanyList(props);
     setAllCompanies(comp.data);
+
+    const u = await getUsers(props);
+    console.log(u.data);
+    var userList = u.data.map(function(item) {
+      return item.name;
+    });
+
+    var users = [];
+    var i;
+    users[0] = {key:0, item: ""};
+    for(i=0; i<len; i++) {
+      users[i+1] = {key:i+1, item: userList[i]};
+    }
+    setAllUsers(users);
 
     const proj = await getDropdownList(props);
     setAllProjects(proj.data);
@@ -478,14 +504,15 @@ export default function SF_Table(props) {
       >
         <UpdateForm {...props}
             recordForEdit={recordForEdit}
-            edit={edit} />
+            edit={edit}
+            allUsers={allUsers}/>
       </Popup>
       <Popup
         title="Register New Milestone"
         openPopup={openRegPopup}
         setOpenPopup={setOpenRegPopup}
       >
-        <RegisterForm {...props} create={create} project={project} allProjects = {allProjects}/>
+        <RegisterForm {...props} create={create} project={project} allProjects = {allProjects} allUsers={allUsers}/>
       </Popup>
       <Notification
                notify={notify}

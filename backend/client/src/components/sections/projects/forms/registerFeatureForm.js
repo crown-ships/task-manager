@@ -14,7 +14,6 @@ const initialFValues = {
     featureDetails: '',
     startDate: '',
     dueDate: '',
-    ownerName: '',
     assignee: '',
     projectName: ''
 }
@@ -141,13 +140,20 @@ export default function RegisterForm(props) {
                     />
                 </Grid>
                 <Grid item xs={4}>
-                    <Input
-                        name="ownerName"
-                        label="Owner Name *"
-                        value={values.ownerName}
-                        onChange={handleInputChange}
-                        error={errors.ownerName}
-                    />
+                <FormControl variant="outlined">
+                  <InputLabel htmlFor="outlined-assignee-native-simple">Assignee *</InputLabel>
+                  <Select
+                    native
+                    value={values.assignee}
+                    onChange={handleInputChange}
+                    label="Assignee"
+                    inputProps={{
+                      name: 'assignee',
+                      id: 'outlined-assignee-native-simple'
+                    }}
+                  >{props.allUsers.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+                  </Select>
+                </FormControl>
                     <Input
                       id="startDate"
                       type="date"

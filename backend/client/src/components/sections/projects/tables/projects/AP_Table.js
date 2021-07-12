@@ -159,6 +159,7 @@ export default function AP_Table(props) {
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
   const [records, setRecords] = React.useState(data);
   const classes = useStyles();
+  
   React.useEffect(async () => {
     const d = await getDropdownList(props);
     setAllCompanies(d.data);

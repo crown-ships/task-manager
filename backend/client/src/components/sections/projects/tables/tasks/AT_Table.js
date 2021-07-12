@@ -172,6 +172,17 @@ const getProjectList = (prop) => {
   return prop.getFilteredProjects(input, prop.history);
 }
 
+const getUsers = (prop) => {
+  const input = {
+    name: '',
+    role: "user",
+    email:prop.auth.user.email,
+    auth:prop.auth.isAuthenticated
+  }
+  return prop.getFilteredUsers(input, prop.history);
+}
+
+
 const getCompanyList = (prop) => {
   return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
@@ -183,6 +194,7 @@ export default function AT_Table(props) {
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
   const [list, setList] = React.useState([]);
+  const [allUsers, setAllUsers] = React.useState([]);
   const [pList, setPList] = React.useState([]);
   const [cList, setCList] = React.useState([]);
   const [allFeatures, setAllFeatures] = React.useState([]);
@@ -207,6 +219,20 @@ export default function AT_Table(props) {
 
     const proj = await getProjectList(props);
     setAllProjects(proj.data);
+
+    const u = await getUsers(props);
+    console.log(u.data);
+    var userList = u.data.map(function(item) {
+      return item.name;
+    });
+
+    var users = [];
+    var i;
+    users[0] = {key:0, item: ""};
+    for(i=0; i<len; i++) {
+      users[i+1] = {key:i+1, item: userList[i]};
+    }
+    setAllUsers(users);
 
     const feat = await getDropdownList(props);
     setAllFeatures(feat.data);
@@ -681,14 +707,15 @@ export default function AT_Table(props) {
       >
         <UpdateForm
             recordForEdit={recordForEdit}
-            edit={edit} />
+            edit={edit}
+            allUsers={allUsers}/>
       </Popup>
       <Popup
         title="Register New Task"
         openPopup={openRegPopup}
         setOpenPopup={setOpenRegPopup}
       >
-        <RegisterForm {...props} create={create} feature={feature} allFeatures={allFeatures}/>
+        <RegisterForm {...props} create={create} feature={feature} allFeatures={allFeatures} allUsers={allUsers}/>
       </Popup>
       <Notification
                notify={notify}

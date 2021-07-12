@@ -3,13 +3,16 @@ import { Grid, } from '@material-ui/core';
 import Button from "../../../controls/Button";
 import Input from "../../../controls/Input";
 import { useForm, Form } from '../../useForm';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 const initialFValues = {
     taskName: '',
     taskDetails: '',
     dueDate: '',
     startDate: '',
-    ownerName:'',
+    assignee:'',
     percentComplete:0
 }
 
@@ -44,7 +47,7 @@ export default function UpdateForm(props) {
               dueDate: values.dueDate,
               startDate: values.startDate,
               percentComplete: parseInt(values.percentComplete),
-              ownerName: values.ownerName
+              assignee: values.assignee
           };
 
           props.edit(input, resetForm, recordForEdit._id);
@@ -88,13 +91,20 @@ export default function UpdateForm(props) {
 
                 </Grid>
                 <Grid item xs={5}>
-                    <Input
-                        name="ownerName"
-                        label="Owner Name"
-                        value={values.ownerName}
-                        onChange={handleInputChange}
-                        error={errors.ownerName}
-                    />
+                <FormControl variant="outlined">
+                  <InputLabel htmlFor="outlined-assignee-native-simple">Assignee *</InputLabel>
+                  <Select
+                    native
+                    value={values.assignee}
+                    onChange={handleInputChange}
+                    label="Assignee"
+                    inputProps={{
+                      name: 'assignee',
+                      id: 'outlined-assignee-native-simple'
+                    }}
+                  >{props.allUsers.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+                  </Select>
+                </FormControl>
                     <Input
                       id="startDate"
                       type="date"
