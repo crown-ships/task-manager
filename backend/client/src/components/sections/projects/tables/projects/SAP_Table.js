@@ -177,8 +177,8 @@ export default function SAP_Table(props) {
     var users = [];
     var i;
     users[0] = {key:0, item: ""};
-    for(i=0; i<len; i++) {
-      users[i+1] = {key:i+1, item: userList[i]};
+    for(i=1; i<=userList.length; i++) {
+      users[i] = {key:i, item: userList[i]};
     }
     setAllUsers(users);
 
@@ -191,7 +191,7 @@ export default function SAP_Table(props) {
     var admins = [];
     var i;
     admins[0] = {key:0, item: ""};
-    for(i=0; i<len; i++) {
+    for(i=0; i<adminsList.length; i++) {
       admins[i+1] = {key:i+1, item: adminsList[i]};
     }
     setAllAdmins(admins);
@@ -470,7 +470,7 @@ export default function SAP_Table(props) {
         <UpdateForm {...props}
             recordForEdit={recordForEdit}
             edit={edit}
-            allAdmins={allAdmins} 
+            allAdmins={allAdmins}
             allUsers={allUsers}/>
       </Popup>
       <Popup

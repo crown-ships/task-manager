@@ -252,7 +252,7 @@ export default function ProjectApprovalTable(props) {
       }
     };
 
-    ifprops.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.updateProject(input, props.history);
       resetForm();
       setOpenRejectPopup(false);

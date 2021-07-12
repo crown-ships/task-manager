@@ -165,8 +165,8 @@ export default function SAF_Table(props) {
     var users = [];
     var i;
     users[0] = {key:0, item: ""};
-    for(i=0; i<len; i++) {
-      users[i+1] = {key:i+1, item: userList[i]};
+    for(i=1; i<=userList.length; i++) {
+      users[i] = {key:i, item: userList[i]};
     }
     setAllUsers(users);
 

@@ -159,7 +159,7 @@ export default function AP_Table(props) {
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
   const [records, setRecords] = React.useState(data);
   const classes = useStyles();
-  
+
   React.useEffect(async () => {
     const d = await getDropdownList(props);
     setAllCompanies(d.data);
@@ -194,8 +194,8 @@ export default function AP_Table(props) {
     var users = [];
     var i;
     users[0] = {key:0, item: ""};
-    for(i=0; i<len; i++) {
-      users[i+1] = {key:i+1, item: userList[i]};
+    for(i=1; i<=userList.length; i++) {
+      users[i] = {key:i, item: userList[i]};
     }
     setAllUsers(users);
 
@@ -208,7 +208,7 @@ export default function AP_Table(props) {
     var admins = [];
     var i;
     admins[0] = {key:0, item: ""};
-    for(i=0; i<len; i++) {
+    for(i=0; i<adminsList.length; i++) {
       admins[i+1] = {key:i+1, item: adminsList[i]};
     }
     setAllAdmins(admins);
