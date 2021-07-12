@@ -189,7 +189,7 @@ export default function SP_Table(props) {
     var i;
     users[0] = {key:0, item: ""};
     for(i=1; i<=userList.length; i++) {
-      users[i] = {key:i, item: userList[i]};
+      users[i] = {key:i, item: userList[i-1]};
     }
     setAllUsers(users);
 
