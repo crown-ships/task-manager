@@ -140,7 +140,7 @@ export default function RegisterForm(props) {
                       name: 'ownerName',
                       id: 'outlined-ownerName-native-simple'
                     }}
-                  >{selList.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+                  >{props.allAdmins.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
                   </Select>
                 </FormControl>
                 <FormControl variant="outlined">
@@ -154,7 +154,7 @@ export default function RegisterForm(props) {
                       name: 'assignee',
                       id: 'outlined-assignee-native-simple'
                     }}
-                  >{selList.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+                  >{props.allUsers.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
                   </Select>
                 </FormControl>
                     <Input
