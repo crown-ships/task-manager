@@ -134,7 +134,7 @@ export default function UserTable(props) {
       },
       body: data
     };
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.updateUser(input, props.history);
       resetForm();
       setRecordForEdit(null);
@@ -160,7 +160,7 @@ export default function UserTable(props) {
     };
 
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.deleteUser(input, props.history);
       setNotify({
         isOpen: true,

@@ -191,7 +191,7 @@ export default function CompaniesTable(props) {
       body: data
     };
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.updateCompany(input, props.history);
       resetForm();
       setRecordForEdit(null);
@@ -217,7 +217,7 @@ export default function CompaniesTable(props) {
     };
 
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.deleteCompany(input, props.history);
       setNotify({
         isOpen: true,

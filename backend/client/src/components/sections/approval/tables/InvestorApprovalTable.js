@@ -141,7 +141,7 @@ export default function InvestorApprovalTable(props) {
       }
     };
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.updateInvestor(input, props.history);
       setNotify({
         isOpen: true,
@@ -164,7 +164,7 @@ export default function InvestorApprovalTable(props) {
       }
     };
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.updateInvestor(input, props.history);
       resetForm();
       setOpenRejectPopup(false);

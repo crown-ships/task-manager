@@ -192,7 +192,7 @@ export default function PaymentApprovalTable(props) {
       }
     };
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.updatePayment(input, props.history);
       setNotify({
         isOpen: true,
@@ -215,7 +215,7 @@ export default function PaymentApprovalTable(props) {
       }
     };
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.updatePayment(input, props.history);
       resetForm();
       setOpenRejectPopup(false);

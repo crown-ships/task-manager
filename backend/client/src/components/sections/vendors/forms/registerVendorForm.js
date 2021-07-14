@@ -40,7 +40,7 @@ export default function RegisterForm(props) {
     const handleSubmit = e => {
         e.preventDefault()
         if (validate()) {
-            const approved = (props.auth.user.role === "admin")?"approved":"wait";
+            const approved = (props.auth.user.role === "admin" || props.auth.user.role === "super-admin")?"approved":"wait";
             const input = {
               vendorName:values.vendorName,
               vendorEmail:values.vendorEmail,

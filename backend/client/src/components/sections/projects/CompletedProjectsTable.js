@@ -226,7 +226,7 @@ export default function AP_Table(props) {
       email: props.auth.user.email,
       auth: props.auth.isAuthenticated
     };
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.deleteProject(input, props.history);
       setNotify({
         isOpen: true,

@@ -142,7 +142,7 @@ export default function VendorApprovalTable(props) {
       }
     };
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.updateVendor(input, props.history);
       setNotify({
         isOpen: true,
@@ -165,7 +165,7 @@ export default function VendorApprovalTable(props) {
       }
     };
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.updateVendor(input, props.history);
       resetForm();
       setOpenRejectPopup(false);

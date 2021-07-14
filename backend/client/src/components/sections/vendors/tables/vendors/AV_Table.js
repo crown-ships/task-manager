@@ -180,7 +180,7 @@ export default function AV_Table(props) {
       body: data
     };
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.updateVendor(input, props.history);
       resetForm();
       setRecordForEdit(null);

@@ -194,7 +194,7 @@ export default function AL_Table(props) {
     }
 
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.deletePayment(input, props.history);
       setNotify({
         isOpen: true,

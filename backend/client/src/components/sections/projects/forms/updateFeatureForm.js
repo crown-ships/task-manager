@@ -39,13 +39,11 @@ export default function UpdateForm(props) {
     const handleSubmit = e => {
         e.preventDefault()
         if (validate()) {
-            const approved = (props.auth.user.role === "admin")?"approved":"wait";
             const input = {
               featureDetails: values.featureDetails,
               dueDate: values.dueDate,
               startDate: values.startDate,
-              assignee: values.assignee,
-              approved: approved
+              assignee: values.assignee
           };
           props.edit(input, resetForm, props.recordForEdit._id);
         }

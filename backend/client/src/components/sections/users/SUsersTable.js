@@ -142,7 +142,7 @@ export default function UserTable(props) {
       },
       body: data
     };
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.updateUser(input, props.history);
       resetForm();
       setRecordForEdit(null);
@@ -168,7 +168,7 @@ export default function UserTable(props) {
     };
 
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.deleteUser(input, props.history);
       setNotify({
         isOpen: true,
@@ -225,18 +225,6 @@ export default function UserTable(props) {
                     color="primary"
                     onClick={() => { openInEditPopup(row) }}>
                     <EditOutlinedIcon fontSize="small" />
-                  </ActionButton>
-                  <ActionButton
-                    color="secondary"
-                    onClick={() => {
-                      setConfirmDialog({
-                        isOpen: true,
-                        title: 'Are you sure to delete this record?',
-                        subTitle: "You can't undo this operation",
-                        onConfirm: () => { onDelete(row) }
-                      })
-                    }}>
-                    <CloseIcon fontSize="small" />
                   </ActionButton>
                 </TableCell>
               </TableRow>

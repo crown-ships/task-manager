@@ -227,7 +227,7 @@ export default function APay_Table(props) {
       }
     };
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.updatePayment(input, props.history);
 
       var i;
@@ -296,7 +296,7 @@ export default function APay_Table(props) {
       body: data
     };
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.updatePayment(input, props.history);
       resetForm();
       setRecordForEdit(null);
@@ -322,7 +322,7 @@ export default function APay_Table(props) {
     }
 
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.deletePayment(input, props.history);
       setNotify({
         isOpen: true,

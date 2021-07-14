@@ -269,7 +269,7 @@ export default function InvestmentApprovalTable(props) {
       }
     };
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.updateInvestment(input, props.history);
       setNotify({
         isOpen: true,
@@ -293,7 +293,7 @@ export default function InvestmentApprovalTable(props) {
       }
     };
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.updateInvestment(input, props.history);
       resetForm();
       setOpenRejectPopup(false);

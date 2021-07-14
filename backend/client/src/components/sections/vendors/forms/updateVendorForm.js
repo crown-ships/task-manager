@@ -37,7 +37,7 @@ export default function UpdateForm(props) {
 
         if (validate()) {
           console.log(props.recordForEdit);
-            const approved = (props.auth.user.role === "admin")?"approved":"wait";
+            const approved = (props.auth.user.role === "admin" || props.auth.user.role === "super-admin")?"approved":"wait";
             const input = {
               vendorEmail:values.email,
               contactNo:values.contactNo,
