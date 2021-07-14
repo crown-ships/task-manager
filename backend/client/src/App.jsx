@@ -10,6 +10,7 @@ import store from "./store";
 import Login from "./auth/Login"
 import Companies from "./components/sections/companies/CompaniesPage";
 import Projects from "./components/sections/projects/ProjectsPage";
+import CompletedProjects from "./components/sections/projects/CompletedProjects";
 import Users from "./components/sections/users/UsersPage";
 import Vendors from "./components/sections/vendors/VendorsPage";
 import Investments from "./components/sections/investments/InvestmentsPage";

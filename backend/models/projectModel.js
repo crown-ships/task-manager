@@ -8,6 +8,11 @@ const projectModel = new mongoose.Schema({
   dueDate: {
     type: Date
   },
+  completed: {
+    type: String,
+    default: "no",
+    enum: ["no", "yes"]
+  },
   startDate: {
     type: Date,
     required: true

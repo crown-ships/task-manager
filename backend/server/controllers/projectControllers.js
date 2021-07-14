@@ -63,7 +63,9 @@ exports.getFilteredProjects = async (req, res, next) => {
     approved: req.query.approved,
     enabled: req.query.enabled,
     ownerName: req.query.ownerName,
-    assignee: req.query.assignee
+    assignee: req.query.assignee,
+    completed: req.query.completed,
+    percentComplete: req.query.percentComplete
   };
 
    var counter=0;
