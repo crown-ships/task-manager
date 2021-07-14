@@ -237,9 +237,13 @@ export default function ProjectApprovalTable(props) {
   }
 
   const dateToString = (date) => {
-    var d = date.toString();
 
-    d = d.substring(0, d.indexOf('T'));
+    var d = "";
+    if (date != undefined){
+      d= date.toString();
+      d = d.substring(0, d.indexOf('T'));
+    }
+
     return d;
   }
 
