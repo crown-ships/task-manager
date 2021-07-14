@@ -7,6 +7,7 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import PeopleIcon from '@material-ui/icons/People';
+import Collapse from '@material-ui/core/Collapse';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import LayersIcon from '@material-ui/icons/Layers';
@@ -18,8 +19,16 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import ContactsIcon from '@material-ui/icons/Contacts';
 import BusinessIcon from '@material-ui/icons/Business';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 
-export const mainListItems = (
+export const mainListItems = (open) => {
+  const [open, setOpen] = React.useState(true);
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
+  return (
   <div>
     <ListItem button component={Link} to="/dashboard">
       <ListItemIcon>
@@ -32,7 +41,18 @@ export const mainListItems = (
         <AssignmentIcon />
       </ListItemIcon>
       <ListItemText primary="Projects" />
+      {open ? <ExpandLess /> : <ExpandMore />}
     </ListItem>
+    <Collapse in={open} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <ListItem button component={Link} to="/approval">
+            <ListItemIcon>
+                <AssignmentIcon />
+            </ListItemIcon>
+            <ListItemText primary="Starred" />
+          </ListItem>
+        </List>
+      </Collapse>
     <ListItem button component={Link} to="/approval">
       <ListItemIcon>
         <CheckCircleOutlineIcon />
@@ -70,7 +90,7 @@ export const mainListItems = (
       <ListItemText primary="Users" />
     </ListItem>
   </div>
-);
+)};
 
 export const secondaryListItems = (
   <div>

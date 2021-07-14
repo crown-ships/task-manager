@@ -184,7 +184,7 @@ const ProjectsPage =  (props) => {
       itemList = secondaryListItems;
     }
     else if (props.auth.user.role === "super-admin"){
-      itemList = mainListItems;
+      itemList = mainListItems();
     }
     else if (props.auth.user.role === "admin"){
       itemList = thirdListItems;
