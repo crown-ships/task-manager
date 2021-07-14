@@ -94,6 +94,7 @@ const getData = (prop) => {
       ownerName: "",
       assignee: "",
       completed: "",
+      percentComplete:"",
       email:prop.auth.user.email,
       auth:prop.auth.isAuthenticated
     }
@@ -114,6 +115,7 @@ const getData = (prop) => {
       ownerName: prop.auth.user.name,
       assignee: "",
       completed: "",
+      percentComplete:"",
       email:prop.auth.user.email,
       auth:prop.auth.isAuthenticated
     }
