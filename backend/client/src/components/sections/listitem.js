@@ -22,7 +22,7 @@ import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 
-export function mainListItems (open)  {
+export function mainListItems ()  {
   const [open, setOpen] = React.useState(true);
 
   const handleClick = () => {
