@@ -18,7 +18,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Switch from '@material-ui/core/Switch';
 import ActionButton from "../../../controls/ActionButton"
 import Button from "../../../controls/Button"
-import Input from "../../../../controls/Input"
+import Input from "../../../controls/Input"
 import ConfirmDialog from "../../../elements/ConfirmDialog"
 import Notification from "../../../elements/Notification"
 import Popup from "../../../elements/Popup"
@@ -116,6 +116,7 @@ const getData = (prop) => {
     ownerName: "",
     assignee: "",
     percentComplete: 100,
+    completed: "",
     email:prop.auth.user.email,
     auth:prop.auth.isAuthenticated
   }
