@@ -26,7 +26,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import ExitToApp from '@material-ui/icons/ExitToApp';
-import { mainListItems, secondaryListItems, thirdListItems } from '../listitem';
+import { MainListItems, secondaryListItems, thirdListItems } from '../listitem';
 import { logoutUser } from "../../../actions/authActions";
 import { getFilteredUsers} from "../../../actions/userActions";
 import { getAllCompanies, updateCompany } from "../../../actions/companyActions";
