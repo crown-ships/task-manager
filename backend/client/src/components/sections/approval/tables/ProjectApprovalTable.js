@@ -93,6 +93,7 @@ const getData = (prop) => {
       enabled: "",
       ownerName: "",
       assignee: "",
+      completed: "",
       email:prop.auth.user.email,
       auth:prop.auth.isAuthenticated
     }
@@ -112,6 +113,7 @@ const getData = (prop) => {
       enabled: "",
       ownerName: prop.auth.user.name,
       assignee: "",
+      completed: "",
       email:prop.auth.user.email,
       auth:prop.auth.isAuthenticated
     }
