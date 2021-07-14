@@ -24,7 +24,7 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 
 export const MazinListItems = () => {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
 
   const handleClick = () => {
     setOpen(!open);
@@ -37,7 +37,7 @@ export const MazinListItems = () => {
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
     </ListItem>
-    <ListItem button component={Link} to="/projects">
+    <ListItem button component={Link} to="/projects" onClick={handleClick}>
       <ListItemIcon>
         <AssignmentIcon />
       </ListItemIcon>
