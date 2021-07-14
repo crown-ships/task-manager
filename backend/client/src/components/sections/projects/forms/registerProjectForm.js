@@ -72,7 +72,7 @@ export default function RegisterForm(props) {
               if(props.allCompanies[i].companyName === values.companyName)
                 companyDetails = props.allCompanies[i];
             }
-            const approved = (props.auth.user.role === "admin")?"approved":"wait";
+            const approved = (props.auth.user.role === "admin" || props.auth.user.role === "super-admin")?"approved":"wait";
             const input = {
               companyName: companyDetails.companyName,
               companyID: companyDetails._id,

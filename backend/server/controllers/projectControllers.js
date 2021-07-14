@@ -81,6 +81,7 @@ exports.getFilteredProjects = async (req, res, next) => {
 
      }
    });
+
   var projects;
   if(conditions.length == 0){
      projects = await Project.find({});
@@ -90,7 +91,8 @@ exports.getFilteredProjects = async (req, res, next) => {
   }
 
   res.status(200).json({
-    data: projects
+    data: projects,
+    conditions: conditions
   });
 }
 
