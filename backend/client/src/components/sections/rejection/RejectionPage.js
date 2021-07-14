@@ -29,7 +29,7 @@ import ExitToApp from '@material-ui/icons/ExitToApp';
 import { mainListItems, secondaryListItems, thirdListItems } from '../listitem';
 import { logoutUser } from "../../../actions/authActions";
 import { getAllCompanies } from "../../../actions/companyActions";
-import { getAllProjects, deleteProject, updateProject, registerProject } from "../../../actions/projectActions";
+import { getAllProjects,getFilteredProjects, deleteProject, updateProject, registerProject } from "../../../actions/projectActions";
 import { getAllVendors, deleteVendor, updateVendor, registerVendor } from "../../../actions/vendorActions";
 import { getAllPayments, deletePayment, updatePayment, registerPayment } from "../../../actions/paymentActions";
 import { getAllInvestments, deleteInvestment, updateInvestment, registerInvestment } from "../../../actions/investmentActions";
@@ -301,5 +301,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-    { getAllInvestments, deleteInvestment, updateInvestment, registerInvestment, logoutUser, getAllPayments, deletePayment, updatePayment, registerPayment, getAllInvestors, deleteInvestor, updateInvestor, registerInvestor, getAllProjects, getAllCompanies, deleteProject, updateProject, registerProject, getAllVendors, deleteVendor, updateVendor, registerVendor}
+    { getAllInvestments, getFilteredProjects,deleteInvestment, updateInvestment, registerInvestment, logoutUser, getAllPayments, deletePayment, updatePayment, registerPayment, getAllInvestors, deleteInvestor, updateInvestor, registerInvestor, getAllProjects, getAllCompanies, deleteProject, updateProject, registerProject, getAllVendors, deleteVendor, updateVendor, registerVendor}
 )(withRouter(RejectionPage));

@@ -23,7 +23,7 @@ import ConfirmDialog from "../../../elements/ConfirmDialog"
 import Notification from "../../../elements/Notification"
 import Popup from "../../../elements/Popup"
 import UpdateForm from "../forms/updateProjectForm"
-import UseTable from "../../useTable"
+import UseTable from "../useTable"
 import RegisterForm from "../forms/registerProjectForm"
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
