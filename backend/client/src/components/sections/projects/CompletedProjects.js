@@ -33,7 +33,7 @@ import { getAllCompanies, updateCompany } from "../../../actions/companyActions"
 import { getAllProjects, getFilteredProjects, deleteProject, updateProject, registerProject } from "../../../actions/projectActions";
 import { getAllTasks, getFilteredTasks, deleteTask, updateTask, registerTask ,updateAllTasks } from "../../../actions/taskActions";
 import { getAllFeatures, getFilteredFeatures, deleteFeature, updateFeature, registerFeature, updateAllFeatures } from "../../../actions/featureActions";
-import CompletedProjectsTable from './CopmletedProjectsTable'
+import CompletedProjectsTable from './CompletedProjectsTable'
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
