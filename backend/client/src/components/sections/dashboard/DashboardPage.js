@@ -161,6 +161,9 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'auto',
     flexDirection: 'column',
   },
+  grid: {
+    margin: 2
+  },
   fixedHeight: {
     height: 240,
   },
@@ -296,7 +299,7 @@ const ProjectsPage =  (props) => {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
-        <Paper padding ={1}>
+        <Paper className={classes.paper}>
         <FormControl variant="outlined">
           <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
           <Select
@@ -311,7 +314,7 @@ const ProjectsPage =  (props) => {
           >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
           </Select>
         </FormControl>
-          <Grid container padding={1}>
+          <Grid container className={classes.grid}>
             <Grid item xs={5}>
               <Graphs {...props} company={company}/>
             </Grid>
@@ -321,7 +324,7 @@ const ProjectsPage =  (props) => {
             </Grid>
           </Grid>
 
-          <Grid container padding={1}>
+          <Grid container  className={classes.grid}>
             <Grid item xs={3}></Grid>
             <Grid item xs={6}>
               <Pie {...props} company={company}/>

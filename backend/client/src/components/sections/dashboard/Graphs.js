@@ -37,7 +37,7 @@ export default function Graphs(props) {
       var complist = d.data.map(function(item) {
         console.log(props.company);
         console.log(item);
-        if(props.company === item.companyName && item.approved === "true") {
+        if(props.company === item.companyName && item.approved === "approved") {
           return {projectName: item.projectName, percentComplete: item.percentComplete};
         }
         else {
