@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Paper from '@material-ui/core/Paper';
-import { Chart, Series, Tooltip, ValueAxis } from 'devextreme-react/chart';
+import { Chart, Series, Label, Tooltip, ValueAxis } from 'devextreme-react/chart';
 
 
 const data = [
@@ -55,7 +55,7 @@ export default function OwnerGraphs(props) {
       var complist = d.data.map(function(item) {
         console.log(props.company);
         console.log(item);
-        if(props.company === item.companyName) {
+        if(props.company === item.companyName && item.approved === "approved") {
           return item;
         }
         else {
@@ -102,7 +102,7 @@ export default function OwnerGraphs(props) {
     }
   return (
     <Paper>
-    <Chart id="chart" dataSource={ownerCount}>
+    <Chart id="chart" dataSource={ownerCount} title="Project Owners">
         <Series
           valueField="val"
           argumentField="owner"

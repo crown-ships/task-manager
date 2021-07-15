@@ -296,7 +296,7 @@ const ProjectsPage =  (props) => {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
-        <Paper>
+        <Paper padding ={1}>
         <FormControl variant="outlined">
           <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
           <Select
@@ -311,16 +311,17 @@ const ProjectsPage =  (props) => {
           >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
           </Select>
         </FormControl>
-          <Grid container>
+          <Grid container padding={1}>
             <Grid item xs={5}>
               <Graphs {...props} company={company}/>
             </Grid>
+            <Grid item xs={2}></Grid>
             <Grid item xs={5}>
               <OwnerGraphs {...props} company={company}/>
             </Grid>
           </Grid>
-          <div></div>
-          <Grid container>
+
+          <Grid container padding={1}>
             <Grid item xs={3}></Grid>
             <Grid item xs={6}>
               <Pie {...props} company={company}/>

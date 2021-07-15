@@ -37,7 +37,7 @@ export default function Graphs(props) {
       var complist = d.data.map(function(item) {
         console.log(props.company);
         console.log(item);
-        if(props.company === item.companyName) {
+        if(props.company === item.companyName && item.approved === "true") {
           return {projectName: item.projectName, percentComplete: item.percentComplete};
         }
         else {
@@ -62,7 +62,7 @@ export default function Graphs(props) {
   console.log(project);
   return (
     <Paper>
-    <Chart id="chart" dataSource={project}>
+    <Chart id="chart" dataSource={project} title="Project Progress">
         <Series
           valueField="percentComplete"
           argumentField="projectName"

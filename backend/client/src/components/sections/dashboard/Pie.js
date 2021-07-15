@@ -107,7 +107,7 @@ export default function Graphs(props) {
     <PieChart
         id="pie"
         type="doughnut"
-        title="Project Progress"
+        title="Project Overview"
         palette="Material"
         dataSource={pie}
       >
