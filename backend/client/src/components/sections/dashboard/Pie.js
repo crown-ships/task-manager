@@ -21,15 +21,10 @@ function getProjects (props) {
     return props.getAllProjects({email:props.auth.user.email, auth:props.auth.isAuthenticed}, props.history)
 }
 
-function getDropdownList (prop) {
-  return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
-}
-
 export default function Graphs(props) {
 
   const [project, setProject] = React.useState([]);
   const [total, setTotal] = React.useState(0);
-  const [list, setList] = React.useState([]);
   const [pie, setPie] = React.useState([]);
   const [state, setState] = React.useState({
       checkedA: true,
