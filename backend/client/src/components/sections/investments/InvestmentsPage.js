@@ -26,7 +26,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import ExitToApp from '@material-ui/icons/ExitToApp';
-import { mainListItems, secondaryListItems, thirdListItems } from '../listitem';
+import { SuperAdminListItems, AdminListItems, SupervisorListItems } from '../listitem';
 import { logoutUser } from "../../../actions/authActions";
 import { getAllCompanies } from "../../../actions/companyActions";
 import { getAllInvestments, deleteInvestment, updateInvestment, registerInvestment } from "../../../actions/investmentActions";
@@ -176,15 +176,16 @@ const InvestmentsPage =  (props) => {
   };
 
   var itemList = "";
-    if (props.auth.user.role === "supervisor") {
-      itemList = secondaryListItems;
-    }
-    else if (props.auth.user.role === "super-admin"){
-      itemList = mainListItems;
-    }
-    else if (props.auth.user.role === "admin"){
-      itemList = thirdListItems;
-    }
+
+  if (props.auth.user.role === "supervisor") {
+    itemList = (<SupervisorListItems />);
+  }
+  else if (props.auth.user.role === "super-admin"){
+    itemList = (<SuperAdminListItems />);
+  }
+  else if (props.auth.user.role === "admin"){
+    itemList = (<AdminListItems />);
+  }
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {

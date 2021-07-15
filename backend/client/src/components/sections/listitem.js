@@ -23,6 +23,7 @@ import BusinessIcon from '@material-ui/icons/Business';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const MazinListItems = () => {
+export const SuperAdminListItems = () => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -61,7 +62,7 @@ export const MazinListItems = () => {
         <List component="div" disablePadding>
           <ListItem button component={Link} to="/CompletedProjects" className={classes.nested}>
             <ListItemIcon>
-                <AssignmentIcon />
+                <AssignmentTurnedInIcon />
             </ListItemIcon>
             <ListItemText primary="Completed" />
           </ListItem>
@@ -106,137 +107,126 @@ export const MazinListItems = () => {
   </div>
 )};
 
-export const secondaryListItems = (
-  <div>
-  <ListItem button component={Link} to="/dashboard">
-    <ListItemIcon>
-      <DashboardIcon />
-    </ListItemIcon>
-    <ListItemText primary="Dashboard" />
-  </ListItem>
-  <ListItem button component={Link} to="/projects">
-    <ListItemIcon>
-      <AssignmentIcon />
-    </ListItemIcon>
-    <ListItemText primary="Projects" />
-  </ListItem>
-  <ListItem button component={Link} to="/investments">
-    <ListItemIcon>
-      <MonetizationOnIcon />
-    </ListItemIcon>
-    <ListItemText primary="Investments" />
-  </ListItem>
-  <ListItem button component={Link} to="/vendors">
-    <ListItemIcon>
-      <ContactsIcon />
-    </ListItemIcon>
-    <ListItemText primary="Vendors" />
-  </ListItem>
-  <ListItem button component={Link} to="/rejection">
-    <ListItemIcon>
-      <CancelIcon />
-    </ListItemIcon>
-    <ListItemText primary="Rejection" />
-  </ListItem>
-  <ListItem button component={Link} to="/users">
-    <ListItemIcon>
-      <PeopleIcon />
-    </ListItemIcon>
-    <ListItemText primary="Users" />
-  </ListItem>
-  </div>
-);
+export const AdminListItems = () => {
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
 
-export const thirdListItems = (
+  const handleClick = () => {
+    setOpen(!open);
+  };
+  return (
   <div>
-  <ListItem button component={Link} to="/dashboard">
-    <ListItemIcon>
-      <DashboardIcon />
-    </ListItemIcon>
-    <ListItemText primary="Dashboard" />
-  </ListItem>
-  <ListItem button component={Link} to="/projects">
-    <ListItemIcon>
-      <AssignmentIcon />
-    </ListItemIcon>
-    <ListItemText primary="Projects" />
-  </ListItem>
-  <ListItem button component={Link} to="/approval">
-    <ListItemIcon>
-      <CheckCircleOutlineIcon />
-    </ListItemIcon>
-    <ListItemText primary="Approval" />
-  </ListItem>
-  <ListItem button component={Link} to="/rejection">
-    <ListItemIcon>
-      <CancelIcon />
-    </ListItemIcon>
-    <ListItemText primary="Rejection" />
-  </ListItem>
-  <ListItem button component={Link} to="/investments">
-    <ListItemIcon>
-      <MonetizationOnIcon />
-    </ListItemIcon>
-    <ListItemText primary="Investments" />
-  </ListItem>
-  <ListItem button component={Link} to="/vendors">
-    <ListItemIcon>
-      <ContactsIcon />
-    </ListItemIcon>
-    <ListItemText primary="Vendors" />
-  </ListItem>
-  <ListItem button component={Link} to="/users">
-    <ListItemIcon>
-      <PeopleIcon />
-    </ListItemIcon>
-    <ListItemText primary="Users" />
-  </ListItem>
+    <ListItem button component={Link} to="/dashboard">
+      <ListItemIcon>
+        <DashboardIcon />
+      </ListItemIcon>
+      <ListItemText primary="Dashboard" />
+    </ListItem>
+    <ListItem button component={Link} to="/projects" onClick={handleClick}>
+      <ListItemIcon>
+        <AssignmentIcon />
+      </ListItemIcon>
+      <ListItemText primary="Projects" />
+      {open ? <ExpandLess /> : <ExpandMore />}
+    </ListItem>
+    <Collapse in={open} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <ListItem button component={Link} to="/CompletedProjects" className={classes.nested}>
+            <ListItemIcon>
+                <AssignmentTurnedInIcon />
+            </ListItemIcon>
+            <ListItemText primary="Completed" />
+          </ListItem>
+        </List>
+      </Collapse>
+    <ListItem button component={Link} to="/approval">
+      <ListItemIcon>
+        <CheckCircleOutlineIcon />
+      </ListItemIcon>
+      <ListItemText primary="Approval" />
+    </ListItem>
+    <ListItem button component={Link} to="/rejection">
+      <ListItemIcon>
+        <CancelIcon />
+      </ListItemIcon>
+      <ListItemText primary="Rejection" />
+    </ListItem>
+    <ListItem button component={Link} to="/investments">
+      <ListItemIcon>
+        <MonetizationOnIcon />
+      </ListItemIcon>
+      <ListItemText primary="Investments" />
+    </ListItem>
+    <ListItem button component={Link} to="/vendors">
+      <ListItemIcon>
+        <ContactsIcon />
+      </ListItemIcon>
+      <ListItemText primary="Vendors" />
+    </ListItem>
+    <ListItem button component={Link} to="/users">
+      <ListItemIcon>
+        <PeopleIcon />
+      </ListItemIcon>
+      <ListItemText primary="Users" />
+    </ListItem>
   </div>
-);
+)};
 
-export const mainListItems = (
+export const SupervisorListItems = () => {
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
+  return (
   <div>
-  <ListItem button component={Link} to="/dashboard">
-    <ListItemIcon>
-      <DashboardIcon />
-    </ListItemIcon>
-    <ListItemText primary="Dashboard" />
-  </ListItem>
-  <ListItem button component={Link} to="/projects">
-    <ListItemIcon>
-      <AssignmentIcon />
-    </ListItemIcon>
-    <ListItemText primary="Projects" />
-  </ListItem>
-  <ListItem button component={Link} to="/approval">
-    <ListItemIcon>
-      <CheckCircleOutlineIcon />
-    </ListItemIcon>
-    <ListItemText primary="Approval" />
-  </ListItem>
-  <ListItem button component={Link} to="/rejection">
-    <ListItemIcon>
-      <CancelIcon />
-    </ListItemIcon>
-    <ListItemText primary="Rejection" />
-  </ListItem>
-  <ListItem button component={Link} to="/investments">
-    <ListItemIcon>
-      <MonetizationOnIcon />
-    </ListItemIcon>
-    <ListItemText primary="Investments" />
-  </ListItem>
-  <ListItem button component={Link} to="/vendors">
-    <ListItemIcon>
-      <ContactsIcon />
-    </ListItemIcon>
-    <ListItemText primary="Vendors" />
-  </ListItem>
-  <ListItem button component={Link} to="/users">
-    <ListItemIcon>
-      <PeopleIcon />
-    </ListItemIcon>
-    <ListItemText primary="Users" />
-  </ListItem>
+    <ListItem button component={Link} to="/dashboard">
+      <ListItemIcon>
+        <DashboardIcon />
+      </ListItemIcon>
+      <ListItemText primary="Dashboard" />
+    </ListItem>
+    <ListItem button component={Link} to="/projects" onClick={handleClick}>
+      <ListItemIcon>
+        <AssignmentIcon />
+      </ListItemIcon>
+      <ListItemText primary="Projects" />
+      {open ? <ExpandLess /> : <ExpandMore />}
+    </ListItem>
+    <Collapse in={open} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <ListItem button component={Link} to="/CompletedProjects" className={classes.nested}>
+            <ListItemIcon>
+                <AssignmentTurnedInIcon />
+            </ListItemIcon>
+            <ListItemText primary="Completed" />
+          </ListItem>
+        </List>
+      </Collapse>
+    <ListItem button component={Link} to="/rejection">
+      <ListItemIcon>
+        <CancelIcon />
+      </ListItemIcon>
+      <ListItemText primary="Rejection" />
+    </ListItem>
+    <ListItem button component={Link} to="/investments">
+      <ListItemIcon>
+        <MonetizationOnIcon />
+      </ListItemIcon>
+      <ListItemText primary="Investments" />
+    </ListItem>
+    <ListItem button component={Link} to="/vendors">
+      <ListItemIcon>
+        <ContactsIcon />
+      </ListItemIcon>
+      <ListItemText primary="Vendors" />
+    </ListItem>
+    <ListItem button component={Link} to="/users">
+      <ListItemIcon>
+        <PeopleIcon />
+      </ListItemIcon>
+      <ListItemText primary="Users" />
+    </ListItem>
   </div>
-);
+)};
