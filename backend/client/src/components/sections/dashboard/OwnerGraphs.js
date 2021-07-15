@@ -70,7 +70,7 @@ export default function OwnerGraphs(props) {
 
   function customizeTooltip(arg) {
       return {
-        text: `${(arg.valueText}`
+        text: `${arg.valueText}`
       };
     }
   return (
