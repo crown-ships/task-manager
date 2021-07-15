@@ -203,7 +203,7 @@ export default function RegisterForm(props) {
                         value={values.investmentType}
                         onChange={handleInputChange}
                         label="Investment Type"
-                        inputProps={{
+                        InputProps={{
                           name: 'investmentType',
                           id: 'outlined-investmentType-native-simple'
                         }}
@@ -214,13 +214,13 @@ export default function RegisterForm(props) {
                       <InputLabel htmlFor="outlined-paymentTerms-native-simple">Payment Terms</InputLabel>
                       <Select
                         native
-                        disabled={(values.investmentType !== "recurring")}
                         value={values.paymentTerms}
                         onChange={handleInputChange}
                         label="Payment Terms"
-                        inputProps={{
+                        InputProps={{
                           name: 'paymentTerms',
-                          id: 'outlined-paymentTerms-native-simple'
+                          id: 'outlined-paymentTerms-native-simple',
+                          readOnly: (values.investmentType !== "recurring")
                         }}
                       >{payterms.map(item =><option key={item.key} value={item.item}>{item.label}</option>)}
                       </Select>

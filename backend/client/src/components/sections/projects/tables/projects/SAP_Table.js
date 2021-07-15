@@ -22,7 +22,7 @@ import Input from "../../../../controls/Input"
 import ConfirmDialog from "../../../../elements/ConfirmDialog"
 import Notification from "../../../../elements/Notification"
 import Popup from "../../../../elements/Popup"
-import UpdateForm from "../../forms/updateProjectForm"
+import UpdateForm from "../../forms/SAupdateProjectForm"
 import UseTable from "../../../useTable"
 import RegisterForm from "../../forms/registerProjectForm"
 import InputLabel from '@material-ui/core/InputLabel';
