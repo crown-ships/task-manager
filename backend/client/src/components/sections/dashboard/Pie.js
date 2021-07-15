@@ -28,7 +28,6 @@ function getDropdownList (prop) {
 export default function Graphs(props) {
 
   const [project, setProject] = React.useState([]);
-  const [company, setCompany] = React.useState("");
   const [total, setTotal] = React.useState(0);
   const [list, setList] = React.useState([]);
   const [pie, setPie] = React.useState([]);
@@ -42,7 +41,7 @@ export default function Graphs(props) {
     var data = d.data;
     console.log(data);
 
-    if (company === "") {
+    if (props.company === "") {
       var complist = d.data.map(function(item) {
         return item;
       });
@@ -51,9 +50,9 @@ export default function Graphs(props) {
     }
     else {
       var complist = d.data.map(function(item) {
-        console.log(company);
+        console.log(props.company);
         console.log(item);
-        if(company === item.companyName) {
+        if(props.company === item.companyName) {
           return item;
         }
         else {
@@ -72,7 +71,7 @@ export default function Graphs(props) {
       console.log(trimlist);
       setProject(trimlist)
     }
-  },[company]);
+  },[props.company]);
 
   React.useEffect(() => {
     var i;
@@ -100,39 +99,7 @@ export default function Graphs(props) {
     ])
   },[project]);
 
-  React.useEffect(async () => {
-    const d = await getDropdownList(props);
-    var complist = d.data.map(function(item) {
-      if(item.enabled === "true")
-        return item.companyName;
-      else
-        return "0"
-    });
 
-    var j;
-    var len = 0;
-    var trimlist = [];
-    for(j=0; j<complist.length; j++) {
-      if(complist[j] !== "0"){
-        trimlist[len++] = complist[j];
-      }
-    }
-    var selList = [];
-    var i;
-    selList[0] = {key:0, item: ""};
-    for(i=0; i<len; i++) {
-      selList[i+1] = {key:i+1, item: trimlist[i]};
-    }
-    console.log(selList);
-    setList(selList);
-  },[]);
-
-
-  const handleChange = (event) => {
-    let val = event.target;
-    console.log(val.value);
-    setCompany(val.value);
-  };
 
   function customizeTooltip(arg) {
       return {
@@ -163,20 +130,6 @@ export default function Graphs(props) {
         <Tooltip enabled={true} customizeTooltip={customizeTooltip}>
         </Tooltip>
       </PieChart>
-      <FormControl variant="outlined">
-        <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
-        <Select
-          native
-          value={state.age}
-          onChange={handleChange}
-          label="Company"
-          inputProps={{
-            name: 'company',
-            id: 'outlined-company-native-simple',
-          }}
-        >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
-        </Select>
-      </FormControl>
     </Paper>
     </>
   );

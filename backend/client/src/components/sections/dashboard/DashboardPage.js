@@ -172,11 +172,51 @@ function onLogoutClick(e) {
   this.props.logoutUser();
 }
 
+function getDropdownList (prop) {
+  return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+}
+
 const ProjectsPage =  (props) => {
 
   const [value, setValue] = React.useState(0);
+  const [company, setCompany] = React.useState("");
+  const [list, setList] = React.useState([]);
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  React.useEffect(async () => {
+    const d = await getDropdownList(props);
+    var complist = d.data.map(function(item) {
+      if(item.enabled === "true")
+        return item.companyName;
+      else
+        return "0"
+    });
+
+    var j;
+    var len = 0;
+    var trimlist = [];
+    for(j=0; j<complist.length; j++) {
+      if(complist[j] !== "0"){
+        trimlist[len++] = complist[j];
+      }
+    }
+    var selList = [];
+    var i;
+    selList[0] = {key:0, item: ""};
+    for(i=0; i<len; i++) {
+      selList[i+1] = {key:i+1, item: trimlist[i]};
+    }
+    console.log(selList);
+    setList(selList);
+  },[]);
+
+
+  const handleCompanyChange = (event) => {
+    let val = event.target;
+    console.log(val.value);
+    setCompany(val.value);
   };
 
   var itemList = "";
@@ -250,22 +290,33 @@ const ProjectsPage =  (props) => {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
-        <Grid container>
-          <Grid item xs={6}>
-            <Graphs {...props}/>
+        <Paper>
+        <FormControl variant="outlined">
+          <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
+          <Select
+            native
+            value={state.age}
+            onChange={handleCompanyChange}
+            label="Company"
+            inputProps={{
+              name: 'company',
+              id: 'outlined-company-native-simple',
+            }}
+          >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+          </Select>
+        </FormControl>
+          <Grid container>
+            <Grid item xs={4}>
+              <Graphs {...props}/>
+            </Grid>
+            <Grid item xs={4}>
+              <Pie {...props} company={company}/>
+            </Grid>
+            <Grid item xs={4}>
+              <OwnerGraphs {...props}/>
+            </Grid>
           </Grid>
-          <Grid item xs={6}>
-            <Pie {...props}/>
-          </Grid>
-        </Grid>
-
-        <Grid container>
-          <Grid item xs={3}></Grid>
-          <Grid item xs={6}>
-            <OwnerGraphs {...props}/>
-          </Grid>
-          <Grid item xs={3}></Grid>
-        </Grid>
+        </Paper>
 
           <Box pt={4}>
             <Copyright />
