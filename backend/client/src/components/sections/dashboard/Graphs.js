@@ -56,10 +56,6 @@ export default function Graphs(props) {
       console.log(trimlist);
       setProject(trimlist)
     }
-    var complist = d.data.map(function(item) {
-      return {projectName: item.projectName, percentComplete: item.percentComplete}
-    });
-    setProject(complist);
   },[props.company]);
 
 

@@ -93,7 +93,7 @@ export default function OwnerGraphs(props) {
       temp[j] = {owner: owners[j], val: taskCount[j]};
     }
     setOwnerCount(temp);
-  },[owners]);
+  },[owners, tasks]);
 
   function customizeTooltip(arg) {
       return {

@@ -312,15 +312,20 @@ const ProjectsPage =  (props) => {
           </Select>
         </FormControl>
           <Grid container>
-            <Grid item xs={4}>
+            <Grid item xs={5}>
               <Graphs {...props} company={company}/>
             </Grid>
-            <Grid item xs={4}>
-              <Pie {...props} company={company}/>
-            </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={5}>
               <OwnerGraphs {...props} company={company}/>
             </Grid>
+          </Grid>
+          <div></div>
+          <Grid container>
+            <Grid item xs={3}></Grid>
+            <Grid item xs={6}>
+              <Pie {...props} company={company}/>
+            </Grid>
+            <Grid item xs={3}></Grid>
           </Grid>
         </Paper>
 
