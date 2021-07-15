@@ -313,13 +313,13 @@ const ProjectsPage =  (props) => {
         </FormControl>
           <Grid container>
             <Grid item xs={4}>
-              <Graphs {...props}/>
+              <Graphs {...props} company={company}/>
             </Grid>
             <Grid item xs={4}>
               <Pie {...props} company={company}/>
             </Grid>
             <Grid item xs={4}>
-              <OwnerGraphs {...props}/>
+              <OwnerGraphs {...props} company={company}/>
             </Grid>
           </Grid>
         </Paper>

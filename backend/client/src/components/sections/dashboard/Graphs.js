@@ -25,11 +25,42 @@ export default function Graphs(props) {
     const d = await getProjects(props);
     var data = d.data;
     console.log(data);
+
+    if (props.company === "") {
+      var complist = d.data.map(function(item) {
+        return item;
+      });
+      console.log(complist);
+      setProject(complist)
+    }
+    else {
+      var complist = d.data.map(function(item) {
+        console.log(props.company);
+        console.log(item);
+        if(props.company === item.companyName) {
+          return {projectName: item.projectName, percentComplete: item.percentComplete};
+        }
+        else {
+          return null;
+        }
+      });
+
+      var j;
+      var len = 0;
+      var trimlist = [];
+      for(j=0; j<complist.length; j++) {
+        if(complist[j] !== null){
+          trimlist[len++] = complist[j];
+        }
+      }
+      console.log(trimlist);
+      setProject(trimlist)
+    }
     var complist = d.data.map(function(item) {
       return {projectName: item.projectName, percentComplete: item.percentComplete}
     });
     setProject(complist);
-  },[]);
+  },[props.company]);
 
 
   console.log(project);

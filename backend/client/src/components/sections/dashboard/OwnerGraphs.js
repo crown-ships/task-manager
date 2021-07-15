@@ -32,22 +32,49 @@ export default function OwnerGraphs(props) {
   const [tasks, setTasks] = React.useState([]);
   const [owners, setOwners] = React.useState([]);
   const [ownerCount, setOwnerCount] = React.useState([]);
-
   React.useEffect(async () => {
-    const d = await getTasks(props);
-    var data = d.data;
-    console.log(data);
-    var complist = d.data.map(function(item) {
-      return item;
-    });
-    setTasks(complist);
-
     const admins = await getAdmins(props);
     var ownersList = admins.data.map(function(item) {
       return item.name;
     });
     setOwners(ownersList);
   },[]);
+
+  React.useEffect(async () => {
+    const d = await getTasks(props);
+    var data = d.data;
+    console.log(data);
+    if (props.company === "") {
+      var complist = d.data.map(function(item) {
+        return item;
+      });
+      console.log(complist);
+      setTasks(complist)
+    }
+    else {
+      var complist = d.data.map(function(item) {
+        console.log(props.company);
+        console.log(item);
+        if(props.company === item.companyName) {
+          return item;
+        }
+        else {
+          return null;
+        }
+      });
+
+      var j;
+      var len = 0;
+      var trimlist = [];
+      for(j=0; j<complist.length; j++) {
+        if(complist[j] !== null){
+          trimlist[len++] = complist[j];
+        }
+      }
+      console.log(trimlist);
+      setTasks(trimlist)
+    }
+  },[props.company]);
 
   React.useEffect( () => {
     var i;

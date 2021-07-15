@@ -118,7 +118,7 @@ export default function Graphs(props) {
         </Series>
         <Export enabled={true} />
         <Legend
-          margin={50}
+          margin={30}
           horizontalAlignment="right"
           verticalAlignment="top"
         />
