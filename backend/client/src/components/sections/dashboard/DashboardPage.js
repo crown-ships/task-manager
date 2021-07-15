@@ -249,11 +249,12 @@ const ProjectsPage =  (props) => {
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
         <Grid container>
-          <Grid item xs={3}></Grid>
           <Grid item xs={6}>
             <Graphs {...props}/>
           </Grid>
-          <Grid item xs={3}></Grid>
+          <Grid item xs={6}>
+            <Pie {...props}/>
+          </Grid>
         </Grid>
 
           <Box pt={4}>
