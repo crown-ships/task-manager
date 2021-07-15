@@ -26,7 +26,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import ExitToApp from '@material-ui/icons/ExitToApp';
-import { mainListItems, secondaryListItems } from '../../../listitem';
+import { SuperAdminListItems, AdminListItems, SupervisorListItems } from '../../../listitem';
 import { logoutUser } from "../../../../../actions/authActions";
 import { getAllCompanies, updateCompany } from "../../../../../actions/companyActions";
 import { getAllProjects, deleteProject, updateProject, registerProject } from "../../../../../actions/projectActions";
@@ -167,12 +167,16 @@ const ProjectDetails =  (props) => {
   };
 
   var itemList = "";
-    if (props.auth.user.role === "user") {
-      itemList = secondaryListItems;
-    }
-    else {
-      itemList = mainListItems;
-    }
+
+  if (props.auth.user.role === "supervisor") {
+    itemList = (<SupervisorListItems />);
+  }
+  else if (props.auth.user.role === "super-admin"){
+    itemList = (<SuperAdminListItems />);
+  }
+  else if (props.auth.user.role === "admin"){
+    itemList = (<AdminListItems />);
+  }
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
