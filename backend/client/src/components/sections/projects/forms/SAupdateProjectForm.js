@@ -44,6 +44,7 @@ export default function UpdateForm(props) {
               dueDate: values.dueDate,
               startDate: values.startDate,
               assignee: values.assignee,
+              ownerName: values.ownerName,
               approved: approved
           };
           props.edit(input, resetForm, props.recordForEdit._id);

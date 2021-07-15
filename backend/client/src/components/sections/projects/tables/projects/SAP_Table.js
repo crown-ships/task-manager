@@ -266,6 +266,7 @@ export default function SAP_Table(props) {
       type: 'success'
     });
   }
+
   const edit = (data, resetForm, og_id) => {
     const input = {
       params: {
@@ -277,6 +278,22 @@ export default function SAP_Table(props) {
     };
     if(props.auth.user.role === "super-admin"){
       props.updateProject(input, props.history);
+
+      if (recordForEdit.ownerName !== data.ownerName) {
+        const updAll = {
+          params: {
+            email: props.auth.user.email,
+            projectID: og_id,
+            auth: props.auth.isAuthenticated
+          },
+          body: {
+          ownerName: data.ownerName
+          }
+        };
+
+        props.updateAllFeatures(updAll, props.history);
+        props.updateAllTasks(updAll, props.history);
+      }
       resetForm();
       setRecordForEdit(null);
       setOpenEditPopup(false);
@@ -287,12 +304,14 @@ export default function SAP_Table(props) {
       });
     }
   }
+
   const handleSwitch = (val, row) => {
       if(val== true)
         changeEnable("true",row);
       if(val == false)
         changeEnable("false",row);
   };
+
   const changeEnable = (value, og) => {
     const input = {
       params: {
@@ -326,6 +345,7 @@ export default function SAP_Table(props) {
       type: 'success'
     });
   }
+
   const onDelete = project => {
     setConfirmDialog({
         ...confirmDialog,
@@ -345,6 +365,7 @@ export default function SAP_Table(props) {
       });
     }
   }
+
   const approvedIcon = (status) => {
     if (status === "approved") {
       return <CheckCircleIcon fontSize="small" style={{ color: "#00b386" }}/>

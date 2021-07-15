@@ -99,24 +99,48 @@ function preventDefault(event) {
   event.preventDefault();
 }
 const getData = (prop) => {
-  const input = {
-    projectName: "",
-    dueDate: "",
-    startDate: "",
-    projectDetails: "",
-    productCategory: "",
-    companyName: "",
-    companyID: "",
-    creatorName: "",
-    creatorID: "",
-    approved: "",
-    enabled: "",
-    ownerName: "",
-    assignee: "",
-    percentComplete: 100,
-    completed: "",
-    email:prop.auth.user.email,
-    auth:prop.auth.isAuthenticated
+  var input;
+  if (prop.auth.user.role === "super-admin" || prop.auth.user.role === "supervisor") {
+    input = {
+      projectName: "",
+      dueDate: "",
+      startDate: "",
+      projectDetails: "",
+      productCategory: "",
+      companyName: "",
+      companyID: "",
+      creatorName: "",
+      creatorID: "",
+      approved: "",
+      enabled: "",
+      ownerName: "",
+      assignee: "",
+      completed: "",
+      percentComplete:100,
+      email:prop.auth.user.email,
+      auth:prop.auth.isAuthenticated
+    }
+  }
+  else {
+    input = {
+      projectName: "",
+      dueDate: "",
+      startDate: "",
+      projectDetails: "",
+      productCategory: "",
+      companyName: "",
+      companyID: "",
+      creatorName: "",
+      creatorID: "",
+      approved: "",
+      enabled: "",
+      ownerName: prop.auth.user.name,
+      assignee: "",
+      completed: "",
+      percentComplete:100,
+      email:prop.auth.user.email,
+      auth:prop.auth.isAuthenticated
+    }
   }
   return prop.getFilteredProjects(input, prop.history);
 }
