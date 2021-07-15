@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Paper from '@material-ui/core/Paper';
-import { Chart, Series, ValueAxis } from 'devextreme-react/chart';
+import { Chart, Series, Tooltip, ValueAxis } from 'devextreme-react/chart';
 
 
 const data = [
@@ -14,7 +14,7 @@ const data = [
 ];
 
 function getTasks (props) {
-    return props.getAllTasks({email:props.auth.user.email, auth:props.auth.isAuthenticed}, props.history)
+    return props.getAllProjects({email:props.auth.user.email, auth:props.auth.isAuthenticed}, props.history)
     }
 
 const getAdmins = (prop) => {
@@ -68,16 +68,23 @@ export default function OwnerGraphs(props) {
     setOwnerCount(temp);
   },[owners]);
 
+  function customizeTooltip(arg) {
+      return {
+        text: `${(arg.valueText}`
+      };
+    }
   return (
     <Paper>
     <Chart id="chart" dataSource={ownerCount}>
         <Series
           valueField="val"
           argumentField="owner"
-          name="Task Owners"
+          name="Project Owners"
           type="bar"
           color="#52006A" />
           <ValueAxis defaultVisualRange={{ startValue: 0 }} />
+          <Tooltip enabled={true} customizeTooltip={customizeTooltip}>
+          </Tooltip>
       </Chart>
     </Paper>
 
