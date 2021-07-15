@@ -303,7 +303,7 @@ export default function AI_Table(props) {
       body: data
     };
 
-    ifprops.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.updateInvestment(input, props.history);
       resetForm();
       setRecordForEdit(null);
