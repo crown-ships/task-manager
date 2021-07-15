@@ -168,7 +168,7 @@ export default function AInv_Table(props) {
       body: data
     };
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.updateInvestor(input, props.history);
       resetForm();
       setRecordForEdit(null);
@@ -194,7 +194,7 @@ export default function AInv_Table(props) {
     };
 
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.deleteInvestor(input, props.history);
       setNotify({
         isOpen: true,

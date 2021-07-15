@@ -134,7 +134,7 @@ export default function RegisterForm(props) {
               capitalAmt: values.capitalAmt,
               capitalPaid: values.capitalPaid,
               investmentType: values.investmentType,
-              paymentTerms: values.paymentTerms,
+              paymentTerms: (values.paymentTerms != undefined)? values.paymentTerms:"none",
               approved: approved
             };
             console.log(investorDetails.investorID)
@@ -203,7 +203,7 @@ export default function RegisterForm(props) {
                         value={values.investmentType}
                         onChange={handleInputChange}
                         label="Investment Type"
-                        InputProps={{
+                        inputProps={{
                           name: 'investmentType',
                           id: 'outlined-investmentType-native-simple'
                         }}
@@ -214,13 +214,13 @@ export default function RegisterForm(props) {
                       <InputLabel htmlFor="outlined-paymentTerms-native-simple">Payment Terms</InputLabel>
                       <Select
                         native
+                        disabled={(values.investmentType !== "recurring")}
                         value={values.paymentTerms}
                         onChange={handleInputChange}
                         label="Payment Terms"
-                        InputProps={{
+                        inputProps={{
                           name: 'paymentTerms',
-                          id: 'outlined-paymentTerms-native-simple',
-                          readOnly: (values.investmentType !== "recurring")
+                          id: 'outlined-paymentTerms-native-simple'
                         }}
                       >{payterms.map(item =><option key={item.key} value={item.item}>{item.label}</option>)}
                       </Select>

@@ -171,7 +171,7 @@ export default function UP_Table(props) {
             if (company == "")
                 return items.filter(x => x.enabled.includes("true"));
             else
-                return items.filter(x => x.companyName.includes(company) && x.enabled.includes("true"));
+                return items.filter(x => (x.companyName === company) && x.enabled.includes("true"));
         }
     })
   },[notify, list]);
@@ -208,7 +208,7 @@ export default function UP_Table(props) {
             if (val.value == "")
                 return items.filter(x => x.enabled.includes("true"));
             else
-                return items.filter(x => x.companyName.includes(val.value) && x.enabled.includes("true"))
+                return items.filter(x => (x.companyName === val.value) && x.enabled.includes("true"))
         }
     })
 

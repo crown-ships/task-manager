@@ -225,7 +225,7 @@ export default function AP_Table(props) {
             if (company == "")
                 return items.filter(x => x.approved.includes("approved"));
             else
-                return items.filter(x => x.companyName.includes(company) && x.approved.includes("approved"));
+                return items.filter(x => (x.companyName === company) && x.approved.includes("approved"));
         }
     })
   },[notify, list]);
@@ -260,7 +260,7 @@ export default function AP_Table(props) {
             if (val.value == "")
                 return items.filter(x =>  x.approved.includes("approved"));
             else
-                return items.filter(x => x.companyName.includes(val.value) && x.approved.includes("approved"));
+                return items.filter(x => (x.companyName === val.value) && x.approved.includes("approved"));
         }
     })
   };

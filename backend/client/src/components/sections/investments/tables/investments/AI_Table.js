@@ -303,7 +303,7 @@ export default function AI_Table(props) {
       body: data
     };
 
-    if(props.auth.user.role === "admin"){
+    ifprops.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.updateInvestment(input, props.history);
       resetForm();
       setRecordForEdit(null);
@@ -337,7 +337,7 @@ export default function AI_Table(props) {
     };
 
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.deleteInvestment(input, props.history);
       setNotify({
         isOpen: true,

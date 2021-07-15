@@ -172,7 +172,7 @@ export default function AR_Table(props) {
       }
     };
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.updateReturn(input, props.history);
       setNotify({
         isOpen: true,
@@ -220,7 +220,7 @@ export default function AR_Table(props) {
     }
 
 
-    if(props.auth.user.role === "admin"){
+    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.deleteReturn(input, props.history);
       setNotify({
         isOpen: true,
