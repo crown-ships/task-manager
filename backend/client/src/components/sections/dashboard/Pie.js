@@ -30,6 +30,7 @@ export default function Graphs(props) {
   const [project, setProject] = React.useState([]);
   const [company, setCompany] = React.useState("");
   const [list, setList] = React.useState([]);
+  const [pie, setPie] = React.useState([]);
   const [state, setState] = React.useState({
       checkedA: true,
       checkedB: true,
@@ -42,7 +43,7 @@ export default function Graphs(props) {
 
     if (company === "") {
       var complist = d.data.map(function(item) {
-        return {projectName: item.projectName, val: item.percentComplete}
+        return item;
       });
       console.log(complist);
       setProject(complist)
@@ -52,7 +53,7 @@ export default function Graphs(props) {
         console.log(company);
         console.log(item);
         if(company === item.companyName) {
-          return {projectName: item.projectName, val: item.percentComplete}
+          return item;
         }
         else {
           return null;
@@ -70,6 +71,28 @@ export default function Graphs(props) {
       console.log(trimlist);
       setProject(trimlist)
     }
+
+    var i;
+    var completed = 0;
+    var approval = 0;
+    var ongoing = 0;
+    for(i=0; i< project.length; i++) {
+      if(project[i].percentComplete == 100){
+        completed++;
+      }
+      else if(project[i].percentComplete<100 && project[i].approved === "approved") {
+        ongoing++;
+      }
+      else if(project[i].approved === "wait")
+      {
+        approval++;
+      }
+    }
+    setPie([
+      {count: "Completed", val: completed},
+      {count: "Pending Approval", val: approval},
+      {count: "Ongoing", val: ongoing}    
+    ])
   },[company]);
 
   React.useEffect(async () => {
@@ -119,9 +142,9 @@ export default function Graphs(props) {
         type="doughnut"
         title="Project Progress"
         palette="Material"
-        dataSource={project}
+        dataSource={pie}
       >
-        <Series argumentField="projectName">
+        <Series argumentField="count">
           <Label visible={true}>
             <Connector visible={true} />
           </Label>

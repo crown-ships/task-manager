@@ -32,7 +32,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import CircularProgress from '@material-ui/core/CircularProgress';
 // Generate Order Data
 function createData(id ,name, date, details, createdBy, update,del) {
-  return { _id:id, investmentName: name, dueDate: date, investmentDetails: details, creatorName: createdBy, updated:update,delete:del};
+  return { _id:id, investmentName: name, localDueDate: date, investmentDetails: details, creatorName: createdBy, updated:update,delete:del};
 }
 
 const useStyles = makeStyles(theme => ({
@@ -244,7 +244,7 @@ export default function AL_Table(props) {
               recordsAfterPagingAndSorting().map(row =>
               (<TableRow key={row._id}>
                 <TableCell>{row.investmentName}</TableCell>
-                <TableCell>{dateToString(row.dueDate)}</TableCell>
+                <TableCell>{dateToString(row.localDueDate)}</TableCell>
                 <TableCell>{row.returnAmt}</TableCell>
                 <TableCell>{row.totalInterestAmt}</TableCell>
                 <TableCell>{row.paymentTerms}</TableCell>
