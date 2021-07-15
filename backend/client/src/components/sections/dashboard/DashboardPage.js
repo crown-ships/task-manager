@@ -28,6 +28,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import { SuperAdminListItems, AdminListItems, SupervisorListItems } from '../listitem';
 import { logoutUser } from "../../../actions/authActions";
+import { getFilteredUsers} from "../../../actions/userActions";
 import { getAllCompanies } from "../../../actions/companyActions";
 import { getAllProjects, deleteProject, updateProject, registerProject } from "../../../actions/projectActions";
 import { getAllTasks, deleteTask, updateTask, registerTask ,updateAllTasks } from "../../../actions/taskActions";
@@ -276,5 +277,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { updateAllFeatures,updateAllTasks,logoutUser, getAllProjects, getAllCompanies, deleteProject, updateProject, registerProject,getAllFeatures, deleteFeature, updateFeature, registerFeature,getAllTasks, deleteTask, updateTask, registerTask }
+  { getFilteredUsers,updateAllFeatures,updateAllTasks,logoutUser, getAllProjects, getAllCompanies, deleteProject, updateProject, registerProject,getAllFeatures, deleteFeature, updateFeature, registerFeature,getAllTasks, deleteTask, updateTask, registerTask }
 )(withRouter(ProjectsPage));

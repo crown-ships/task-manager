@@ -71,7 +71,9 @@ export default function Graphs(props) {
       console.log(trimlist);
       setProject(trimlist)
     }
+  },[company]);
 
+  React.useEffect(() => {
     var i;
     var completed = 0;
     var approval = 0;
@@ -88,12 +90,13 @@ export default function Graphs(props) {
         approval++;
       }
     }
+    var total = completed + ongoing + approval;
     setPie([
-      {count: "Completed", val: completed},
-      {count: "Pending Approval", val: approval},
-      {count: "Ongoing", val: ongoing}    
+      {count: "Completed", val: (completed/total)},
+      {count: "Pending Approval", val:(approval/total)},
+      {count: "Ongoing", val: (ongoing/total)}
     ])
-  },[company]);
+  },[project]);
 
   React.useEffect(async () => {
     const d = await getDropdownList(props);
