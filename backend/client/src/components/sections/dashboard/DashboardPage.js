@@ -34,6 +34,7 @@ import { getAllProjects, deleteProject, updateProject, registerProject } from ".
 import { getAllTasks, deleteTask, updateTask, registerTask ,updateAllTasks } from "../../../actions/taskActions";
 import { getAllFeatures, deleteFeature, updateFeature, registerFeature, updateAllFeatures } from "../../../actions/featureActions";
 import Graphs from "./Graphs"
+import OwnerGraphs from "./OwnerGraphs"
 import Pie from "./Pie"
 
 function TabPanel(props) {
@@ -255,6 +256,11 @@ const ProjectsPage =  (props) => {
           </Grid>
           <Grid item xs={6}>
             <Pie {...props}/>
+          </Grid>
+        </Grid>
+        <Grid container>
+          <Grid item xs={12}>
+            <OwnerGraphs {...props}/>
           </Grid>
         </Grid>
 

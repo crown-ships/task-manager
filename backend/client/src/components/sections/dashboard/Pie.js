@@ -29,6 +29,7 @@ export default function Graphs(props) {
 
   const [project, setProject] = React.useState([]);
   const [company, setCompany] = React.useState("");
+  const [total, setTotal] = React.useState(0);
   const [list, setList] = React.useState([]);
   const [pie, setPie] = React.useState([]);
   const [state, setState] = React.useState({
@@ -90,11 +91,12 @@ export default function Graphs(props) {
         approval++;
       }
     }
-    var total = completed + ongoing + approval;
+    var t = completed + ongoing + approval;
+    setTotal(t);
     setPie([
-      {count: "Completed", val: (completed/total)},
-      {count: "Pending Approval", val:(approval/total)},
-      {count: "Ongoing", val: (ongoing/total)}
+      {count: "Completed", val: completed},
+      {count: "Pending Approval", val:approval},
+      {count: "Ongoing", val: ongoing}
     ])
   },[project]);
 
@@ -134,7 +136,7 @@ export default function Graphs(props) {
 
   function customizeTooltip(arg) {
       return {
-        text: `${arg.valueText}%`
+        text: `${(arg.valueText/total)*100}%`
       };
     }
   return (
