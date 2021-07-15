@@ -1,7 +1,9 @@
 import React  from 'react';
 import clsx from 'clsx';
 import { withRouter } from "react-router-dom";
-
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 import { connect } from "react-redux";
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -181,6 +183,10 @@ const ProjectsPage =  (props) => {
   const [value, setValue] = React.useState(0);
   const [company, setCompany] = React.useState("");
   const [list, setList] = React.useState([]);
+  const [state, setState] = React.useState({
+      checkedA: true,
+      checkedB: true,
+    });
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
