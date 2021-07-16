@@ -122,7 +122,7 @@ export default function RegisterForm(props) {
     var k;
     var length = 0;
     var ctrimlist = [];
-    for(k=0; k<complist.length; k++) {
+    for(k=0; k<clist.length; k++) {
       if(clist[k] !== "0"){
         ctrimlist[length++] = clist[k];
       }

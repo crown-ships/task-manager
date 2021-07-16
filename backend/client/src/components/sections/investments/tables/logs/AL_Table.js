@@ -55,6 +55,10 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
+const getCompanies = (prop) => {
+  return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+}
+
 const headCells = [
     { id: 'investmentName', label: 'Investment Name' },
     { id: 'localDueDate', label: 'Next Due Date' },
@@ -87,10 +91,37 @@ export default function AL_Table(props) {
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
+  const [companyList, setCompanyList] = React.useState([]);
+  const [company, setCompany] = React.useState("");
   const [list, setList] = React.useState([]);
   const [investment, setInvestment] = React.useState("");
   const [records, setRecords] = React.useState(data);
   const classes = useStyles();
+
+  React.useEffect(async () => {
+    const d = await getCompanies(props);
+    var complist = d.data.map(function(item) {
+      if(item.enabled === "true")
+        return item.companyName;
+      else
+        return "0"
+    });
+    var j;
+    var len = 0;
+    var trimlist = [];
+    for(j=0; j<complist.length; j++) {
+      if(complist[j] !== "0"){
+        trimlist[len++] = complist[j];
+      }
+    }
+    var selList = [];
+    var i;
+    selList[0] = {key:0, item: ""};
+    for(i=0; i<len; i++) {
+      selList[i+1] = {key:i+1, item: trimlist[i]};
+    }
+    setCompanyList(selList);
+  },[]);
 
   React.useEffect(async () => {
     const d = await getDropdownList(props);
