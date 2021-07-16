@@ -291,5 +291,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { logoutUser, getFilteredUsers, getAllInvestments,getAllInvestors, deleteInvestor, updateInvestor, registerInvestor, deleteInvestment, updateInvestment, registerInvestment,getAllReturns, deleteReturn, updateReturn, registerReturn  }
+  { logoutUser, getFilteredUsers, getAllCompanies, getAllInvestments,getAllInvestors, deleteInvestor, updateInvestor, registerInvestor, deleteInvestment, updateInvestment, registerInvestment,getAllReturns, deleteReturn, updateReturn, registerReturn  }
 )(withRouter(InvestmentsPage));
