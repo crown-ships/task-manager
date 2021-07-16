@@ -152,13 +152,13 @@ export default function AL_Table(props) {
       selList[i+1] = {key:i+1, item: trimlist[i]};
     }
     console.log(selList);
-    investorList(selList);
+    setInvestorList(selList);
   },[]);
 
   React.useEffect(async () => {
     const d = await getDropdownList(props);
     var complist = d.data.map(function(item) {
-      if (item.approved === "approved")
+      if (item.approved === "approved") {
         if(company === "") {
           if(investor === "") {
             return item.investmentName;
@@ -167,8 +167,18 @@ export default function AL_Table(props) {
             return (item.investorName === investor)? item.investmentName : "0" ;
           }
         }
-        else
+        else {
+          if (investor === "") {
+            return (item.companyName === company)? item.investmentName: "0";
+          }
+          else {
+            return (item.companyName === company && item.investorName === investor) ? item.investmentName : "0";
+          }
+        }
+      }
+      else {
         return "0";
+      }
     });
     console.log(complist);
     var j;
