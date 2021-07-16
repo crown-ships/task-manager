@@ -228,9 +228,9 @@ export default function AL_Table(props) {
     setFilterFn({
         fn: items => {
             if (target.value == "")
-                return items;
+                  return items.filter(x => x.isPaid.includes("yes"));
             else
-                return items.filter(x => x.investmentName.toLowerCase().includes(target.value.toLowerCase()))
+                return items.filter(x => x.investmentName.toLowerCase().includes(target.value.toLowerCase()) && x.isPaid.includes("yes"))
         }
     })
   }
@@ -242,9 +242,9 @@ export default function AL_Table(props) {
     setFilterFn({
         fn: items => {
             if (val.value == "")
-                return items.filter(x => x.approved.includes("approved"));
+                return items.filter(x => x.isPaid.includes("yes"));
             else
-                return items.filter(x => (x.investorName === val.value) && x.approved.includes("approved"))
+                return items.filter(x => (x.investorName === val.value) && x.isPaid.includes("yes"))
         }
     })
   };
@@ -255,9 +255,9 @@ export default function AL_Table(props) {
     setFilterFn({
         fn: items => {
             if (val.value == "")
-                return items.filter(x =>  x.approved.includes("approved"));
+                return items.filter(x =>  x.isPaid.includes("yes"));
             else
-                return items.filter(x => (x.companyName === val.value) && x.approved.includes("approved"));
+                return items.filter(x => (x.companyName === val.value) && x.isPaid.includes("yes"));
         }
     })
   };
