@@ -197,7 +197,7 @@ export default function AL_Table(props) {
     }
     console.log(selList);
     setList(selList);
-  },[]);
+  },[company, investor]);
 
 
   React.useEffect(async () => {
@@ -207,10 +207,23 @@ export default function AL_Table(props) {
     console.log(d.data);
     setFilterFn({
         fn: items => {
-            if (investment == "")
+            if (investment === "" && investor === "" && company === "")
                 return items.filter(x => x.isPaid.includes("yes"));
-            else
-                return items.filter(x => x.investmentName.includes(investment) && x.isPaid.includes("yes"))
+            else   if (investment !== "" && investor === "" && company === "")
+                return items.filter(x => (x.investmentName === investment) && x.isPaid.includes("yes"))
+            else   if (investment === "" && investor !== "" && company === "")
+                return items.filter(x => (x.investorName === investor) && x.isPaid.includes("yes"))
+            else   if (investment === "" && investor === "" && company !== "")
+                return items.filter(x => (x.companyName === company) && x.isPaid.includes("yes"))
+            else   if (investment !== "" && investor !== "" && company === "")
+                return items.filter(x => (x.investmentName === investment) && (x.investorName === investor) && x.isPaid.includes("yes"))
+            else   if (investment === "" && investor !== "" && company !== "")
+                return items.filter(x => (x.investorName === investor) && (x.companyName === company) && x.isPaid.includes("yes"))
+            else   if (investment !== "" && investor === "" && company !== "")
+                return items.filter(x => (x.investmentName === investment) && (x.companyName === company)  && x.isPaid.includes("yes"))
+            else   if (investment !== "" && investor !== "" && company !== "")
+                return items.filter(x => (x.investmentName === investment) && (x.investorName === investor) && (x.companyName === company) && x.isPaid.includes("yes"))
+
         }
     })
   },[notify, list]);
@@ -241,10 +254,23 @@ export default function AL_Table(props) {
     setInvestor(val.value);
     setFilterFn({
         fn: items => {
-            if (val.value == "")
-                return items.filter(x => x.isPaid.includes("yes"));
-            else
-                return items.filter(x => (x.investorName === val.value) && x.isPaid.includes("yes"))
+          if (investment === "" && investor === "" && company === "")
+              return items.filter(x => x.isPaid.includes("yes"));
+          else   if (investment !== "" && investor === "" && company === "")
+              return items.filter(x => (x.investmentName === investment) && x.isPaid.includes("yes"))
+          else   if (investment === "" && investor !== "" && company === "")
+              return items.filter(x => (x.investorName === investor) && x.isPaid.includes("yes"))
+          else   if (investment === "" && investor === "" && company !== "")
+              return items.filter(x => (x.companyName === company) && x.isPaid.includes("yes"))
+          else   if (investment !== "" && investor !== "" && company === "")
+              return items.filter(x => (x.investmentName === investment) && (x.investorName === investor) && x.isPaid.includes("yes"))
+          else   if (investment === "" && investor !== "" && company !== "")
+              return items.filter(x => (x.investorName === investor) && (x.companyName === company) && x.isPaid.includes("yes"))
+          else   if (investment !== "" && investor === "" && company !== "")
+              return items.filter(x => (x.investmentName === investment) && (x.companyName === company)  && x.isPaid.includes("yes"))
+          else   if (investment !== "" && investor !== "" && company !== "")
+              return items.filter(x => (x.investmentName === investment) && (x.investorName === investor) && (x.companyName === company) && x.isPaid.includes("yes"))
+
         }
     })
   };
@@ -254,10 +280,23 @@ export default function AL_Table(props) {
     setCompany(val.value);
     setFilterFn({
         fn: items => {
-            if (val.value == "")
-                return items.filter(x =>  x.isPaid.includes("yes"));
-            else
-                return items.filter(x => (x.companyName === val.value) && x.isPaid.includes("yes"));
+          if (investment === "" && investor === "" && company === "")
+              return items.filter(x => x.isPaid.includes("yes"));
+          else   if (investment !== "" && investor === "" && company === "")
+              return items.filter(x => (x.investmentName === investment) && x.isPaid.includes("yes"))
+          else   if (investment === "" && investor !== "" && company === "")
+              return items.filter(x => (x.investorName === investor) && x.isPaid.includes("yes"))
+          else   if (investment === "" && investor === "" && company !== "")
+              return items.filter(x => (x.companyName === company) && x.isPaid.includes("yes"))
+          else   if (investment !== "" && investor !== "" && company === "")
+              return items.filter(x => (x.investmentName === investment) && (x.investorName === investor) && x.isPaid.includes("yes"))
+          else   if (investment === "" && investor !== "" && company !== "")
+              return items.filter(x => (x.investorName === investor) && (x.companyName === company) && x.isPaid.includes("yes"))
+          else   if (investment !== "" && investor === "" && company !== "")
+              return items.filter(x => (x.investmentName === investment) && (x.companyName === company)  && x.isPaid.includes("yes"))
+          else   if (investment !== "" && investor !== "" && company !== "")
+              return items.filter(x => (x.investmentName === investment) && (x.investorName === investor) && (x.companyName === company) && x.isPaid.includes("yes"))
+
         }
     })
   };
@@ -268,10 +307,23 @@ export default function AL_Table(props) {
     setInvestment(val.value);
     setFilterFn({
         fn: items => {
-          if (val.value == "")
+          if (investment === "" && investor === "" && company === "")
               return items.filter(x => x.isPaid.includes("yes"));
-          else
-              return items.filter(x => x.investmentName.includes(val.value) && x.isPaid.includes("yes"))
+          else   if (investment !== "" && investor === "" && company === "")
+              return items.filter(x => (x.investmentName === investment) && x.isPaid.includes("yes"))
+          else   if (investment === "" && investor !== "" && company === "")
+              return items.filter(x => (x.investorName === investor) && x.isPaid.includes("yes"))
+          else   if (investment === "" && investor === "" && company !== "")
+              return items.filter(x => (x.companyName === company) && x.isPaid.includes("yes"))
+          else   if (investment !== "" && investor !== "" && company === "")
+              return items.filter(x => (x.investmentName === investment) && (x.investorName === investor) && x.isPaid.includes("yes"))
+          else   if (investment === "" && investor !== "" && company !== "")
+              return items.filter(x => (x.investorName === investor) && (x.companyName === company) && x.isPaid.includes("yes"))
+          else   if (investment !== "" && investor === "" && company !== "")
+              return items.filter(x => (x.investmentName === investment) && (x.companyName === company)  && x.isPaid.includes("yes"))
+          else   if (investment !== "" && investor !== "" && company !== "")
+              return items.filter(x => (x.investmentName === investment) && (x.investorName === investor) && (x.companyName === company) && x.isPaid.includes("yes"))
+
         }
     })
 
