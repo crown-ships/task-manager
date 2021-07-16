@@ -18,6 +18,8 @@ exports.addNew = async (req, res, next) => {
    }
 
   const signedupPayment = new Payment({
+    companyName: req.body.companyName,
+    ownerName: req.body.ownerName,
    vendorName: req.body.vendorName,
    vendorID: req.body.vendorID,
    vendorStartDate: req.body.vendorStartDate,

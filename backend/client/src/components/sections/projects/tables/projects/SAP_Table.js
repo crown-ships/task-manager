@@ -143,6 +143,7 @@ export default function SAP_Table(props) {
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
   const [records, setRecords] = React.useState(data);
   const classes = useStyles();
+
   React.useEffect(async () => {
     const d = await getDropdownList(props);
     setAllCompanies(d.data);
@@ -196,6 +197,7 @@ export default function SAP_Table(props) {
     }
     setAllAdmins(admins);
   },[]);
+  
   React.useEffect(async () => {
     const d = await getData(props);
     setData(d.data);

@@ -8,6 +8,8 @@ const { roles } = require('../roles')
 exports.addNew = async (req, res, next) => {
  try {
   const signedupReturn = new Return({
+    companyName: req.body.companyName,
+    ownerName: req.body.ownerName,
    investmentName: req.body.investmentName,
    investorName: req.body.investorName,
    investorID: req.body.investorID,

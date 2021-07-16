@@ -1,6 +1,14 @@
 const mongoose = require('mongoose');
 
 const returnsModel = new mongoose.Schema({
+  companyName: {
+    type: String,
+    required: true
+  },
+  ownerName: {
+    type: String,
+    required: true
+  },
   investmentName: {
     type: String,
     required: true

@@ -1,6 +1,14 @@
 const mongoose = require('mongoose');
 
 const paymentModel = new mongoose.Schema({
+  companyName: {
+    type: String,
+    required: true
+  },
+  ownerName: {
+    type: String,
+    required: true
+  },
   vendorName: {
     type: String,
     required: true

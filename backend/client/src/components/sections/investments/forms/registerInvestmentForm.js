@@ -18,7 +18,9 @@ const initialFValues = {
     capitalPaid: '',
     investmentType: '',
     paymentTerms: '',
-    investorName: ''
+    investorName: '',
+    companyName: '',
+    ownerName: ''
 }
 
 const invtype = [
@@ -133,6 +135,8 @@ export default function RegisterForm(props) {
               profitPercent: values.profitPercent,
               capitalAmt: values.capitalAmt,
               capitalPaid: values.capitalPaid,
+              companyName: values.companyName,
+              ownerName: values.ownerName,
               investmentType: values.investmentType,
               paymentTerms: (values.paymentTerms != undefined)? values.paymentTerms:"none",
               approved: approved
@@ -172,21 +176,34 @@ export default function RegisterForm(props) {
                         onChange={handleInputChange}
                         error={errors.investmentName}
                     />
-
-                    <Input
-                        name="capitalAmt"
-                        label="Capital Amount"
-                        value={values.capitalAmt}
+                    <FormControl variant="outlined">
+                      <InputLabel htmlFor="outlined-companyName-native-simple">Company Name *</InputLabel>
+                      <Select
+                        native
+                        value={values.companyName}
                         onChange={handleInputChange}
-                        error={errors.capitalAmt}
-                    />
-                    <Input
-                        name="capitalPaid"
-                        label="Capital Paid"
-                        value={values.capitalPaid}
+                        label="Company Name"
+                        inputProps={{
+                          name: 'companyName',
+                          id: 'outlined-companyName-native-simple'
+                        }}
+                      >{selList.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+                      </Select>
+                    </FormControl>
+                    <FormControl variant="outlined">
+                      <InputLabel htmlFor="outlined-ownerName-native-simple">Owner Name *</InputLabel>
+                      <Select
+                        native
+                        value={values.ownerName}
                         onChange={handleInputChange}
-                        error={errors.capitalPaid}
-                    />
+                        label="Owner Name"
+                        inputProps={{
+                          name: 'ownerName',
+                          id: 'outlined-ownerName-native-simple'
+                        }}
+                      >{props.allAdmins.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+                      </Select>
+                    </FormControl>
                 </Grid>
                 <Grid item xs={4}>
                     <Input
@@ -195,6 +212,13 @@ export default function RegisterForm(props) {
                         value={values.profitPercent}
                         onChange={handleInputChange}
                         error={errors.profitPercent}
+                    />
+                    <Input
+                        name="capitalAmt"
+                        label="Capital Amount"
+                        value={values.capitalAmt}
+                        onChange={handleInputChange}
+                        error={errors.capitalAmt}
                     />
                     <FormControl variant="outlined">
                       <InputLabel htmlFor="outlined-investmentType-native-simple">Investment Type</InputLabel>
@@ -227,6 +251,13 @@ export default function RegisterForm(props) {
                     </FormControl>
                 </Grid>
                 <Grid item xs={4}>
+                <Input
+                    name="capitalPaid"
+                    label="Capital Paid"
+                    value={values.capitalPaid}
+                    onChange={handleInputChange}
+                    error={errors.capitalPaid}
+                />
                 <Input
                   id="startDate"
                   type="date"

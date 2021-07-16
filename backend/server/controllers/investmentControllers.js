@@ -23,6 +23,8 @@ exports.addNew = async (req, res, next) => {
   if (user) return res.status(400).json({data: "Investment already exists."});
 
   const signedupInvestment = new Investment({
+   companyName: req.body.companyName,
+   ownerName: req.body.ownerName,
    investorName: req.body.investorName,
    investorID: req.body.investorID,
    startDate: req.body.startDate,

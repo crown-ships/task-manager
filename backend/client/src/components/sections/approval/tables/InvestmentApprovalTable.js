@@ -219,6 +219,8 @@ export default function InvestmentApprovalTable(props) {
             auth: props.auth.isAuthenticated
           },
           body: {
+            companyName: data.companyName,
+            ownerName: data.ownerName,
             investorName: data.investorName,
             investorID: data.investorID,
             investmentName: data.investmentName,

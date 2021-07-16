@@ -21,6 +21,8 @@ exports.addNew = async (req, res, next) => {
    if (user) return res.status(400).json({data: "Vendor already exists."});
 
   const signedupVendor = new Vendor({
+    companyName: req.body.companyName,
+    ownerName: req.body.ownerName,
    vendorName: req.body.vendorName,
    vendorEmail: req.body.vendorEmail,
    contactNo: req.body.contactNo,

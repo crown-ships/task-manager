@@ -28,6 +28,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import { SuperAdminListItems, AdminListItems, SupervisorListItems } from '../listitem';
 import { logoutUser } from "../../../actions/authActions";
+import { getFilteredUsers} from "../../../actions/userActions";
 import { getAllCompanies } from "../../../actions/companyActions";
 import { getAllInvestments, deleteInvestment, updateInvestment, registerInvestment } from "../../../actions/investmentActions";
 import { getAllInvestors, deleteInvestor, updateInvestor, registerInvestor } from "../../../actions/investorActions";
@@ -290,5 +291,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { logoutUser, getAllInvestments,getAllInvestors, deleteInvestor, updateInvestor, registerInvestor, deleteInvestment, updateInvestment, registerInvestment,getAllReturns, deleteReturn, updateReturn, registerReturn  }
+  { logoutUser, getFilteredUsers, getAllInvestments,getAllInvestors, deleteInvestor, updateInvestor, registerInvestor, deleteInvestment, updateInvestment, registerInvestment,getAllReturns, deleteReturn, updateReturn, registerReturn  }
 )(withRouter(InvestmentsPage));
