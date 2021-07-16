@@ -58,6 +58,9 @@ const useStyles = makeStyles(theme => ({
 const getCompanies = (prop) => {
   return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
+const getInvestors = (prop) => {
+  return prop.getAllInvestors({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+}
 
 const headCells = [
     { id: 'investmentName', label: 'Investment Name' },
@@ -92,8 +95,10 @@ export default function AL_Table(props) {
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
   const [companyList, setCompanyList] = React.useState([]);
+  const [investor, setInvestor] = React.useState("");
   const [company, setCompany] = React.useState("");
   const [list, setList] = React.useState([]);
+  const [investorList, setInvestorList] = React.useState([]);
   const [investment, setInvestment] = React.useState("");
   const [records, setRecords] = React.useState(data);
   const classes = useStyles();
@@ -124,11 +129,45 @@ export default function AL_Table(props) {
   },[]);
 
   React.useEffect(async () => {
+    const d = await getInvestors(props);
+    var complist = d.data.map(function(item) {
+      if (item.approved === "approved")
+        return item.investorName;
+      else
+        return "0"
+    });
+
+    var j;
+    var len = 0;
+    var trimlist = [];
+    for(j=0; j<complist.length; j++) {
+      if(complist[j] !== "0"){
+        trimlist[len++] = complist[j];
+      }
+    }
+    var selList = [];
+    var i;
+    selList[0] = {key:0, item: ""};
+    for(i=0; i<len; i++) {
+      selList[i+1] = {key:i+1, item: trimlist[i]};
+    }
+    console.log(selList);
+    investorList(selList);
+  },[]);
+
+  React.useEffect(async () => {
     const d = await getDropdownList(props);
     var complist = d.data.map(function(item) {
       if (item.approved === "approved")
-        return item.investmentName;
-      else
+        if(company === "") {
+          if(investor === "") {
+            return item.investmentName;
+          }
+          else {
+            return (item.investorName === investor)? item.investmentName : "0" ;
+          }
+        }
+        else
         return "0";
     });
     console.log(complist);
@@ -186,7 +225,34 @@ export default function AL_Table(props) {
     })
   }
 
-  const handleChange = (event) => {
+  const handleInvestorChange = (event) => {
+    let val = event.target;
+    console.log(val.value);
+    setInvestor(val.value);
+    setFilterFn({
+        fn: items => {
+            if (val.value == "")
+                return items.filter(x => x.approved.includes("approved"));
+            else
+                return items.filter(x => (x.investorName === val.value) && x.approved.includes("approved"))
+        }
+    })
+  };
+
+  const handleCompanyChange = (event) => {
+    let val = event.target;
+    setCompany(val.value);
+    setFilterFn({
+        fn: items => {
+            if (val.value == "")
+                return items.filter(x =>  x.approved.includes("approved"));
+            else
+                return items.filter(x => (x.companyName === val.value) && x.approved.includes("approved"));
+        }
+    })
+  };
+
+  const handleInvestmentChange = (event) => {
     let val = event.target;
     console.log(val.value);
     setInvestment(val.value);
@@ -238,29 +304,59 @@ export default function AL_Table(props) {
     <React.Fragment>
     <Paper className={classes.pageContent}>
       <Toolbar>
+      <Input
+          label="Search Features"
+          className={classes.searchInput}
+          InputProps={{
+              startAdornment: (<InputAdornment position="start">
+                  <Search />
+              </InputAdornment>)
+          }}
+          onChange={handleSearch}
+      />
+      </Toolbar>
+      <Toolbar>
         <Grid container>
-          <Grid item xs={9}>
-            <Input
-                label="Search Features"
-                className={classes.searchInput}
-                InputProps={{
-                    startAdornment: (<InputAdornment position="start">
-                        <Search />
-                    </InputAdornment>)
-                }}
-                onChange={handleSearch}
-            />
-          </Grid>
-          <Grid item xs={3}>
+        <Grid item xs={4}>
+          <FormControl variant="outlined" className={classes.formControl}>
+            <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
+            <Select
+              native
+              onChange={handleCompanyChange}
+              label="Company"
+              inputProps={{
+                name: 'company',
+                id: 'outlined-company-native-simple',
+              }}
+            >{companyList.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={4}>
+          <FormControl variant="outlined" className={classes.formControl}>
+            <InputLabel htmlFor="outlined-investor-native-simple">Investor</InputLabel>
+            <Select
+              native
+              onChange={handleInvestorChange}
+              label="Investor"
+              inputProps={{
+                name: 'investor',
+                id: 'outlined-investor-native-simple',
+              }}
+            >{investorList.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+            </Select>
+          </FormControl>
+        </Grid>
+          <Grid item xs={4}>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel htmlFor="outlined-project-native-simple">Investment</InputLabel>
+              <InputLabel htmlFor="outlined-investment-native-simple">Investment</InputLabel>
               <Select
                 native
-                onChange={handleChange}
-                label="Project"
+                onChange={handleInvestmentChange}
+                label="Investment"
                 inputProps={{
-                  name: 'project',
-                  id: 'outlined-project-native-simple',
+                  name: 'investment',
+                  id: 'outlined-investment-native-simple',
                 }}
               >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
               </Select>
