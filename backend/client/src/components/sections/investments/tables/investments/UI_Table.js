@@ -74,6 +74,20 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
+const getCompanies = (prop) => {
+  return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+}
+
+const getAdmins = (prop) => {
+  const input = {
+    name: '',
+    role: "admin",
+    email:prop.auth.user.email,
+    auth:prop.auth.isAuthenticated
+  }
+  return prop.getFilteredUsers(input, prop.history);
+}
+
 const headCells = [
     { id: 'investorName', label: 'Investor Name' },
     { id: 'investmentName', label: 'Investment Name' },
@@ -112,12 +126,55 @@ export default function UI_Table(props) {
   const [data, setData] = React.useState(rows);
   const [list, setList] = React.useState([]);
   const [investor, setInvestor] = React.useState("");
+  const [companyList, setCompanyList] = React.useState([]);
+  const [company, setCompany] = React.useState("");
+  const [allCompanies, setAllCompanies] = React.useState([]);
+  const [allAdmins, setAllAdmins] = React.useState([]);
   const [allInvestors, setAllInvestors] = React.useState([]);
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
   const [records, setRecords] = React.useState(data);
   const classes = useStyles();
+
+  React.useEffect(async () => {
+    const d = await getCompanies(props);
+    setAllCompanies(d.data);
+    var complist = d.data.map(function(item) {
+      if(item.enabled === "true")
+        return item.companyName;
+      else
+        return "0"
+    });
+    var j;
+    var len = 0;
+    var trimlist = [];
+    for(j=0; j<complist.length; j++) {
+      if(complist[j] !== "0"){
+        trimlist[len++] = complist[j];
+      }
+    }
+    var selList = [];
+    var i;
+    selList[0] = {key:0, item: ""};
+    for(i=0; i<len; i++) {
+      selList[i+1] = {key:i+1, item: trimlist[i]};
+    }
+    setCompanyList(selList);
+
+    const a = await getAdmins(props);
+    var adminsList = a.data.map(function(item) {
+      return item.name;
+    });
+
+    var admins = [];
+    var i;
+    admins[0] = {key:0, item: ""};
+    for(i=0; i<adminsList.length; i++) {
+      admins[i+1] = {key:i+1, item: adminsList[i]};
+    }
+    setAllAdmins(admins);
+  },[]);
 
   React.useEffect(async () => {
     const d = await getDropdownList(props);
@@ -151,6 +208,14 @@ export default function UI_Table(props) {
     const d = await getData(props);
     setData(d.data);
     setRecords(d.data);
+    setFilterFn({
+        fn: items => {
+            if (company == "")
+                return items.filter(x => x.approved.includes("approved"));
+            else
+                return items.filter(x => (x.companyName === company) && x.approved.includes("approved"));
+        }
+    })
   },[notify, list]);
 
 
@@ -173,20 +238,34 @@ export default function UI_Table(props) {
     })
   }
 
-  const handleChange = (event) => {
+  const handleInvestorChange = (event) => {
     let val = event.target;
     console.log(val.value);
     setInvestor(val.value);
     setFilterFn({
         fn: items => {
             if (val.value == "")
-                return items;
+                return items.filter(x => x.approved.includes("approved"));
             else
-                return items.filter(x => x.investorName.includes(val.value));
+                return items.filter(x => (x.investorName === val.value) && x.approved.includes("approved"))
         }
     })
-
   };
+
+  const handleCompanyChange = (event) => {
+    let val = event.target;
+    setCompany(val.value);
+    setFilterFn({
+        fn: items => {
+            if (val.value == "")
+                return items.filter(x =>  x.approved.includes("approved"));
+            else
+                return items.filter(x => (x.companyName === val.value) && x.approved.includes("approved"));
+        }
+    })
+  };
+
+
   const openInEditPopup = item => {
     setRecordForEdit(item);
     setOpenEditPopup(true);
@@ -280,7 +359,7 @@ export default function UI_Table(props) {
 
       <Toolbar>
         <Grid container>
-          <Grid item xs={7}>
+          <Grid item xs={4}>
             <Input
                 label="Search Investments"
                 className={classes.searchInput}
@@ -294,16 +373,31 @@ export default function UI_Table(props) {
           </Grid>
           <Grid item xs={3}>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel htmlFor="outlined-company-native-simple">Investor</InputLabel>
+              <InputLabel htmlFor="outlined-investor-native-simple">Investor</InputLabel>
               <Select
                 native
-                onChange={handleChange}
+                onChange={handleInvestorChange}
                 label="Investor"
                 inputProps={{
-                  name: '// investor',
+                  name: 'investor',
                   id: 'outlined-investor-native-simple',
                 }}
               >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={3}>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
+              <Select
+                native
+                onChange={handleCompanyChange}
+                label="Company"
+                inputProps={{
+                  name: 'company',
+                  id: 'outlined-company-native-simple',
+                }}
+              >{companyList.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
               </Select>
             </FormControl>
           </Grid>
@@ -360,7 +454,7 @@ export default function UI_Table(props) {
         openPopup={openRegPopup}
         setOpenPopup={setOpenRegPopup}
       >
-        <RegisterForm {...props} create={create} investor={investor} allInvestors={allInvestors} />
+        <RegisterForm {...props} create={create} investor={investor} allInvestors={allInvestors} allCompanies={allCompanies} allAdmins={allAdmins}/>
       </Popup>
       <Notification
                notify={notify}

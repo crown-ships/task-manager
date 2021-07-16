@@ -112,6 +112,28 @@ export default function RegisterForm(props) {
       selList[i+1] = {key:i+1, item: trimlist[i]};
     }
 
+    var clist = props.allCompanies.map(function(item) {
+      if(item.enabled === "true")
+        return item.companyName;
+      else
+        return "0"
+    });
+
+    var k;
+    var length = 0;
+    var ctrimlist = [];
+    for(k=0; k<complist.length; k++) {
+      if(clist[k] !== "0"){
+        ctrimlist[length++] = clist[k];
+      }
+    }
+    var compNames = [];
+    var l;
+    compNames[0] = {key:0, item: ""};
+    for(l=0; l<length; l++) {
+      compNames[l+1] = {key:l+1, item: ctrimlist[l]};
+    }
+
 
 
     const handleSubmit = e => {
@@ -187,7 +209,7 @@ export default function RegisterForm(props) {
                           name: 'companyName',
                           id: 'outlined-companyName-native-simple'
                         }}
-                      >{selList.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+                      >{compNames.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
                       </Select>
                     </FormControl>
                     <FormControl variant="outlined">
