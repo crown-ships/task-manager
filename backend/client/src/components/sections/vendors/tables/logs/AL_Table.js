@@ -77,7 +77,7 @@ function preventDefault(event) {
 const getData = (prop) => {
   const input = {
     companyName: "",
-    ownername: prop.auth.user.name,
+    ownerName: prop.auth.user.name,
     vendorName: "",
     vendorStartDate: "",
     vendorEndDate: "",
