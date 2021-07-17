@@ -479,7 +479,7 @@ export default function AV_Table(props) {
         openPopup={openRegPopup}
         setOpenPopup={setOpenRegPopup}
       >
-        <RegisterForm {...props} create={create} />
+        <RegisterForm {...props} create={create} allAdmins={allAdmins} allCompanies={allCompanies} company={company}/>
       </Popup>
       <Notification
                notify={notify}

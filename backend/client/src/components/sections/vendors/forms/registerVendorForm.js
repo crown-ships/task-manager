@@ -12,7 +12,9 @@ const initialFValues = {
   contactNo:'',
   contractAmt:0,
   startDate:'',
-  endDate:''
+  endDate:'',
+  companyName: '',
+  ownerName: ''
 }
 
 export default function RegisterForm(props) {
@@ -37,12 +39,36 @@ export default function RegisterForm(props) {
         resetForm
     } = useForm(initialFValues, true, validate);
 
+    var complist = props.allCompanies.map(function(item) {
+      if(item.enabled === "true")
+        return item.companyName;
+      else
+        return "0"
+    });
+
+    var j;
+    var len = 0;
+    var trimlist = [];
+    for(j=0; j<complist.length; j++) {
+      if(complist[j] !== "0"){
+        trimlist[len++] = complist[j];
+      }
+    }
+    var selList = [];
+    var i;
+    selList[0] = {key:0, item: ""};
+    for(i=0; i<len; i++) {
+      selList[i+1] = {key:i+1, item: trimlist[i]};
+    }
+
     const handleSubmit = e => {
         e.preventDefault()
         if (validate()) {
             const approved = (props.auth.user.role === "admin" || props.auth.user.role === "super-admin")?"approved":"wait";
             const input = {
               vendorName:values.vendorName,
+              companyName: values.companyName,
+              ownerName: values.ownerName,
               vendorEmail:values.vendorEmail,
               contactNo:values.contactNo,
               contractAmt:values.contractAmt,
@@ -58,11 +84,9 @@ export default function RegisterForm(props) {
     }
 
     useEffect(() => {
-        if (recordForEdit != null)
-            setValues({
-                ...recordForEdit
-            })
-    }, [recordForEdit])
+        if (props.company != null)
+            setValues({companyName: props.company})
+    }, [props.company])
 
     return (
       <Form onSubmit={handleSubmit}>
@@ -124,6 +148,34 @@ export default function RegisterForm(props) {
                   />
               </Grid>
               <Grid item xs={5}>
+                  <FormControl variant="outlined">
+                    <InputLabel htmlFor="outlined-companyName-native-simple">Company Name *</InputLabel>
+                    <Select
+                      native
+                      value={values.companyName}
+                      onChange={handleInputChange}
+                      label="Company Name"
+                      inputProps={{
+                        name: 'companyName',
+                        id: 'outlined-companyName-native-simple'
+                      }}
+                    >{selList.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+                    </Select>
+                  </FormControl>
+                  <FormControl variant="outlined">
+                    <InputLabel htmlFor="outlined-ownerName-native-simple">Owner Name *</InputLabel>
+                    <Select
+                      native
+                      value={values.ownerName}
+                      onChange={handleInputChange}
+                      label="Owner Name"
+                      inputProps={{
+                        name: 'ownerName',
+                        id: 'outlined-ownerName-native-simple'
+                      }}
+                    >{props.allAdmins.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+                    </Select>
+                  </FormControl>
                   <div>
                       <Button
                           type="submit"

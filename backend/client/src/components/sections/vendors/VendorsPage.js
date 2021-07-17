@@ -286,7 +286,7 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { getFilteredUsers, logoutUser, getFilteredPayments, getFilteredVendors, getAllVendors, deleteVendor, updateVendor, registerVendor,updateAllPayments,getAllPayments, deletePayment, updatePayment, registerPayment }
+  { getAllCompanies, getFilteredUsers, logoutUser, getFilteredPayments, getFilteredVendors, getAllVendors, deleteVendor, updateVendor, registerVendor,updateAllPayments,getAllPayments, deletePayment, updatePayment, registerPayment }
 )(withRouter(VendorsPage));
 
 // <TabPanel value={value} index={1}>
