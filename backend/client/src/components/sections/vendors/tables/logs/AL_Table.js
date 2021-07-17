@@ -75,7 +75,29 @@ function preventDefault(event) {
 }
 
 const getData = (prop) => {
-  return prop.getAllPayments({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  const input = {
+    companyName: "",
+    ownername: prop.auth.user.name,
+    vendorName: "",
+    vendorStartDate: "",
+    vendorEndDate: "",
+    vendorCrtAmt: "",
+    vendorID: "",
+    amtToBePaid: "",
+    dueDate: "",
+    isPaid: "yes",
+    creatorName: "",
+    creatorID: "",
+    approved: "approved",
+    enabled: "",
+    email: prop.auth.user.email,
+    auth: prop.auth.isAuthenticated
+    }
+  return prop.getFilteredPayments(input, prop.history);
+}
+
+const getCompanies = (prop) => {
+  return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 const getDropdownList = (prop) => {
   return prop.getAllVendors({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);

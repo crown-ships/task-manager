@@ -130,3 +130,73 @@ exports.delete = async (req, res, next) => {
   next(error)
  }
 }
+
+exports.getFilteredVendors = async (req, res, next) => {
+  const search = {
+    companyName: req.query.companyName,
+    ownername: req.query.ownerName,
+    vendorName: req.query.vendorName,
+    vendorEmail: req.query.vendorEmail,
+    contractAmt: req.query.contractAmt,
+    endDate: req.query.endDate,
+    startDate: req.query.startDate,
+    creatorName: req.query.creatorName,
+    creatorID: req.query.creatorID,
+    approved: req.query.approved,
+    enabled: req.query.enabled
+  };
+
+   var counter=0;
+   var conditions = [];
+
+
+   Object.entries(search).forEach(([key,value]) => {
+     if(value !== "")
+     {
+       var json = {};
+       json[key]= value;
+       conditions[counter++] = json;
+
+     }
+   });
+
+  var vendors;
+  if(conditions.length == 0){
+     vendors = await Vendor.find({});
+  }
+  else {
+     vendors = await Vendor.find({$and: conditions});
+  }
+
+  res.status(200).json({
+    data: vendors,
+    conditions: conditions
+  });
+}
+
+ //validate role
+exports.update = async (req, res, next) => {
+ try {
+   const id_upd = req.query.vendorID;
+   const userBody = req.body;
+
+   // if (userBody.dueDate)
+   // {
+   //   const { errors, isValid } = validateDate(userBody);
+   //   // Check validation
+   //   if (!isValid) {
+   //     return res.status(400).json(errors);
+   //   }
+   // }
+
+
+   await Vendor.findByIdAndUpdate(id_upd, userBody);
+
+   res.status(200).json({
+    message: 'Vendor updated successfully.'
+   });
+  }
+  catch (error) {
+   next(error)
+  }
+}

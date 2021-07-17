@@ -86,3 +86,19 @@ export const registerPayment = (userData, history) => dispatch => {
     );
 };
 //
+
+export const getFilteredPayments = (userData, history) => {
+  return function (dispatch) {
+    return axios
+    .get("/api/getFilteredPayments", {params:userData})
+    .then(res => {
+      return res.data;
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+  }
+};

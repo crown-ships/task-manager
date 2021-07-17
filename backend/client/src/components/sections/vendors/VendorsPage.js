@@ -28,9 +28,10 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import { SuperAdminListItems, AdminListItems, SupervisorListItems } from '../listitem';
 import { logoutUser } from "../../../actions/authActions";
+import { getFilteredUsers} from "../../../actions/userActions";
 import { getAllCompanies } from "../../../actions/companyActions";
-import { getAllVendors, deleteVendor, updateVendor, registerVendor } from "../../../actions/vendorActions";
-import { getAllPayments, deletePayment, updatePayment, updateAllPayments, registerPayment } from "../../../actions/paymentActions";
+import { getFilteredVendors, getAllVendors, deleteVendor, updateVendor, registerVendor } from "../../../actions/vendorActions";
+import { getFilteredPayments, getAllPayments, deletePayment, updatePayment, updateAllPayments, registerPayment } from "../../../actions/paymentActions";
 import VendorTablePicker from "./pickers/VendorTablePicker"
 import PaymentTablePicker from "./pickers/PaymentTablePicker"
 import LogTablePicker from "./pickers/LogTablePicker"
@@ -285,7 +286,7 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { logoutUser, getAllVendors, deleteVendor, updateVendor, registerVendor,updateAllPayments,getAllPayments, deletePayment, updatePayment, registerPayment }
+  { getFilteredUsers, logoutUser, getFilteredPayments, getFilteredVendors getAllVendors, deleteVendor, updateVendor, registerVendor,updateAllPayments,getAllPayments, deletePayment, updatePayment, registerPayment }
 )(withRouter(VendorsPage));
 
 // <TabPanel value={value} index={1}>

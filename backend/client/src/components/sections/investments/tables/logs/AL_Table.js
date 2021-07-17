@@ -68,6 +68,7 @@ const headCells = [
     { id: 'returnAmt', label: 'Next Payment Amount'},
     { id: 'totalInterestAmt', label: 'Total Interest'},
     { id: 'paymentTerms', label: 'Payment Terms'},
+    { id: 'ownerName', label: 'Owner Name'},
     { id: 'delete', label: 'Delete', disableSorting: true }
 ];
 
@@ -459,6 +460,7 @@ export default function AL_Table(props) {
                 <TableCell>{row.returnAmt}</TableCell>
                 <TableCell>{row.totalInterestAmt}</TableCell>
                 <TableCell>{row.paymentTerms}</TableCell>
+                <TableCell>{row.ownerName}</TableCell>
                 <TableCell>
                   <ActionButton
                     color="light"

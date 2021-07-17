@@ -97,6 +97,8 @@ router.delete('/delVendor', userController.allowIfLoggedin, userController.grant
 
 router.get('/getVendors', userController.allowIfLoggedin, userController.grantAccess('readAny', 'vendor'),  vendorController.getVendors);
 
+router.get('/getFilteredVendors', userController.allowIfLoggedin, userController.grantAccess('readAny', 'vendor'),  vendorController.getFilteredVendors);
+
 //------------------PAYMENT REQUESTS
 router.post('/newPayment', userController.allowIfLoggedin, userController.grantAccess('create', 'payment'),paymentController.addNew);
 
@@ -107,6 +109,8 @@ router.post('/updAllPayments',  userController.allowIfLoggedin, userController.g
 router.delete('/delPayment', userController.allowIfLoggedin, userController.grantAccess('deleteAny', 'payment'),  paymentController.delete);
 
 router.get('/getPayments', userController.allowIfLoggedin, userController.grantAccess('readAny', 'payment'),  paymentController.getPayments);
+
+router.get('/getFilteredPayments', userController.allowIfLoggedin, userController.grantAccess('readAny', 'payment'),  paymentController.getFilteredPayments);
 
 //------------------RETURNS
 router.post('/newReturn', userController.allowIfLoggedin, userController.grantAccess('create', 'return'),returnController.addNew);

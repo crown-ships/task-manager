@@ -4,8 +4,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import FormControl from '@material-ui/core/FormControl';
+import PropTypes from "prop-types";
 import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
 import AddIcon from '@material-ui/icons/Add';
+import CancelIcon from '@material-ui/icons/Cancel';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import HelpIcon from '@material-ui/icons/Help';
+import Typography from '@material-ui/core/Typography';
 import {Search} from '@material-ui/icons';
 import TableCell from '@material-ui/core/TableCell';
 import Paper from '@material-ui/core/Paper';
@@ -13,43 +19,57 @@ import TableHead from '@material-ui/core/TableHead';
 import Toolbar from '@material-ui/core/Toolbar';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TableRow from '@material-ui/core/TableRow';
+import CheckIcon from '@material-ui/icons/Check';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import CloseIcon from '@material-ui/icons/Close';
 import Switch from '@material-ui/core/Switch';
-import CancelIcon from '@material-ui/icons/Cancel';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import HelpIcon from '@material-ui/icons/Help';
 import ActionButton from "../../../../controls/ActionButton"
 import Button from "../../../../controls/Button"
 import Input from "../../../../controls/Input"
 import ConfirmDialog from "../../../../elements/ConfirmDialog"
 import Notification from "../../../../elements/Notification"
 import Popup from "../../../../elements/Popup"
-import UpdateForm from "../../forms/updateVendorForm"
+import UpdateForm from "../../forms/updatePaymentForm"
 import UseTable from "../../../useTable"
-import RegisterForm from "../../forms/registerVendorForm"
+import RegisterForm from "../../forms/registerPaymentForm"
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import PropTypes from "prop-types";
 // Generate Order Data
 function createData() {
-  return {
-    _id:"",
-    vendorName: "",
-    vendorEmail: "",
-    contactNo: "",
-    contractAmt: "",
-    startDate: "",
-    endDate:"",
-    pendingAmt:'',
-    approved: ""
-  }
+  return { _id:'',  vendorName: '', paymentName: '', amtToBePaid: '', dueDate: '', updated:'',delete:''};
 }
 
+function CircularProgressWithLabel(props) {
+  return (
+    <Box position="relative" display="inline-flex">
+      <CircularProgress variant="determinate" {...props} />
+      <Box
+        top={0}
+        left={0}
+        bottom={0}
+        right={0}
+        position="absolute"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Typography variant="caption" component="div" color="textSecondary">{`${Math.round(
+          props.value,
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
+
+CircularProgressWithLabel.propTypes = {
+  /**
+   * The value of the progress indicator for the determinate and buffer variants.
+   * Value between 0 and 100.
+   */
+  value: PropTypes.number.isRequired,
+};
 const useStyles = makeStyles(theme => ({
     pageContent: {
         margin: theme.spacing(5),
@@ -73,15 +93,10 @@ const useStyles = makeStyles(theme => ({
 const headCells = [
     { id: 'vendorName', label: 'Vendor Name' },
     { id: 'approved', label: 'Approved' },
-    { id: 'vendorEmail', label: 'Email' },
-    { id: 'startDate', label: 'Start Date' },
-    { id: 'endDate', label: 'End Date' },
-    { id: 'contractAmt', label: 'Contract Amount' },
-    { id: 'pendingAmt', label: 'Pending Amount'},
-    { id: 'contactNo', label: 'Contact No.'},
-    { id: 'enabled', label: 'Enable', disableSorting: true },
-    { id: 'update', label: 'Update', disableSorting: true },
-    { id: 'delete', label: 'Delete', disableSorting: true }
+    { id: 'amtToBePaid', label: 'Amount to Pay' },
+    { id: 'dueDate', label: 'Due Date'},
+    { id: 'isPaid', label: 'Pay', disableSorting: true },
+    { id: 'update', label: 'Update', disableSorting: true }
 ];
 
 const rows = [
@@ -93,48 +108,23 @@ function preventDefault(event) {
 }
 
 const getData = (prop) => {
-  const input = {
-    companyName: "",
-    ownername: prop.auth.user.name,
-    vendorName: "",
-    vendorEmail: "",
-    contractAmt: "",
-    endDate: "",
-    startDate: "",
-    creatorName: "",
-    creatorID: "",
-    approved: "",
-    enabled: "",
-    email: prop.auth.user.email,
-    auth: prop.auth.isAuthenticated
-    }
-  return prop.getFilteredVendors(input, prop.history);
+  return prop.getAllPayments({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+}
+const getDropdownList = (prop) => {
+  return prop.getAllVendors({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
-const getAdmins = (prop) => {
-  const input = {
-    name: '',
-    role: "admin",
-    email:prop.auth.user.email,
-    auth:prop.auth.isAuthenticated
-  }
-  return prop.getFilteredUsers(input, prop.history);
-}
 
-const getCompanies =  (prop) => {
-  return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
-}
 
-export default function AV_Table(props) {
-  console.log(rows);
+export default function UPay_Table(props) {
+
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
-  const [allAdmins, setAllAdmins] = React.useState([]);
-  const [company, setCompany] = React.useState("");
+  const [allVendors, setAllVendors] = React.useState([]);
   const [list, setList] = React.useState([]);
-  const [allCompanies, setAllCompanies] = React.useState([]);
+  const [vendor, setVendor] = React.useState("");
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
@@ -142,14 +132,15 @@ export default function AV_Table(props) {
   const classes = useStyles();
 
   React.useEffect(async () => {
-    const d = await getCompanies(props);
-    setAllCompanies(d.data);
+    const d = await getDropdownList(props);
+    setAllVendors(d.data);
     var complist = d.data.map(function(item) {
-      if(item.enabled === "true")
-        return item.companyName;
+      if(item.enabled === "true" && item.approved === "approved")
+        return item.vendorName;
       else
         return "0"
     });
+    console.log(complist);
     var j;
     var len = 0;
     var trimlist = [];
@@ -164,39 +155,27 @@ export default function AV_Table(props) {
     for(i=0; i<len; i++) {
       selList[i+1] = {key:i+1, item: trimlist[i]};
     }
+    console.log(selList);
     setList(selList);
-
-
-    const a = await getAdmins(props);
-    var adminsList = a.data.map(function(item) {
-      return item.name;
-    });
-
-    var admins = [];
-    var i;
-    admins[0] = {key:0, item: ""};
-    for(i=0; i<adminsList.length; i++) {
-      admins[i+1] = {key:i+1, item: adminsList[i]};
-    }
-    setAllAdmins(admins);
   },[]);
+
 
   React.useEffect(async () => {
     const d = await getData(props);
-        console.log(d.data);
     setData(d.data);
     setRecords(d.data);
+    console.log(d.data);
     setFilterFn({
         fn: items => {
-          if (company == "")
-              return items.filter(x => x.approved.includes("approved"));
-          else
-              return items.filter(x => (x.companyName === company) && x.approved.includes("approved"));
-          }
+            if (vendor == "")
+                return items.filter(x => x.isPaid.includes("no")&& x.enabled.includes("true"));
+            else
+                return items.filter(x => x.vendorName.includes(vendor)  && x.isPaid.includes("no")&& x.enabled.includes("true"));
+        }
     })
-  },[notify]);
+  },[notify, list]);
 
-  console.log(data);
+
   const {
           TblContainer,
           TblHead,
@@ -209,11 +188,72 @@ export default function AV_Table(props) {
     setFilterFn({
         fn: items => {
             if (target.value == "")
-              return items.filter(x => x.approved.includes("approved"));
+                return items.filter(x => x.isPaid.includes("no")  && x.enabled.includes("true"));
             else
-              return items.filter(x => x.vendorName.toLowerCase().includes(target.value.toLowerCase()) && x.approved.includes("approved"))
+                return items.filter(x => x.vendorName.toLowerCase().includes(target.value.toLowerCase()) && x.isPaid.includes("no")  && x.enabled.includes("true"));
         }
     })
+  }
+  const [state, setState] = React.useState({
+      checkedA: true,
+      checkedB: true,
+    });
+
+  const handleChange = (event) => {
+    let val = event.target;
+    console.log(val.value);
+    setVendor(val.value);
+    setFilterFn({
+        fn: items => {
+            if (val.value == "")
+                return items;
+            else
+                return items.filter(x => x.vendorName.includes(val.value) && x.isPaid.includes("no")&& x.enabled.includes("true"));
+        }
+    })
+
+  };
+
+  const onPaid = (paymentID, vendorID, payAmt) => {
+    const input = {
+      params: {
+        email: props.auth.user.email,
+        paymentID: paymentID,
+        auth: props.auth.isAuthenticated
+      },
+      body: {
+        isPaid: "yes"
+      }
+    };
+
+      props.updatePayment(input, props.history);
+
+      var i;
+      var pAmt;
+      for (i=0; i< allVendors.length; i++) {
+        if (allVendors[i]._id === vendorID) {
+          pAmt = allVendors[i].pendingAmt;
+          break;
+        }
+      }
+      var newPending = pAmt - payAmt;
+
+      const v_inp = {
+        params: {
+          email: props.auth.user.email,
+          vendorID: vendorID,
+          auth: props.auth.isAuthenticated
+        },
+        body: {
+          pendingAmt: newPending
+        }
+      };
+      props.updateVendor(v_inp, props.history);
+      setNotify({
+        isOpen: true,
+        message: "Return Paid",
+        type: 'success'
+      });
   }
 
   const openInEditPopup = item => {
@@ -235,7 +275,7 @@ export default function AV_Table(props) {
       body: data
     };
     console.log(input);
-    props.registerVendor(input, props.history);
+    props.registerPayment(input, props.history);
     resetForm();
     setOpenRegPopup(false);
     setNotify({
@@ -249,14 +289,14 @@ export default function AV_Table(props) {
     const input = {
       params: {
         email: props.auth.user.email,
-        vendorID: og_id,
+        paymentID: og_id,
         auth: props.auth.isAuthenticated
       },
       body: data
     };
 
-    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
-      props.updateVendor(input, props.history);
+
+      props.updatePayment(input, props.history);
       resetForm();
       setRecordForEdit(null);
       setOpenEditPopup(false);
@@ -265,77 +305,17 @@ export default function AV_Table(props) {
         message: "Update Successfully",
         type: 'success'
       });
-    }
+
   }
 
-  const handleSwitch = (val, row) => {
-    console.log(val);
-      if(val== true)
-        changeEnable("true", row._id);
-      if(val == false)
-        changeEnable("false", row._id);
-  };
 
-  const changeEnable = (value, og_id) => {
-    const input = {
-      params: {
-        email: props.auth.user.email,
-        vendorID: og_id,
-        auth: props.auth.isAuthenticated
-      },
-      body: {
-      enabled: value
-      }
-    };
-
-    const p_input = {
-      params: {
-        email: props.auth.user.email,
-        vendorID: og_id,
-        auth: props.auth.isAuthenticated
-      },
-      body: {
-        enabled: value
-      }
-    };
-    props.updateVendor(input, props.history);
-    props.updateAllPayments(p_input, props.history);
-    setNotify({
-      isOpen: true,
-      message: "Success.",
-      type: 'success'
-    });
-  }
-
-  const onDelete = vendor => {
-    setConfirmDialog({
-        ...confirmDialog,
-        isOpen: false
-    })
-
-    const input = {
-      vendorID: vendor._id,
-      email: props.auth.user.email,
-      auth: props.auth.isAuthenticated
-    };
-
-
-    if(props.auth.user.role === "admin"){
-      props.deleteVendor(input, props.history);
-      setNotify({
-        isOpen: true,
-        message: "Deleted Successfully",
-        type: 'success'
-      });
-
-    }
-  }
   const dateToString = (date) => {
     var d = date.toString();
 
     d = d.substring(0, d.indexOf('T'));
     return d;
   }
+
 
   const approvedIcon = (status) => {
 
@@ -353,27 +333,14 @@ export default function AV_Table(props) {
       return <CancelIcon fontSize="small"  style={{ color: "#DC143C" }}/>
     }
   }
-
-  const handleChange = (event) => {
-    let val = event.target;
-    setCompany(val.value);
-    setFilterFn({
-        fn: items => {
-            if (val.value == "")
-                return items.filter(x =>  x.approved.includes("approved"));
-            else
-                return items.filter(x => (x.companyName === val.value) && x.approved.includes("approved"));
-        }
-    })
-  };
-
   return (
     <React.Fragment>
+    <Paper className={classes.pageContent}>
       <Toolbar>
         <Grid container>
-          <Grid item xs={6}>
+          <Grid item xs={7}>
             <Input
-                label="Search Vendors"
+                label="Search Payments"
                 className={classes.searchInput}
                 InputProps={{
                     startAdornment: (<InputAdornment position="start">
@@ -385,21 +352,21 @@ export default function AV_Table(props) {
           </Grid>
           <Grid item xs={3}>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
+              <InputLabel htmlFor="outlined-vendor-native-simple">Vendor</InputLabel>
               <Select
                 native
                 value={state.age}
                 onChange={handleChange}
-                label="Company"
+                label="Vendor"
                 inputProps={{
-                  name: 'company',
-                  id: 'outlined-company-native-simple',
+                  name: 'vendor',
+                  id: 'outlined-vendor-native-simple',
                 }}
               >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={2}>
             <Button
                 text="Add New"
                 variant="outlined"
@@ -418,20 +385,16 @@ export default function AV_Table(props) {
               (<TableRow key={row._id}>
                 <TableCell>{row.vendorName}</TableCell>
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
-                <TableCell>{row.vendorEmail}</TableCell>
-                <TableCell>{dateToString(row.startDate)}</TableCell>
-                <TableCell>{dateToString(row.endDate)}</TableCell>
-                <TableCell>{row.contractAmt}</TableCell>
-                <TableCell>{row.pendingAmt}</TableCell>
-                <TableCell>{row.contactNo}</TableCell>
+                <TableCell>{row.amtToBePaid}</TableCell>
+                <TableCell>{dateToString(row.dueDate)}</TableCell>
                 <TableCell>
-                  <Switch
-                    onChange={(e,val)=>handleSwitch(val, row)}
-                    color="primary"
-                    name="checked"
-                    checked={(row.enabled==="true")}
-                    inputProps={{ 'aria-label': 'primary checkbox' }}
-                  />
+                {(row.approved !== "approved")?null :
+                  <ActionButton
+                    color="light"
+                    onClick={() => {onPaid(row._id, row.vendorID, row.amtToBePaid)}}>
+                    <CheckIcon fontSize="small" />
+                  </ActionButton>
+                }
                 </TableCell>
                 <TableCell>
                   <ActionButton
@@ -440,28 +403,14 @@ export default function AV_Table(props) {
                     <EditOutlinedIcon fontSize="small" />
                   </ActionButton>
                 </TableCell>
-                <TableCell>
-                  <ActionButton
-                    color="light"
-                    onClick={() => {
-                      setConfirmDialog({
-                        isOpen: true,
-                        title: 'Are you sure to delete this record?',
-                        subTitle: "You can't undo this operation",
-                        onConfirm: () => { onDelete(row) }
-                      })
-                    }}>
-                    <CloseIcon fontSize="small" />
-                  </ActionButton>
-                </TableCell>
               </TableRow>
           ))}
         </TableBody>
       </TblContainer>
       <TblPagination />
-
+    </Paper>
       <Popup
-        title="Edit Vendor Details"
+        title="Edit Payment Details"
         openPopup={openEditPopup}
         setOpenPopup={setOpenEditPopup}
       >
@@ -470,11 +419,11 @@ export default function AV_Table(props) {
             edit={edit} />
       </Popup>
       <Popup
-        title="Register New Vendor"
+        title="Register New Payment"
         openPopup={openRegPopup}
         setOpenPopup={setOpenRegPopup}
       >
-        <RegisterForm {...props} create={create} />
+        <RegisterForm {...props} create={create} vendor={vendor} allVendors={allVendors}/>
       </Popup>
       <Notification
                notify={notify}

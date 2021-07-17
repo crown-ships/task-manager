@@ -12,6 +12,24 @@ export const get_all = data => {
   return data;
 };
 
+
+export const getFilteredVendors = (userData, history) => {
+  return function (dispatch) {
+    return axios
+    .get("/api/getFilteredVendors", {params:userData})
+    .then(res => {
+      return res.data;
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+  }
+};
+
+
 export const updateVendor = (userData, history) => dispatch => {
   axios
     .post("/api/updVendor", userData.body, {params:userData.params})

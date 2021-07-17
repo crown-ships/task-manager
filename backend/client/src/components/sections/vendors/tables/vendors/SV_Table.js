@@ -16,9 +16,6 @@ import TableRow from '@material-ui/core/TableRow';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import CloseIcon from '@material-ui/icons/Close';
 import Switch from '@material-ui/core/Switch';
-import CancelIcon from '@material-ui/icons/Cancel';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import HelpIcon from '@material-ui/icons/Help';
 import ActionButton from "../../../../controls/ActionButton"
 import Button from "../../../../controls/Button"
 import Input from "../../../../controls/Input"
@@ -34,6 +31,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
+import CancelIcon from '@material-ui/icons/Cancel';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import HelpIcon from '@material-ui/icons/Help';
 import PropTypes from "prop-types";
 // Generate Order Data
 function createData() {
@@ -42,10 +42,11 @@ function createData() {
     vendorName: "",
     vendorEmail: "",
     contactNo: "",
-    contractAmt: "",
+    contractAmt: 0,
     startDate: "",
     endDate:"",
-    pendingAmt:'',
+    pendingAmt:0,
+    creatorName: "",
     approved: ""
   }
 }
@@ -79,9 +80,7 @@ const headCells = [
     { id: 'contractAmt', label: 'Contract Amount' },
     { id: 'pendingAmt', label: 'Pending Amount'},
     { id: 'contactNo', label: 'Contact No.'},
-    { id: 'enabled', label: 'Enable', disableSorting: true },
-    { id: 'update', label: 'Update', disableSorting: true },
-    { id: 'delete', label: 'Delete', disableSorting: true }
+    { id: 'update', label: 'Update', disableSorting: true }
 ];
 
 const rows = [
@@ -93,107 +92,26 @@ function preventDefault(event) {
 }
 
 const getData = (prop) => {
-  const input = {
-    companyName: "",
-    ownername: prop.auth.user.name,
-    vendorName: "",
-    vendorEmail: "",
-    contractAmt: "",
-    endDate: "",
-    startDate: "",
-    creatorName: "",
-    creatorID: "",
-    approved: "",
-    enabled: "",
-    email: prop.auth.user.email,
-    auth: prop.auth.isAuthenticated
-    }
-  return prop.getFilteredVendors(input, prop.history);
+  return prop.getAllVendors({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
-const getAdmins = (prop) => {
-  const input = {
-    name: '',
-    role: "admin",
-    email:prop.auth.user.email,
-    auth:prop.auth.isAuthenticated
-  }
-  return prop.getFilteredUsers(input, prop.history);
-}
-
-const getCompanies =  (prop) => {
-  return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
-}
-
-export default function AV_Table(props) {
-  console.log(rows);
+export default function UV_Table(props) {
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
-  const [allAdmins, setAllAdmins] = React.useState([]);
-  const [company, setCompany] = React.useState("");
-  const [list, setList] = React.useState([]);
-  const [allCompanies, setAllCompanies] = React.useState([]);
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
   const [records, setRecords] = React.useState(data);
   const classes = useStyles();
 
-  React.useEffect(async () => {
-    const d = await getCompanies(props);
-    setAllCompanies(d.data);
-    var complist = d.data.map(function(item) {
-      if(item.enabled === "true")
-        return item.companyName;
-      else
-        return "0"
-    });
-    var j;
-    var len = 0;
-    var trimlist = [];
-    for(j=0; j<complist.length; j++) {
-      if(complist[j] !== "0"){
-        trimlist[len++] = complist[j];
-      }
-    }
-    var selList = [];
-    var i;
-    selList[0] = {key:0, item: ""};
-    for(i=0; i<len; i++) {
-      selList[i+1] = {key:i+1, item: trimlist[i]};
-    }
-    setList(selList);
-
-
-    const a = await getAdmins(props);
-    var adminsList = a.data.map(function(item) {
-      return item.name;
-    });
-
-    var admins = [];
-    var i;
-    admins[0] = {key:0, item: ""};
-    for(i=0; i<adminsList.length; i++) {
-      admins[i+1] = {key:i+1, item: adminsList[i]};
-    }
-    setAllAdmins(admins);
-  },[]);
 
   React.useEffect(async () => {
     const d = await getData(props);
         console.log(d.data);
     setData(d.data);
     setRecords(d.data);
-    setFilterFn({
-        fn: items => {
-          if (company == "")
-              return items.filter(x => x.approved.includes("approved"));
-          else
-              return items.filter(x => (x.companyName === company) && x.approved.includes("approved"));
-          }
-    })
   },[notify]);
 
   console.log(data);
@@ -209,9 +127,9 @@ export default function AV_Table(props) {
     setFilterFn({
         fn: items => {
             if (target.value == "")
-              return items.filter(x => x.approved.includes("approved"));
+                return items;
             else
-              return items.filter(x => x.vendorName.toLowerCase().includes(target.value.toLowerCase()) && x.approved.includes("approved"))
+                return items.filter(x => x.vendorName.toLowerCase().includes(target.value.toLowerCase()))
         }
     })
   }
@@ -255,81 +173,20 @@ export default function AV_Table(props) {
       body: data
     };
 
-    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
+      console.log(input);
       props.updateVendor(input, props.history);
       resetForm();
       setRecordForEdit(null);
       setOpenEditPopup(false);
       setNotify({
         isOpen: true,
-        message: "Update Successfully",
-        type: 'success'
-      });
-    }
-  }
-
-  const handleSwitch = (val, row) => {
-    console.log(val);
-      if(val== true)
-        changeEnable("true", row._id);
-      if(val == false)
-        changeEnable("false", row._id);
-  };
-
-  const changeEnable = (value, og_id) => {
-    const input = {
-      params: {
-        email: props.auth.user.email,
-        vendorID: og_id,
-        auth: props.auth.isAuthenticated
-      },
-      body: {
-      enabled: value
-      }
-    };
-
-    const p_input = {
-      params: {
-        email: props.auth.user.email,
-        vendorID: og_id,
-        auth: props.auth.isAuthenticated
-      },
-      body: {
-        enabled: value
-      }
-    };
-    props.updateVendor(input, props.history);
-    props.updateAllPayments(p_input, props.history);
-    setNotify({
-      isOpen: true,
-      message: "Success.",
-      type: 'success'
-    });
-  }
-
-  const onDelete = vendor => {
-    setConfirmDialog({
-        ...confirmDialog,
-        isOpen: false
-    })
-
-    const input = {
-      vendorID: vendor._id,
-      email: props.auth.user.email,
-      auth: props.auth.isAuthenticated
-    };
-
-
-    if(props.auth.user.role === "admin"){
-      props.deleteVendor(input, props.history);
-      setNotify({
-        isOpen: true,
-        message: "Deleted Successfully",
+        message: "Updated Successfully",
         type: 'success'
       });
 
-    }
   }
+
+
   const dateToString = (date) => {
     var d = date.toString();
 
@@ -353,25 +210,11 @@ export default function AV_Table(props) {
       return <CancelIcon fontSize="small"  style={{ color: "#DC143C" }}/>
     }
   }
-
-  const handleChange = (event) => {
-    let val = event.target;
-    setCompany(val.value);
-    setFilterFn({
-        fn: items => {
-            if (val.value == "")
-                return items.filter(x =>  x.approved.includes("approved"));
-            else
-                return items.filter(x => (x.companyName === val.value) && x.approved.includes("approved"));
-        }
-    })
-  };
-
   return (
     <React.Fragment>
       <Toolbar>
         <Grid container>
-          <Grid item xs={6}>
+          <Grid item xs={9}>
             <Input
                 label="Search Vendors"
                 className={classes.searchInput}
@@ -382,22 +225,6 @@ export default function AV_Table(props) {
                 }}
                 onChange={handleSearch}
             />
-          </Grid>
-          <Grid item xs={3}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
-              <Select
-                native
-                value={state.age}
-                onChange={handleChange}
-                label="Company"
-                inputProps={{
-                  name: 'company',
-                  id: 'outlined-company-native-simple',
-                }}
-              >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
-              </Select>
-            </FormControl>
           </Grid>
           <Grid item xs={3}>
             <Button
@@ -425,33 +252,10 @@ export default function AV_Table(props) {
                 <TableCell>{row.pendingAmt}</TableCell>
                 <TableCell>{row.contactNo}</TableCell>
                 <TableCell>
-                  <Switch
-                    onChange={(e,val)=>handleSwitch(val, row)}
-                    color="primary"
-                    name="checked"
-                    checked={(row.enabled==="true")}
-                    inputProps={{ 'aria-label': 'primary checkbox' }}
-                  />
-                </TableCell>
-                <TableCell>
                   <ActionButton
                     color="light"
                     onClick={() => { openInEditPopup(row) }}>
                     <EditOutlinedIcon fontSize="small" />
-                  </ActionButton>
-                </TableCell>
-                <TableCell>
-                  <ActionButton
-                    color="light"
-                    onClick={() => {
-                      setConfirmDialog({
-                        isOpen: true,
-                        title: 'Are you sure to delete this record?',
-                        subTitle: "You can't undo this operation",
-                        onConfirm: () => { onDelete(row) }
-                      })
-                    }}>
-                    <CloseIcon fontSize="small" />
                   </ActionButton>
                 </TableCell>
               </TableRow>

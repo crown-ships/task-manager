@@ -8,6 +8,54 @@ const validatePaymentName = require("../../validation/payment/validatePaymentNam
 const validatePaymentAmount = require("../../validation/payment/validatePaymentAmount");
 const validateDate = require("../../validation/validateDate");
 
+
+exports.getFilteredPayments = async (req, res, next) => {
+  const search = {
+    companyName: req.query.companyName,
+    ownername: req.query.ownerName,
+    vendorName: req.query.vendorName,
+    vendorStartDate: req.query.vendorStartDate,
+    vendorEndDate: req.query.vendorEndDate,
+    vendorCrtAmt: req.query.vendorCrtAmt,
+    vendorID: req.query.vendorID,
+    amtToBePaid: req.query.amtToBePaid,
+    dueDate: req.query.dueDate,
+    isPaid: req.query.isPaid,
+    creatorName: req.query.creatorName,
+    creatorID: req.query.creatorID,
+    approved: req.query.approved,
+    enabled: req.query.enabled
+  };
+
+   var counter=0;
+   var conditions = [];
+
+
+   Object.entries(search).forEach(([key,value]) => {
+     if(value !== "")
+     {
+       var json = {};
+       json[key]= value;
+       conditions[counter++] = json;
+
+     }
+   });
+
+  var payments;
+  if(conditions.length == 0){
+     payments = await Payment.find({});
+  }
+  else {
+     payments = await Payment.find({$and: conditions});
+  }
+
+  res.status(200).json({
+    data: payments,
+    conditions: conditions
+  });
+}
+
+
 exports.addNew = async (req, res, next) => {
  try {
    // Validation code here

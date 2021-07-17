@@ -7,9 +7,6 @@ import FormControl from '@material-ui/core/FormControl';
 import PropTypes from "prop-types";
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import CancelIcon from '@material-ui/icons/Cancel';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import HelpIcon from '@material-ui/icons/Help';
 import AddIcon from '@material-ui/icons/Add';
 import Typography from '@material-ui/core/Typography';
 import {Search} from '@material-ui/icons';
@@ -41,35 +38,6 @@ function createData() {
   return { _id:'',  vendorName: '', paymentName: '', amtToBePaid: '', dueDate: '', updated:'',delete:''};
 }
 
-function CircularProgressWithLabel(props) {
-  return (
-    <Box position="relative" display="inline-flex">
-      <CircularProgress variant="determinate" {...props} />
-      <Box
-        top={0}
-        left={0}
-        bottom={0}
-        right={0}
-        position="absolute"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Typography variant="caption" component="div" color="textSecondary">{`${Math.round(
-          props.value,
-        )}%`}</Typography>
-      </Box>
-    </Box>
-  );
-}
-
-CircularProgressWithLabel.propTypes = {
-  /**
-   * The value of the progress indicator for the determinate and buffer variants.
-   * Value between 0 and 100.
-   */
-  value: PropTypes.number.isRequired,
-};
 const useStyles = makeStyles(theme => ({
     pageContent: {
         margin: theme.spacing(5),
@@ -92,11 +60,9 @@ const useStyles = makeStyles(theme => ({
 
 const headCells = [
     { id: 'vendorName', label: 'Vendor Name' },
-    { id: 'approved', label: 'Approved' },
-    { id: 'amtToBePaid', label: 'Amount to Pay' },
+    { id: 'amtToBePaid', label: 'Amount Paid' },
     { id: 'dueDate', label: 'Due Date'},
-    { id: 'isPaid', label: 'Pay', disableSorting: true },
-    { id: 'update', label: 'Update', disableSorting: true },
+    { id: 'isPaid', label: 'Status'},
     { id: 'delete', label: 'Delete', disableSorting: true }
 ];
 
@@ -109,37 +75,15 @@ function preventDefault(event) {
 }
 
 const getData = (prop) => {
-  const input = {
-    companyName: "",
-    ownername: prop.auth.user.name,
-    vendorName: "",
-    vendorStartDate: "",
-    vendorEndDate: "",
-    vendorCrtAmt: "",
-    vendorID: "",
-    amtToBePaid: "",
-    dueDate: "",
-    isPaid: "no",
-    creatorName: "",
-    creatorID: "",
-    approved: "approved",
-    enabled: "true",
-    email: prop.auth.user.email,
-    auth: prop.auth.isAuthenticated
-    }
-  return prop.getFilteredPayments(input, prop.history);
+  return prop.getAllPayments({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
-
 const getDropdownList = (prop) => {
   return prop.getAllVendors({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
-const getCompanies = (prop) => {
-  return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
-}
 
 
-export default function APay_Table(props) {
+export default function AL_Table(props) {
 
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
@@ -158,7 +102,7 @@ export default function APay_Table(props) {
     const d = await getDropdownList(props);
     setAllVendors(d.data);
     var complist = d.data.map(function(item) {
-      if(item.enabled === "true" && item.approved === "approved")
+      if(item.approved === "approved")
         return item.vendorName;
       else
         return "0"
@@ -191,9 +135,9 @@ export default function APay_Table(props) {
     setFilterFn({
         fn: items => {
             if (vendor == "")
-                return items.filter(x => x.isPaid.includes("no") && x.approved.includes("approved")&& x.enabled.includes("true"));
+                return items.filter(x => x.isPaid.includes("yes"));
             else
-                return items.filter(x => x.vendorName.includes(vendor) && x.approved.includes("approved") && x.isPaid.includes("no")&& x.enabled.includes("true"));
+                return items.filter(x => x.vendorName.includes(vendor) && x.approved.includes("approved") && x.isPaid.includes("yes"))
         }
     })
   },[notify, list]);
@@ -211,9 +155,9 @@ export default function APay_Table(props) {
     setFilterFn({
         fn: items => {
             if (target.value == "")
-                return items.filter(x => x.isPaid.includes("no") && x.approved.includes("approved") && x.enabled.includes("true"));
+                return items;
             else
-                return items.filter(x => x.vendorName.toLowerCase().includes(target.value.toLowerCase()) && x.isPaid.includes("no") && x.approved.includes("approved") && x.enabled.includes("true"));
+                return items.filter(x => x.vendorName.toLowerCase().includes(target.value.toLowerCase()))
         }
     })
   }
@@ -229,107 +173,13 @@ export default function APay_Table(props) {
     setFilterFn({
         fn: items => {
             if (val.value == "")
-                return items;
+                return items.filter(x=>x.isPaid.includes("yes"));
             else
-                return items.filter(x => x.vendorName.includes(val.value) && x.approved.includes("approved")&& x.isPaid.includes("no")&& x.enabled.includes("true"));
+                return items.filter(x => x.vendorName.includes(val.value) && x.approved.includes("approved")&& x.isPaid.includes("yes"))
         }
     })
 
   };
-
-  const onPaid = (paymentID, vendorID, payAmt) => {
-    const input = {
-      params: {
-        email: props.auth.user.email,
-        paymentID: paymentID,
-        auth: props.auth.isAuthenticated
-      },
-      body: {
-        isPaid: "yes"
-      }
-    };
-
-    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
-      props.updatePayment(input, props.history);
-
-      var i;
-      var pAmt;
-      for (i=0; i< allVendors.length; i++) {
-        if (allVendors[i]._id === vendorID) {
-          pAmt = allVendors[i].pendingAmt;
-          break;
-        }
-      }
-      const v_inp = {
-        params: {
-          email: props.auth.user.email,
-          vendorID: vendorID,
-          auth: props.auth.isAuthenticated
-        },
-        body: {
-          pendingAmt: (pAmt - payAmt)
-        }
-      };
-      props.updateVendor(v_inp, props.history);
-      setNotify({
-        isOpen: true,
-        message: "Return Paid",
-        type: 'success'
-      });
-    }
-  }
-
-  const openInEditPopup = item => {
-    setRecordForEdit(item);
-    setOpenEditPopup(true);
-  }
-
-  const openInRegPopup = item => {
-
-    setOpenRegPopup(true);
-  }
-
-  const create = (data, resetForm) => {
-    const input = {
-      params: {
-        email: props.auth.user.email,
-        auth: props.auth.isAuthenticated
-      },
-      body: data
-    };
-    console.log(input);
-    props.registerPayment(input, props.history);
-    resetForm();
-    setOpenRegPopup(false);
-    setNotify({
-      isOpen: true,
-      message: "Registered Successfully.",
-      type: 'success'
-    });
-  }
-  const edit = (data, resetForm, og_id) => {
-
-    const input = {
-      params: {
-        email: props.auth.user.email,
-        paymentID: og_id,
-        auth: props.auth.isAuthenticated
-      },
-      body: data
-    };
-
-    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
-      props.updatePayment(input, props.history);
-      resetForm();
-      setRecordForEdit(null);
-      setOpenEditPopup(false);
-      setNotify({
-        isOpen: true,
-        message: "Update Successfully",
-        type: 'success'
-      });
-    }
-  }
 
   const onDelete = payment => {
     setConfirmDialog({
@@ -362,28 +212,12 @@ export default function APay_Table(props) {
   }
 
 
-  const approvedIcon = (status) => {
-
-    if (status === "approved") {
-      console.log(status);
-      console.log("yes");
-      return <CheckCircleIcon fontSize="small" style={{ color: "#00b386" }}/>
-    }
-    else if (status === "wait") {
-      console.log("what");
-      return <HelpIcon fontSize="small"  style={{ color: "#ffbf00" }}/>
-    }
-    else if (status === "rejected") {
-      console.log("what");
-      return <CancelIcon fontSize="small"  style={{ color: "#DC143C" }}/>
-    }
-  }
   return (
     <React.Fragment>
     <Paper className={classes.pageContent}>
       <Toolbar>
         <Grid container>
-          <Grid item xs={7}>
+          <Grid item xs={9}>
             <Input
                 label="Search Payments"
                 className={classes.searchInput}
@@ -411,15 +245,6 @@ export default function APay_Table(props) {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={2}>
-            <Button
-                text="Add New"
-                variant="outlined"
-                startIcon={<AddIcon />}
-                className={classes.newButton}
-                onClick={() => { setOpenRegPopup(true); }}
-            />
-          </Grid>
         </Grid>
       </Toolbar>
       <TblContainer>
@@ -428,24 +253,10 @@ export default function APay_Table(props) {
             {
               recordsAfterPagingAndSorting().map(row =>
               (<TableRow key={row._id}>
-                <TableCell>{row.vendorName}</TableCell>
-                <TableCell>{approvedIcon(row.approved)}</TableCell>
+                <TableCell backgroundColor = "primary">{row.vendorName}</TableCell>
                 <TableCell>{row.amtToBePaid}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
-                <TableCell>
-                  <ActionButton
-                    color="light"
-                    onClick={() => {onPaid(row._id, row.vendorID, row.amtToBePaid)}}>
-                    <CheckIcon fontSize="small" />
-                  </ActionButton>
-                </TableCell>
-                <TableCell>
-                  <ActionButton
-                    color="light"
-                    onClick={() => { openInEditPopup(row) }}>
-                    <EditOutlinedIcon fontSize="small" />
-                  </ActionButton>
-                </TableCell>
+                <TableCell>{row.isPaid}</TableCell>
                 <TableCell>
                   <ActionButton
                     color="light"
@@ -466,22 +277,6 @@ export default function APay_Table(props) {
       </TblContainer>
       <TblPagination />
     </Paper>
-      <Popup
-        title="Edit Payment Details"
-        openPopup={openEditPopup}
-        setOpenPopup={setOpenEditPopup}
-      >
-        <UpdateForm {...props}
-            recordForEdit={recordForEdit}
-            edit={edit} />
-      </Popup>
-      <Popup
-        title="Register New Payment"
-        openPopup={openRegPopup}
-        setOpenPopup={setOpenRegPopup}
-      >
-        <RegisterForm {...props} create={create} vendor={vendor} allVendors={allVendors}/>
-      </Popup>
       <Notification
                notify={notify}
                setNotify={setNotify}

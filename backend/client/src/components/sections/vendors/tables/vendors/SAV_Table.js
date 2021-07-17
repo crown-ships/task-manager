@@ -93,36 +93,7 @@ function preventDefault(event) {
 }
 
 const getData = (prop) => {
-  const input = {
-    companyName: "",
-    ownername: prop.auth.user.name,
-    vendorName: "",
-    vendorEmail: "",
-    contractAmt: "",
-    endDate: "",
-    startDate: "",
-    creatorName: "",
-    creatorID: "",
-    approved: "",
-    enabled: "",
-    email: prop.auth.user.email,
-    auth: prop.auth.isAuthenticated
-    }
-  return prop.getFilteredVendors(input, prop.history);
-}
-
-const getAdmins = (prop) => {
-  const input = {
-    name: '',
-    role: "admin",
-    email:prop.auth.user.email,
-    auth:prop.auth.isAuthenticated
-  }
-  return prop.getFilteredUsers(input, prop.history);
-}
-
-const getCompanies =  (prop) => {
-  return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+  return prop.getAllVendors({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
 export default function AV_Table(props) {
@@ -131,55 +102,12 @@ export default function AV_Table(props) {
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
-  const [allAdmins, setAllAdmins] = React.useState([]);
-  const [company, setCompany] = React.useState("");
-  const [list, setList] = React.useState([]);
-  const [allCompanies, setAllCompanies] = React.useState([]);
   const [recordForEdit, setRecordForEdit] = React.useState(null);
   const [openEditPopup, setOpenEditPopup] = React.useState(false);
   const [openRegPopup, setOpenRegPopup] = React.useState(false);
   const [records, setRecords] = React.useState(data);
   const classes = useStyles();
 
-  React.useEffect(async () => {
-    const d = await getCompanies(props);
-    setAllCompanies(d.data);
-    var complist = d.data.map(function(item) {
-      if(item.enabled === "true")
-        return item.companyName;
-      else
-        return "0"
-    });
-    var j;
-    var len = 0;
-    var trimlist = [];
-    for(j=0; j<complist.length; j++) {
-      if(complist[j] !== "0"){
-        trimlist[len++] = complist[j];
-      }
-    }
-    var selList = [];
-    var i;
-    selList[0] = {key:0, item: ""};
-    for(i=0; i<len; i++) {
-      selList[i+1] = {key:i+1, item: trimlist[i]};
-    }
-    setList(selList);
-
-
-    const a = await getAdmins(props);
-    var adminsList = a.data.map(function(item) {
-      return item.name;
-    });
-
-    var admins = [];
-    var i;
-    admins[0] = {key:0, item: ""};
-    for(i=0; i<adminsList.length; i++) {
-      admins[i+1] = {key:i+1, item: adminsList[i]};
-    }
-    setAllAdmins(admins);
-  },[]);
 
   React.useEffect(async () => {
     const d = await getData(props);
@@ -188,11 +116,8 @@ export default function AV_Table(props) {
     setRecords(d.data);
     setFilterFn({
         fn: items => {
-          if (company == "")
-              return items.filter(x => x.approved.includes("approved"));
-          else
-              return items.filter(x => (x.companyName === company) && x.approved.includes("approved"));
-          }
+                return items.filter(x => x.approved.includes("approved"))
+        }
     })
   },[notify]);
 
@@ -209,9 +134,9 @@ export default function AV_Table(props) {
     setFilterFn({
         fn: items => {
             if (target.value == "")
-              return items.filter(x => x.approved.includes("approved"));
+                return items;
             else
-              return items.filter(x => x.vendorName.toLowerCase().includes(target.value.toLowerCase()) && x.approved.includes("approved"))
+                return items.filter(x => x.vendorName.toLowerCase().includes(target.value.toLowerCase()))
         }
     })
   }
@@ -354,24 +279,11 @@ export default function AV_Table(props) {
     }
   }
 
-  const handleChange = (event) => {
-    let val = event.target;
-    setCompany(val.value);
-    setFilterFn({
-        fn: items => {
-            if (val.value == "")
-                return items.filter(x =>  x.approved.includes("approved"));
-            else
-                return items.filter(x => (x.companyName === val.value) && x.approved.includes("approved"));
-        }
-    })
-  };
-
   return (
     <React.Fragment>
       <Toolbar>
         <Grid container>
-          <Grid item xs={6}>
+          <Grid item xs={9}>
             <Input
                 label="Search Vendors"
                 className={classes.searchInput}
@@ -382,22 +294,6 @@ export default function AV_Table(props) {
                 }}
                 onChange={handleSearch}
             />
-          </Grid>
-          <Grid item xs={3}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
-              <Select
-                native
-                value={state.age}
-                onChange={handleChange}
-                label="Company"
-                inputProps={{
-                  name: 'company',
-                  id: 'outlined-company-native-simple',
-                }}
-              >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
-              </Select>
-            </FormControl>
           </Grid>
           <Grid item xs={3}>
             <Button
