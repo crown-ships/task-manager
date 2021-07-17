@@ -121,7 +121,7 @@ router.post('/updReturn', userController.allowIfLoggedin, userController.grantAc
 
 router.get('/getReturns', userController.allowIfLoggedin, userController.grantAccess('readAny', 'return'),  returnController.getReturns);
 
-router.get('/getFilteredReturns', userController.allowIfLoggedin, userController.grantAccess('readAny', 'return'),  projectController.getFilteredReturns);
+router.get('/getFilteredReturns', userController.allowIfLoggedin, userController.grantAccess('readAny', 'return'),  returnController.getFilteredReturns);
 
 //------------------INVESTORS
 router.post('/newInvestor', userController.allowIfLoggedin, userController.grantAccess('create', 'investor'),investorController.addNew);
