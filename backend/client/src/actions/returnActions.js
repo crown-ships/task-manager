@@ -72,3 +72,19 @@ export const registerReturn = (userData, history) => dispatch => {
     );
 };
 //
+
+export const getFilteredReturns = (userData, history) => {
+  return function (dispatch) {
+    return axios
+    .get("/api/getFilteredReturns", {params:userData})
+    .then(res => {
+      return res.data;
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+  }
+};

@@ -18,7 +18,6 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import TableRow from '@material-ui/core/TableRow';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import CloseIcon from '@material-ui/icons/Close';
-import CheckIcon from '@material-ui/icons/Check';
 import Switch from '@material-ui/core/Switch';
 import ActionButton from "../../../../controls/ActionButton"
 import Button from "../../../../controls/Button"
@@ -33,7 +32,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import CircularProgress from '@material-ui/core/CircularProgress';
 // Generate Order Data
 function createData(id ,name, date, details, createdBy, update,del) {
-  return { _id:id, returnName: name, localDueDate: date, returnDetails: details, creatorName: createdBy, updated:update,delete:del};
+  return { _id:id, investmentName: name, localDueDate: date, investmentDetails: details, creatorName: createdBy, updated:update,delete:del};
 }
 
 const useStyles = makeStyles(theme => ({
@@ -61,9 +60,7 @@ const headCells = [
     { id: 'localDueDate', label: 'Next Due Date' },
     { id: 'returnAmt', label: 'Next Payment Amount'},
     { id: 'totalInterestAmt', label: 'Total Interest'},
-    { id: 'paymentTerms', label: 'Payment Terms'},
-    { id: 'isPaid', label: 'Paid', disableSorting: true },
-    { id: 'delete', label: 'Delete', disableSorting: true }
+    { id: 'paymentTerms', label: 'Payment Terms'}
 ];
 
 const rows = [
@@ -75,29 +72,7 @@ function preventDefault(event) {
 }
 
 const getData = (prop) => {
-  const input = {
-    companyName: "",
-    ownerName: prop.auth.user.name,
-    investmentName: "",
-    investmentID: "",
-    investorName: "",
-    investorID: "",
-    startDate: "",
-    dueDate: "",
-    localDueDate: "",
-    isPaid: "no",
-    profitPercent: "",
-    capitalAmt: "",
-    investmentName: "",
-    investmentType: "",
-    creatorName: "",
-    creatorID: "",
-    paymentTerms: "",
-    approved: "",
-    email: prop.auth.user.email,
-    auth: prop.auth.isAuthenticated
-    }
-  return prop.getFilteredReturns(input, prop.history);
+  return prop.getAllReturns({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 const getDropdownList = (prop) => {
   return prop.getAllInvestments({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
@@ -105,17 +80,14 @@ const getDropdownList = (prop) => {
 
 
 
-export default function AR_Table(props) {
+export default function AF_Table(props) {
 
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
   const [filterFn, setFilterFn] = React.useState({ fn: items => { return items; } })
   const [data, setData] = React.useState(rows);
   const [list, setList] = React.useState([]);
-  const [investor, setInvestor] = React.useState("");
-  const [recordForEdit, setRecordForEdit] = React.useState(null);
-  const [openEditPopup, setOpenEditPopup] = React.useState(false);
-  const [openRegPopup, setOpenRegPopup] = React.useState(false);
+  const [investment, setInvestment] = React.useState("");
   const [records, setRecords] = React.useState(data);
   const classes = useStyles();
 
@@ -125,7 +97,7 @@ export default function AR_Table(props) {
       if (item.approved === "approved")
         return item.investmentName;
       else
-        return "0";
+        return "0"
     });
     console.log(complist);
     var j;
@@ -154,10 +126,10 @@ export default function AR_Table(props) {
     console.log(d.data);
     setFilterFn({
         fn: items => {
-            if (investor == "")
-                return items.filter(x => x.isPaid.includes("no"));
+            if (investment == "")
+                return items.filter(x => x.isPaid.includes("yes"));
             else
-                return items.filter(x => x.investmentName.includes(investor) && x.isPaid.includes("no"))
+                return items.filter(x => x.investmentName.includes(investment) && x.isPaid.includes("yes"))
         }
     })
   },[notify, list]);
@@ -182,76 +154,21 @@ export default function AR_Table(props) {
     })
   }
 
-  const onPaid = returnID => {
-    const input = {
-      params: {
-        email: props.auth.user.email,
-        returnID: returnID,
-        auth: props.auth.isAuthenticated
-      },
-      body: {
-        isPaid: "yes"
-      }
-    };
-
-    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
-      props.updateReturn(input, props.history);
-      setNotify({
-        isOpen: true,
-        message: "Return Paid",
-        type: 'success'
-      });
-    }
-  }
-
   const handleChange = (event) => {
     let val = event.target;
     console.log(val.value);
-    setInvestor(val.value);
+    setInvestment(val.value);
     setFilterFn({
         fn: items => {
-            if (val.value == "")
-                return items.filter(x => x.isPaid.includes("no"));
-            else
-                return items.filter(x => x.investmentName.includes(val.value) && x.isPaid.includes("no"))
+          if (val.value == "")
+              return items.filter(x => x.isPaid.includes("yes"));
+          else
+              return items.filter(x => x.investmentName.includes(val.value) && x.isPaid.includes("yes"))
         }
-        }
-    )
-
-  };
-  const openInEditPopup = item => {
-    setRecordForEdit(item);
-    setOpenEditPopup(true);
-  }
-
-  const openInRegPopup = item => {
-
-    setOpenRegPopup(true);
-  }
-
-  const onDelete = returns => {
-    setConfirmDialog({
-        ...confirmDialog,
-        isOpen: false
     })
 
-    const input = {
-      returnID: returns._id,
-      email: props.auth.user.email,
-      auth: props.auth.isAuthenticated
-    }
+  };
 
-
-    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
-      props.deleteReturn(input, props.history);
-      setNotify({
-        isOpen: true,
-        message: "Deleted Successfully",
-        type: 'success'
-      });
-
-    }
-  }
 
   const dateToString = (date) => {
     var d = date.toString();
@@ -280,20 +197,18 @@ export default function AR_Table(props) {
           </Grid>
           <Grid item xs={3}>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel htmlFor="outlined-investment-native-simple">Investment</InputLabel>
+              <InputLabel htmlFor="outlined-project-native-simple">Investment</InputLabel>
               <Select
                 native
                 onChange={handleChange}
-                label="Investment"
+                label="Project"
                 inputProps={{
-                  name: 'investment',
-                  id: 'outlined-investment-native-simple',
+                  name: 'project',
+                  id: 'outlined-project-native-simple',
                 }}
               >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
               </Select>
             </FormControl>
-          </Grid>
-          <Grid item xs={2}>
           </Grid>
         </Grid>
       </Toolbar>
@@ -308,27 +223,6 @@ export default function AR_Table(props) {
                 <TableCell>{row.returnAmt}</TableCell>
                 <TableCell>{row.totalInterestAmt}</TableCell>
                 <TableCell>{row.paymentTerms}</TableCell>
-                <TableCell>
-                  <ActionButton
-                    color="light"
-                    onClick={() => {onPaid(row._id)}}>
-                    <CheckIcon fontSize="small" />
-                  </ActionButton>
-                </TableCell>
-                <TableCell>
-                  <ActionButton
-                    color="light"
-                    onClick={() => {
-                      setConfirmDialog({
-                        isOpen: true,
-                        title: 'Are you sure to delete this record?',
-                        subTitle: "You can't undo this operation",
-                        onConfirm: () => { onDelete(row) }
-                      })
-                    }}>
-                    <CloseIcon fontSize="small" />
-                  </ActionButton>
-                </TableCell>
               </TableRow>
           ))}
         </TableBody>

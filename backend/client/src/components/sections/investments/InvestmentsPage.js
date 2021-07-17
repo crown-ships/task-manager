@@ -32,7 +32,7 @@ import { getFilteredUsers} from "../../../actions/userActions";
 import { getAllCompanies } from "../../../actions/companyActions";
 import { getFilteredInvestments, getAllInvestments, deleteInvestment, updateInvestment, registerInvestment } from "../../../actions/investmentActions";
 import { getAllInvestors, deleteInvestor, updateInvestor, registerInvestor } from "../../../actions/investorActions";
-import { getAllReturns, deleteReturn, updateReturn, registerReturn } from "../../../actions/returnActions";
+import { getFilteredReturns, getAllReturns, deleteReturn, updateReturn, registerReturn } from "../../../actions/returnActions";
 import InvestmentTablePicker from "./pickers/InvestmentTablePicker"
 import ReturnTablePicker from "./pickers/ReturnTablePicker"
 import LogTablePicker from "./pickers/LogTablePicker"
@@ -291,5 +291,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { getFilteredInvestments, logoutUser, getFilteredUsers, getAllCompanies, getAllInvestments,getAllInvestors, deleteInvestor, updateInvestor, registerInvestor, deleteInvestment, updateInvestment, registerInvestment,getAllReturns, deleteReturn, updateReturn, registerReturn  }
+  { getFilteredReturns, getFilteredInvestments, logoutUser, getFilteredUsers, getAllCompanies, getAllInvestments,getAllInvestors, deleteInvestor, updateInvestor, registerInvestor, deleteInvestment, updateInvestment, registerInvestment,getAllReturns, deleteReturn, updateReturn, registerReturn  }
 )(withRouter(InvestmentsPage));

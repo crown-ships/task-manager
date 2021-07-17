@@ -62,8 +62,7 @@ const headCells = [
     { id: 'returnAmt', label: 'Next Payment Amount'},
     { id: 'totalInterestAmt', label: 'Total Interest'},
     { id: 'paymentTerms', label: 'Payment Terms'},
-    { id: 'isPaid', label: 'Paid', disableSorting: true },
-    { id: 'delete', label: 'Delete', disableSorting: true }
+    { id: 'isPaid', label: 'Paid', disableSorting: true }
 ];
 
 const rows = [
@@ -75,29 +74,7 @@ function preventDefault(event) {
 }
 
 const getData = (prop) => {
-  const input = {
-    companyName: "",
-    ownerName: prop.auth.user.name,
-    investmentName: "",
-    investmentID: "",
-    investorName: "",
-    investorID: "",
-    startDate: "",
-    dueDate: "",
-    localDueDate: "",
-    isPaid: "no",
-    profitPercent: "",
-    capitalAmt: "",
-    investmentName: "",
-    investmentType: "",
-    creatorName: "",
-    creatorID: "",
-    paymentTerms: "",
-    approved: "",
-    email: prop.auth.user.email,
-    auth: prop.auth.isAuthenticated
-    }
-  return prop.getFilteredReturns(input, prop.history);
+  return prop.getAllReturns({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 const getDropdownList = (prop) => {
   return prop.getAllInvestments({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
@@ -105,7 +82,7 @@ const getDropdownList = (prop) => {
 
 
 
-export default function AR_Table(props) {
+export default function SR_Table(props) {
 
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
@@ -194,14 +171,13 @@ export default function AR_Table(props) {
       }
     };
 
-    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
       props.updateReturn(input, props.history);
       setNotify({
         isOpen: true,
         message: "Return Paid",
         type: 'success'
       });
-    }
+
   }
 
   const handleChange = (event) => {
@@ -229,29 +205,6 @@ export default function AR_Table(props) {
     setOpenRegPopup(true);
   }
 
-  const onDelete = returns => {
-    setConfirmDialog({
-        ...confirmDialog,
-        isOpen: false
-    })
-
-    const input = {
-      returnID: returns._id,
-      email: props.auth.user.email,
-      auth: props.auth.isAuthenticated
-    }
-
-
-    if(props.auth.user.role === "admin" || props.auth.user.role === "super-admin"){
-      props.deleteReturn(input, props.history);
-      setNotify({
-        isOpen: true,
-        message: "Deleted Successfully",
-        type: 'success'
-      });
-
-    }
-  }
 
   const dateToString = (date) => {
     var d = date.toString();
@@ -313,20 +266,6 @@ export default function AR_Table(props) {
                     color="light"
                     onClick={() => {onPaid(row._id)}}>
                     <CheckIcon fontSize="small" />
-                  </ActionButton>
-                </TableCell>
-                <TableCell>
-                  <ActionButton
-                    color="light"
-                    onClick={() => {
-                      setConfirmDialog({
-                        isOpen: true,
-                        title: 'Are you sure to delete this record?',
-                        subTitle: "You can't undo this operation",
-                        onConfirm: () => { onDelete(row) }
-                      })
-                    }}>
-                    <CloseIcon fontSize="small" />
                   </ActionButton>
                 </TableCell>
               </TableRow>

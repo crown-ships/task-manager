@@ -21,7 +21,7 @@ const InvestmentTablePicker = (props) => {
   if (user.role === "user" || user.role === "supervisor"){
     console.log("user");
     return(
-      <UI_Table {...props}/>
+      <SI_Table {...props}/>
     );
   }
 }

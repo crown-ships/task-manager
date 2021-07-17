@@ -71,3 +71,53 @@ exports.update = async (req, res, next) => {
    next(error)
   }
 }
+
+exports.getFilteredReturns = async (req, res, next) => {
+  const search = {
+    companyName: req.query.companyName,
+    ownerName: req.query.ownerName,
+    investmentName: req.query.investmentName,
+    investmentID: req.query.investmentID,
+    investorName: req.query.investorName,
+    investorID: req.query.investorID,
+    startDate: req.query.startDate,
+    dueDate: req.query.dueDate,
+    localDueDate: req.query.localDueDate,
+    isPaid: req.query.isPaid,
+    profitPercent: req.query.profitPercent,
+    capitalAmt: req.query.capitalAmt,
+    investmentName: req.query.investmentName,
+    investmentType: req.query.investmentType,
+    creatorName: req.query.creatorName,
+    creatorID: req.query.creatorID,
+    paymentTerms: req.query.paymentTerms,
+    approved: req.query.approved
+  };
+
+   var counter=0;
+   var conditions = [];
+
+
+   Object.entries(search).forEach(([key,value]) => {
+     if(value !== "")
+     {
+       var json = {};
+       json[key]= value;
+       conditions[counter++] = json;
+
+     }
+   });
+
+  var returns;
+  if(conditions.length == 0){
+     returns = await Return.find({});
+  }
+  else {
+     returns = await Return.find({$and: conditions});
+  }
+
+  res.status(200).json({
+    data: returns,
+    conditions: conditions
+  });
+}

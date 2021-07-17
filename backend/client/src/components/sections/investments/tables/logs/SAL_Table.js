@@ -80,29 +80,7 @@ function preventDefault(event) {
 }
 
 const getData = (prop) => {
-  const input = {
-    companyName: "",
-    ownerName: prop.auth.user.name,
-    investmentName: "",
-    investmentID: "",
-    investorName: "",
-    investorID: "",
-    startDate: "",
-    dueDate: "",
-    localDueDate: "",
-    isPaid: "yes",
-    profitPercent: "",
-    capitalAmt: "",
-    investmentName: "",
-    investmentType: "",
-    creatorName: "",
-    creatorID: "",
-    paymentTerms: "",
-    approved: "",
-    email: prop.auth.user.email,
-    auth: prop.auth.isAuthenticated
-    }
-  return prop.getFilteredReturns(input, prop.history);
+  return prop.getAllReturns({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 const getDropdownList = (prop) => {
   return prop.getAllInvestments({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);

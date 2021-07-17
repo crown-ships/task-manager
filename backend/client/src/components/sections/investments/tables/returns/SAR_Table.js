@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
@@ -75,29 +76,7 @@ function preventDefault(event) {
 }
 
 const getData = (prop) => {
-  const input = {
-    companyName: "",
-    ownerName: prop.auth.user.name,
-    investmentName: "",
-    investmentID: "",
-    investorName: "",
-    investorID: "",
-    startDate: "",
-    dueDate: "",
-    localDueDate: "",
-    isPaid: "no",
-    profitPercent: "",
-    capitalAmt: "",
-    investmentName: "",
-    investmentType: "",
-    creatorName: "",
-    creatorID: "",
-    paymentTerms: "",
-    approved: "",
-    email: prop.auth.user.email,
-    auth: prop.auth.isAuthenticated
-    }
-  return prop.getFilteredReturns(input, prop.history);
+  return prop.getAllReturns({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 const getDropdownList = (prop) => {
   return prop.getAllInvestments({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
@@ -105,7 +84,7 @@ const getDropdownList = (prop) => {
 
 
 
-export default function AR_Table(props) {
+export default function SAR_Table(props) {
 
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
   const [notify, setNotify] = React.useState({ isOpen: false, message: '', type: '' });
