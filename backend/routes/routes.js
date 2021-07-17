@@ -87,6 +87,7 @@ router.delete('/delInv', userController.allowIfLoggedin, userController.grantAcc
 
 router.get('/getInvs', userController.allowIfLoggedin, userController.grantAccess('readAny', 'investment'),  investmentController.getInvestments);
 
+router.get('/getFilteredInvs', userController.allowIfLoggedin, userController.grantAccess('readAny', 'investment'),  investmentController.getFilteredInvestments);
 //------------------VENDORS
 router.post('/newVendor', userController.allowIfLoggedin, userController.grantAccess('create', 'vendor'),vendorController.addNew);
 

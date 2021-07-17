@@ -108,3 +108,49 @@ exports.delete = async (req, res, next) => {
   next(error)
  }
 }
+
+exports.getFilteredInvestments = async (req, res, next) => {
+  const search = {
+    companyName: req.query.companyName,
+    ownerName: req.query.ownerName,
+    investorName: req.query.investorName,
+    investorID: req.query.investorID,
+    startDate: req.query.startDate,
+    dueDate: req.query.dueDate,
+    profitPercent: req.query.profitPercent,
+    capitalAmt: req.query.capitalAmt,
+    investmentName: req.query.investmentName,
+    investmentType: req.query.investmentType,
+    creatorName: req.query.creatorName,
+    creatorID: req.query.creatorID,
+    paymentTerms: req.query.paymentTerms,
+    approved: req.query.approved
+  };
+
+   var counter=0;
+   var conditions = [];
+
+
+   Object.entries(search).forEach(([key,value]) => {
+     if(value !== "")
+     {
+       var json = {};
+       json[key]= value;
+       conditions[counter++] = json;
+
+     }
+   });
+
+  var investments;
+  if(conditions.length == 0){
+     investments = await Investment.find({});
+  }
+  else {
+     investments = await Investment.find({$and: conditions});
+  }
+
+  res.status(200).json({
+    data: investments,
+    conditions: conditions
+  });
+}

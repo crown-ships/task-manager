@@ -30,7 +30,7 @@ import { SuperAdminListItems, AdminListItems, SupervisorListItems } from '../lis
 import { logoutUser } from "../../../actions/authActions";
 import { getFilteredUsers} from "../../../actions/userActions";
 import { getAllCompanies } from "../../../actions/companyActions";
-import { getAllInvestments, deleteInvestment, updateInvestment, registerInvestment } from "../../../actions/investmentActions";
+import { getFilteredInvestments, getAllInvestments, deleteInvestment, updateInvestment, registerInvestment } from "../../../actions/investmentActions";
 import { getAllInvestors, deleteInvestor, updateInvestor, registerInvestor } from "../../../actions/investorActions";
 import { getAllReturns, deleteReturn, updateReturn, registerReturn } from "../../../actions/returnActions";
 import InvestmentTablePicker from "./pickers/InvestmentTablePicker"
@@ -291,5 +291,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { logoutUser, getFilteredUsers, getAllCompanies, getAllInvestments,getAllInvestors, deleteInvestor, updateInvestor, registerInvestor, deleteInvestment, updateInvestment, registerInvestment,getAllReturns, deleteReturn, updateReturn, registerReturn  }
+  { getFilteredInvestments, logoutUser, getFilteredUsers, getAllCompanies, getAllInvestments,getAllInvestors, deleteInvestor, updateInvestor, registerInvestor, deleteInvestment, updateInvestment, registerInvestment,getAllReturns, deleteReturn, updateReturn, registerReturn  }
 )(withRouter(InvestmentsPage));
