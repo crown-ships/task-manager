@@ -141,6 +141,11 @@ export default function AV_Table(props) {
   const [records, setRecords] = React.useState(data);
   const classes = useStyles();
 
+  const [state, setState] = React.useState({
+      checkedA: true,
+      checkedB: true,
+    });
+
   React.useEffect(async () => {
     const d = await getCompanies(props);
     setAllCompanies(d.data);
