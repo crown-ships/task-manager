@@ -134,7 +134,7 @@ exports.delete = async (req, res, next) => {
 exports.getFilteredVendors = async (req, res, next) => {
   const search = {
     companyName: req.query.companyName,
-    ownername: req.query.ownerName,
+    ownerName: req.query.ownerName,
     vendorName: req.query.vendorName,
     vendorEmail: req.query.vendorEmail,
     contractAmt: req.query.contractAmt,
