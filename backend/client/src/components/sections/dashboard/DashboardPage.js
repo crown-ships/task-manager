@@ -409,17 +409,18 @@ const DashboardPage =  (props) => {
                 <FPie {...props} project={project}/>
               </Grid>
             </Grid>
+            <Grid container className={classes.grid}>
+              <Grid item xs={5}>
+                <TPie {...props} project={project}/>
+              </Grid>
+              <Grid item xs={2}></Grid>
+              <Grid item xs={5}>
+                <TOwnerGraphs {...props} project={project}/>
+              </Grid>
+            </Grid>
         </Paper>
 
-        <Grid container className={classes.grid}>
-          <Grid item xs={5}>
-            <TPie {...props} company={company}/>
-          </Grid>
-          <Grid item xs={2}></Grid>
-          <Grid item xs={5}>
-            <TOwnerGraphs {...props} company={company}/>
-          </Grid>
-        </Grid>
+
 
           <Box pt={4}>
             <Copyright />
