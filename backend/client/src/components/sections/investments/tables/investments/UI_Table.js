@@ -89,19 +89,15 @@ const getAdmins = (prop) => {
 }
 
 const headCells = [
-    { id: 'investorName', label: 'Investor Name' },
     { id: 'investmentName', label: 'Investment Name' },
     { id: 'approved', label: 'Approved' },
-    { id: 'startDate', label: 'Start Date' },
     { id: 'dueDate', label: 'Due Date' },
     { id: 'capitalAmt', label: 'Capital Amount'},
-    { id: 'capitalPaid', label: 'Amount Paid'},
     { id: 'profitPercent', label: 'Rate'},
     { id: 'investmentType', label: 'Type'},
     { id: 'paymentTerms', label: 'Terms'},
     { id: 'update', label: 'Update', disableSorting: true }
 ];
-
 const rows = [
   createData()
 ];
@@ -418,13 +414,10 @@ export default function UI_Table(props) {
             {
               recordsAfterPagingAndSorting().map(row =>
               (<TableRow key={row._id}>
-                <TableCell>{row.investorName}</TableCell>
                 <TableCell>{row.investmentName}</TableCell>
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
-                <TableCell>{dateToString(row.startDate)}</TableCell>
                 <TableCell>{dateToString(row.dueDate)}</TableCell>
                 <TableCell>{row.capitalAmt}</TableCell>
-                <TableCell>{row.capitalPaid}</TableCell>
                 <TableCell>{row.profitPercent + "%"}</TableCell>
                 <TableCell>{row.investmentType}</TableCell>
                 <TableCell>{row.paymentTerms}</TableCell>

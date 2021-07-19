@@ -74,12 +74,8 @@ const useStyles = makeStyles(theme => ({
 const headCells = [
     { id: 'vendorName', label: 'Vendor Name' },
     { id: 'approved', label: 'Approved' },
-    { id: 'vendorEmail', label: 'Email' },
-    { id: 'startDate', label: 'Start Date' },
     { id: 'endDate', label: 'End Date' },
     { id: 'contractAmt', label: 'Contract Amount' },
-    { id: 'pendingAmt', label: 'Pending Amount'},
-    { id: 'contactNo', label: 'Contact No.'},
     { id: 'update', label: 'Update', disableSorting: true }
 ];
 
@@ -245,12 +241,8 @@ export default function UV_Table(props) {
               (<TableRow key={row._id}>
                 <TableCell>{row.vendorName}</TableCell>
                 <TableCell>{approvedIcon(row.approved)}</TableCell>
-                <TableCell>{row.vendorEmail}</TableCell>
-                <TableCell>{dateToString(row.startDate)}</TableCell>
                 <TableCell>{dateToString(row.endDate)}</TableCell>
                 <TableCell>{row.contractAmt}</TableCell>
-                <TableCell>{row.pendingAmt}</TableCell>
-                <TableCell>{row.contactNo}</TableCell>
                 <TableCell>
                   <ActionButton
                     color="light"

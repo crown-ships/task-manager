@@ -36,8 +36,11 @@ import { getAllProjects, deleteProject, updateProject, registerProject } from ".
 import { getAllTasks, deleteTask, updateTask, registerTask ,updateAllTasks } from "../../../actions/taskActions";
 import { getAllFeatures, deleteFeature, updateFeature, registerFeature, updateAllFeatures } from "../../../actions/featureActions";
 import Graphs from "./Graphs"
+import FGraphs from "./FGraphs"
+
 import OwnerGraphs from "./OwnerGraphs"
 import Pie from "./Pie"
+import FPie from "./FPie"
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -177,15 +180,22 @@ function onLogoutClick(e) {
   this.props.logoutUser();
 }
 
-function getDropdownList (prop) {
+function getCompanies (prop) {
   return prop.getAllCompanies({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
 }
 
-const ProjectsPage =  (props) => {
+function getProjects (prop) {
+  return prop.getAllProjects({email:prop.auth.user.email, auth:prop.auth.isAuthenticated}, prop.history);
+}
+
+const DashboardPage =  (props) => {
 
   const [value, setValue] = React.useState(0);
   const [company, setCompany] = React.useState("");
+  const [project, setProject] = React.useState("");
+  const [allProjects, setAllProjects] = React.useState([]);
   const [list, setList] = React.useState([]);
+  const [pList, setPList] = React.useState([]);
   const [state, setState] = React.useState({
       checkedA: true,
       checkedB: true,
@@ -195,7 +205,10 @@ const ProjectsPage =  (props) => {
   };
 
   React.useEffect(async () => {
-    const d = await getDropdownList(props);
+    const p = await getProjects(props);
+    setAllProjects(p.data);
+
+    const d = await getCompanies(props);
     var complist = d.data.map(function(item) {
       if(item.enabled === "true")
         return item.companyName;
@@ -221,11 +234,49 @@ const ProjectsPage =  (props) => {
     setList(selList);
   },[]);
 
+  React.useEffect( () => {
+    var complist = allProjects.map(function(item) {
+      if (company === "") {
+        if(item.enabled === "true" && item.approved === "approved")
+          return item.projectName;
+        else
+          return "0"
+      }
+      else {
+        if(item.enabled === "true" && item.approved === "approved" && item.companyName === company)
+          return item.projectName;
+        else
+          return "0"
+      }
+
+    });
+    var j;
+    var len = 0;
+    var trimlist = [];
+    for(j=0; j<complist.length; j++) {
+      if(complist[j] !== "0"){
+        trimlist[len++] = complist[j];
+      }
+    }
+    var selList = [];
+    var i;
+    selList[0] = {key:0, item: ""};
+    for(i=0; i<len; i++) {
+      selList[i+1] = {key:i+1, item: trimlist[i]};
+    }
+    setPList(selList);
+  },[allProjects, company]);
 
   const handleCompanyChange = (event) => {
     let val = event.target;
     console.log(val.value);
     setCompany(val.value);
+  };
+
+  const handleProjectChange = (event) => {
+    let val = event.target;
+    console.log(val.value);
+    setProject(val.value);
   };
 
   var itemList = "";
@@ -300,37 +351,63 @@ const ProjectsPage =  (props) => {
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
         <Paper className={classes.paper}>
-        <FormControl variant="outlined">
-          <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
-          <Select
-            native
-            value={state.age}
-            onChange={handleCompanyChange}
-            label="Company"
-            inputProps={{
-              name: 'company',
-              id: 'outlined-company-native-simple',
-            }}
-          >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
-          </Select>
-        </FormControl>
-          <Grid container className={classes.grid}>
-            <Grid item xs={5}>
-              <Graphs {...props} company={company}/>
+          <FormControl variant="outlined">
+            <InputLabel htmlFor="outlined-company-native-simple">Company</InputLabel>
+            <Select
+              native
+              value={state.age}
+              onChange={handleCompanyChange}
+              label="Company"
+              inputProps={{
+                name: 'company',
+                id: 'outlined-company-native-simple',
+              }}
+            >{list.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+            </Select>
+          </FormControl>
+            <Grid container className={classes.grid}>
+              <Grid item xs={5}>
+                <Graphs {...props} company={company}/>
+              </Grid>
+              <Grid item xs={2}></Grid>
+              <Grid item xs={5}>
+                <OwnerGraphs {...props} company={company}/>
+              </Grid>
             </Grid>
-            <Grid item xs={2}></Grid>
-            <Grid item xs={5}>
-              <OwnerGraphs {...props} company={company}/>
-            </Grid>
-          </Grid>
 
-          <Grid container  className={classes.grid}>
-            <Grid item xs={3}></Grid>
-            <Grid item xs={6}>
-              <Pie {...props} company={company}/>
+            <Grid container  className={classes.grid}>
+              <Grid item xs={3}></Grid>
+              <Grid item xs={6}>
+                <Pie {...props} company={company}/>
+              </Grid>
+              <Grid item xs={3}></Grid>
             </Grid>
-            <Grid item xs={3}></Grid>
-          </Grid>
+        </Paper>
+
+        <Paper className={classes.paper}>
+          <FormControl variant="outlined">
+            <InputLabel htmlFor="outlined-project-native-simple">Project</InputLabel>
+            <Select
+              native
+              value={state.age}
+              onChange={handleProjectChange}
+              label="Project"
+              inputProps={{
+                name: 'project',
+                id: 'outlined-project-native-simple',
+              }}
+            >{pList.map(item =><option key={item.key} value={item.item}>{item.item}</option>)}
+            </Select>
+          </FormControl>
+            <Grid container className={classes.grid}>
+              <Grid item xs={5}>
+                <FGraphs {...props} project={project}/>
+              </Grid>
+              <Grid item xs={2}></Grid>
+              <Grid item xs={5}>
+                <FPie {...props} project={project}/>
+              </Grid>
+            </Grid>
         </Paper>
 
           <Box pt={4}>
