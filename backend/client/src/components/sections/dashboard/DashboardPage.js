@@ -37,10 +37,11 @@ import { getAllTasks, deleteTask, updateTask, registerTask ,updateAllTasks } fro
 import { getAllFeatures, deleteFeature, updateFeature, registerFeature, updateAllFeatures } from "../../../actions/featureActions";
 import Graphs from "./Graphs"
 import FGraphs from "./FGraphs"
-
+import TOwnerGraphs from "./TOwnerGraphs"
 import OwnerGraphs from "./OwnerGraphs"
 import Pie from "./Pie"
 import FPie from "./FPie"
+import TPie from "./TPie"
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -409,6 +410,16 @@ const DashboardPage =  (props) => {
               </Grid>
             </Grid>
         </Paper>
+
+        <Grid container className={classes.grid}>
+          <Grid item xs={5}>
+            <TPie {...props} company={company}/>
+          </Grid>
+          <Grid item xs={2}></Grid>
+          <Grid item xs={5}>
+            <TOwnerGraphs {...props} company={company}/>
+          </Grid>
+        </Grid>
 
           <Box pt={4}>
             <Copyright />

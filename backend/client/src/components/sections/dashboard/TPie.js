@@ -18,12 +18,12 @@ import Select from '@material-ui/core/Select';
 
 
 function getFeatures (props) {
-    return props.getAllFeatures({email:props.auth.user.email, auth:props.auth.isAuthenticed}, props.history)
+    return props.getAllTasks({email:props.auth.user.email, auth:props.auth.isAuthenticed}, props.history)
 }
 
-export default function FPie(props) {
+export default function TPie(props) {
 
-  const [features, setFeatures] = React.useState([]);
+  const [tasks, setTasks] = React.useState([]);
   const [total, setTotal] = React.useState(0);
   const [pie, setPie] = React.useState([]);
   const [state, setState] = React.useState({
@@ -41,7 +41,7 @@ export default function FPie(props) {
         return item;
       });
       console.log(complist);
-      setFeatures(complist)
+      setTasks(complist)
     }
     else {
       var complist = d.data.map(function(item) {
@@ -63,7 +63,7 @@ export default function FPie(props) {
         }
       }
       console.log(trimlist);
-      setFeatures(trimlist)
+      setTasks(trimlist)
     }
   },[props.project]);
 
@@ -71,11 +71,11 @@ export default function FPie(props) {
     var i;
     var completed = 0;
     var ongoing = 0;
-    for(i=0; i< features.length; i++) {
-      if(features[i].percentComplete == 100){
+    for(i=0; i< tasks.length; i++) {
+      if(tasks[i].percentComplete == 100){
         completed++;
       }
-      else if(features[i].percentComplete<100) {
+      else if(tasks[i].percentComplete<100) {
         ongoing++;
       }
     }
@@ -85,7 +85,7 @@ export default function FPie(props) {
       {count: "Completed", val: completed},
       {count: "Ongoing", val: ongoing}
     ])
-  },[features]);
+  },[tasks]);
 
 
 
