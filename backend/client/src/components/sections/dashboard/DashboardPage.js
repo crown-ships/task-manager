@@ -420,7 +420,7 @@ const DashboardPage =  (props) => {
   );
 }
 
-ProjectsPage.propTypes = {
+DashboardPage.propTypes = {
   logoutUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
@@ -430,4 +430,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { getFilteredUsers,updateAllFeatures,updateAllTasks,logoutUser, getAllProjects, getAllCompanies, deleteProject, updateProject, registerProject,getAllFeatures, deleteFeature, updateFeature, registerFeature,getAllTasks, deleteTask, updateTask, registerTask }
-)(withRouter(ProjectsPage));
+)(withRouter(DashboardPage));
