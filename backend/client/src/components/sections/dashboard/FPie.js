@@ -70,25 +70,19 @@ export default function Graphs(props) {
   React.useEffect(() => {
     var i;
     var completed = 0;
-    var approval = 0;
     var ongoing = 0;
     for(i=0; i< features.length; i++) {
       if(features[i].percentComplete == 100){
         completed++;
       }
-      else if(features[i].percentComplete<100 && features[i].approved === "approved") {
+      else if(features[i].percentComplete<100) {
         ongoing++;
-      }
-      else if(features[i].approved === "wait")
-      {
-        approval++;
       }
     }
     var t = completed + ongoing + approval;
     setTotal(t);
     setPie([
       {count: "Completed", val: completed},
-      {count: "Pending Approval", val:approval},
       {count: "Ongoing", val: ongoing}
     ])
   },[features]);
