@@ -91,7 +91,7 @@ export default function Graphs(props) {
       {count: "Pending Approval", val:approval},
       {count: "Ongoing", val: ongoing}
     ])
-  },[project]);
+  },[features]);
 
 
 
@@ -106,7 +106,7 @@ export default function Graphs(props) {
     <PieChart
         id="pie"
         type="doughnut"
-        title="Project Overview"
+        title="Milestones Overview"
         palette="Material"
         dataSource={pie}
       >
