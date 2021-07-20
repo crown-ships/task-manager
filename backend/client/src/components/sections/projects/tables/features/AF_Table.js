@@ -142,6 +142,8 @@ const getDropdownList = (prop) => {
     enabled: "",
     ownerName: prop.auth.user.name,
     assignee: "",
+    percentComplete: "",
+    completed: "",
     email:prop.auth.user.email,
     auth:prop.auth.isAuthenticated
   }
