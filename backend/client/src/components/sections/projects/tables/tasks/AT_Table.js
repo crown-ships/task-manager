@@ -219,6 +219,7 @@ export default function AT_Table(props) {
 
     const proj = await getProjectList(props);
     setAllProjects(proj.data);
+    console.log(allProjects);
 
     const u = await getUsers(props);
     console.log(u.data);

@@ -205,6 +205,7 @@ export default function AF_Table(props) {
 
     const proj = await getDropdownList(props);
     setAllProjects(proj.data);
+    console.log(allProjects);
 
     setFilterFn({
         fn: items => {

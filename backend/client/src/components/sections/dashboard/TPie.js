@@ -100,7 +100,7 @@ export default function TPie(props) {
     <PieChart
         id="pie"
         type="doughnut"
-        title="Milestones Overview"
+        title="Tasks Overview"
         palette="Material"
         dataSource={pie}
       >
