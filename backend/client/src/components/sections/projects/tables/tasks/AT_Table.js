@@ -213,7 +213,17 @@ export default function AT_Table(props) {
     const tasks = await getData(props);
     setData(tasks.data);
     setRecords(tasks.data);
+    setFilterFn({
+        fn: items => {
+            if (feature == "")
+                return items.filter(x => x.enabled.includes("true"));
+            else
+                return items.filter(x => (x.featureName === feature) && x.enabled.includes("true"))
+        }
+    })
+  },[notify]);
 
+  React.useEffect(async () => {
     const comp = await getCompanyList(props);
     setAllCompanies(comp.data);
 
@@ -237,17 +247,7 @@ export default function AT_Table(props) {
 
     const feat = await getDropdownList(props);
     setAllFeatures(feat.data);
-
-    setFilterFn({
-        fn: items => {
-            if (feature == "")
-                return items.filter(x => x.enabled.includes("true"));
-            else
-                return items.filter(x => (x.featureName === feature) && x.enabled.includes("true"))
-        }
-    })
-  },[notify]);
-
+  },[]);
 
   React.useEffect( () => {
 

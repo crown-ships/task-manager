@@ -182,10 +182,6 @@ export default function AF_Table(props) {
   const classes = useStyles();
 
   React.useEffect(async () => {
-    const feats = await getData(props);
-    setData(feats.data);
-    setRecords(feats.data);
-
     const comp = await getCompanyList(props);
     setAllCompanies(comp.data);
 
@@ -206,6 +202,12 @@ export default function AF_Table(props) {
     const proj = await getDropdownList(props);
     setAllProjects(proj.data);
     console.log(allProjects);
+  },[]);
+
+  React.useEffect(async () => {
+    const feats = await getData(props);
+    setData(feats.data);
+    setRecords(feats.data);
 
     setFilterFn({
         fn: items => {
