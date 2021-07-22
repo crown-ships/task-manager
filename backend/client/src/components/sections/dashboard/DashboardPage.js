@@ -368,7 +368,7 @@ const DashboardPage =  (props) => {
           </FormControl>
             <Grid container className={classes.grid}>
               <Grid item xs={5}>
-                <Graphs {...props} company={company}/>
+                <Graphs {...props} company={company} companyList={list}/>
               </Grid>
               <Grid item xs={2}></Grid>
               <Grid item xs={5}>

@@ -27,11 +27,23 @@ export default function Graphs(props) {
     console.log(data);
 
     if (props.company === "") {
-      var complist = d.data.map(function(item) {
-        return item;
-      });
-      console.log(complist);
-      setProject(complist)
+      var i;
+      var defaultChart = [];\
+      var count = 0;
+      var total = 0;
+      for (i=0; i< props.companyList.length; i++) {
+        for(j=0; j<d.data.length, j++) {
+          if(companyList[i] === d.data[j].companyName)
+          {
+            count++;
+            total+=d.data.percentComplete;
+          }
+        }
+        defaultChart[i] = {projectName: companyList[i], percentComplete: total/count};
+        count = 0;
+        total = 0;
+      }
+      setProject(defaultChart)
     }
     else {
       var complist = d.data.map(function(item) {
@@ -58,7 +70,6 @@ export default function Graphs(props) {
     }
   },[props.company]);
 
-
   console.log(project);
   return (
     <Paper>
@@ -70,9 +81,9 @@ export default function Graphs(props) {
           type="bar"
           color="#ffaa66" />
           <ValueAxis defaultVisualRange={{ startValue: 0, endValue: 100 }} />
-          <ArgumentAxis>
+          <ArgumentAxis title="Projects">
               <Label
-                  title="Projects"
+
               />
           </ArgumentAxis>
       </Chart>
