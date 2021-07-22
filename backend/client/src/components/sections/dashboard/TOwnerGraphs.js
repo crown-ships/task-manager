@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Paper from '@material-ui/core/Paper';
-import { Chart, Series, Label, Tooltip, ValueAxis, ArgumentAxis, Label } from 'devextreme-react/chart';
+import { Chart, Series, Label, Tooltip, ValueAxis, ArgumentAxis } from 'devextreme-react/chart';
 
 
 const data = [
