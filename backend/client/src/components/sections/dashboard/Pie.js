@@ -119,8 +119,8 @@ export default function Graphs(props) {
         <Export enabled={true} />
         <Legend
           margin={30}
-          horizontalAlignment="right"
-          verticalAlignment="top"
+          horizontalAlignment="center"
+          verticalAlignment="bottom"
         />
         <Tooltip enabled={true} customizeTooltip={customizeTooltip}>
         </Tooltip>

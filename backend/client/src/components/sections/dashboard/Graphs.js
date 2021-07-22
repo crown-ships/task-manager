@@ -65,7 +65,7 @@ export default function Graphs(props) {
     <Chart id="chart" dataSource={project} title="Project Progress">
         <Series
           valueField="percentComplete"
-          
+          argumentField="projectName"
           name="Projects"
           type="bar"
           color="#ffaa66" />
