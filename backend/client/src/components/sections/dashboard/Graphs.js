@@ -65,15 +65,14 @@ export default function Graphs(props) {
     <Chart id="chart" dataSource={project} title="Project Progress">
         <Series
           valueField="percentComplete"
-          argumentField="projectName"
+          
           name="Projects"
           type="bar"
           color="#ffaa66" />
           <ValueAxis defaultVisualRange={{ startValue: 0, endValue: 100 }} />
-          <ArgumentAxis> {/* or ValueAxis, or CommonAxisSettings */}
+          <ArgumentAxis>
               <Label
-                  rotationAngle={45}
-                  overlappingBehavior="rotate"
+                  title="Projects"
               />
           </ArgumentAxis>
       </Chart>

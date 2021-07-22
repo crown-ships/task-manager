@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Paper from '@material-ui/core/Paper';
-import { Chart, Series, Label, Tooltip, ValueAxis } from 'devextreme-react/chart';
+import { Chart, Series, Label, Tooltip, ValueAxis, ArgumentAxis, Label } from 'devextreme-react/chart';
 
 
 const data = [
@@ -110,6 +110,12 @@ export default function OwnerGraphs(props) {
           type="bar"
           color="#52006A" />
           <ValueAxis defaultVisualRange={{ startValue: 0 }} />
+          <ArgumentAxis> {/* or ValueAxis, or CommonAxisSettings */}
+              <Label
+                  rotationAngle={45}
+                  overlappingBehavior="rotate"
+              />
+          </ArgumentAxis>
           <Tooltip enabled={true} customizeTooltip={customizeTooltip}>
           </Tooltip>
       </Chart>
