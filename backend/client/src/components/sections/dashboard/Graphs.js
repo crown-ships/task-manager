@@ -28,7 +28,7 @@ export default function Graphs(props) {
 
     if (props.company === "") {
       var i;
-      var defaultChart = [];\
+      var defaultChart = [];
       var count = 0;
       var total = 0;
       for (i=0; i< props.companyList.length; i++) {
