@@ -70,6 +70,12 @@ export default function Graphs(props) {
           type="bar"
           color="#ffaa66" />
           <ValueAxis defaultVisualRange={{ startValue: 0, endValue: 100 }} />
+          <ArgumentAxis> {/* or ValueAxis, or CommonAxisSettings */}
+              <Label
+                  rotationAngle={45}
+                  overlappingBehavior="rotate"
+              />
+          </ArgumentAxis>
       </Chart>
     </Paper>
 
