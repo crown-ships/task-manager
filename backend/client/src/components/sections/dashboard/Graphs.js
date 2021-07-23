@@ -33,13 +33,13 @@ export default function Graphs(props) {
       var total = 0;
       for (i=0; i< props.companyList.length; i++) {
         for(j=0; j<d.data.length; j++) {
-          if(companyList[i] === d.data[j].companyName)
+          if(props.companyList[i] === d.data[j].companyName)
           {
             count++;
             total+=d.data.percentComplete;
           }
         }
-        defaultChart[i] = {projectName: companyList[i], percentComplete: total/count};
+        defaultChart[i] = {projectName: props.companyList[i], percentComplete: total/count};
         count = 0;
         total = 0;
       }
