@@ -32,7 +32,7 @@ export default function Graphs(props) {
       var count = 0;
       var total = 0;
       for (i=0; i< props.companyList.length; i++) {
-        for(j=0; j<d.data.length, j++) {
+        for(j=0; j<d.data.length; j++) {
           if(companyList[i] === d.data[j].companyName)
           {
             count++;
